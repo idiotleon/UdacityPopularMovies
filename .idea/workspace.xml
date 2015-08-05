@@ -10,19 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="41723a74-e072-47cc-89ac-e15a69f7b862" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CommonConstants.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CommonConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_details.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_details.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\CustomListViewAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieTrailerCustomListViewAdapter.java" />
-      <change type="MOVED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\res\layout\row_list_movietrailer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/row_movie_trailer.xml" />
     </list>
     <ignored path="UdacityPopularMovies.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -56,14 +47,39 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.1602564">
-              <caret line="35" column="21" selection-start-line="35" selection-start-column="21" selection-end-line="35" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.18478261">
+              <caret line="46" column="45" selection-start-line="46" selection-start-column="45" selection-end-line="46" selection-end-column="45" />
               <folding>
                 <element signature="e#636#688#0" expanded="true" />
                 <element signature="e#1006#1046#0" expanded="true" />
                 <element signature="e#1377#1428#0" expanded="true" />
                 <element signature="e#2035#2085#0" expanded="true" />
-                <element signature="e#2771#2813#0" expanded="true" />
+                <element signature="e#2780#2822#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FavoriteStatus.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/FavoriteStatus.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MovieDetailsActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+              <folding>
+                <element signature="e#3127#3572#0" expanded="true" />
+                <element signature="e#3571#3572#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1539,10 +1555,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CommonConstants.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieReviewDataWrapper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieReviewModel.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/movie_details.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/FavoriteStatus.java" />
       </list>
     </option>
   </component>
@@ -1557,7 +1574,7 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="817" />
+    <option name="x" value="799" />
     <option name="y" value="9" />
     <option name="width" value="775" />
     <option name="height" value="858" />
@@ -1986,7 +2003,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="817" y="9" width="775" height="858" extended-state="0" />
+    <frame x="799" y="9" width="775" height="858" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32846716" sideWeight="0.49660525" order="6" side_tool="false" content_ui="tabs" />
@@ -2001,13 +2018,13 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45266274" sideWeight="0.49434572" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.454142" sideWeight="0.47980613" order="7" side_tool="false" content_ui="tabs" x="-1423" y="59" width="1331" height="644" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.454142" sideWeight="0.47980613" order="7" side_tool="false" content_ui="tabs" x="-1423" y="59" width="1331" height="644" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3992095" sideWeight="0.51285344" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.8097902" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.48251748" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962447" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24895105" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24901186" sideWeight="0.48714653" order="3" side_tool="false" content_ui="tabs" x="-697" y="513" width="679" height="254" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2073,35 +2090,11 @@
           <option name="timeStamp" value="49" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="50" />
+      <option name="time" value="51" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="8" column="52" selection-start-line="8" selection-start-column="52" selection-end-line="8" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#onCreateOptionsMenu#0;class#MainActivity#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#MainActivity#0" expanded="false" />
-            <element signature="docComment;method#doInBackground#0;class#BuildConnection#0;class#MainActivity#0" expanded="false" />
-            <element signature="method#setMoviesInfoArrayList#0;class#BuildConnection#0;class#MainActivity#0" expanded="false" />
-            <element signature="method#getAllJsonDataAsStringFromAPI#0;class#BuildConnection#0;class#MainActivity#0" expanded="false" />
-            <element signature="e#10917#10929#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CustomGridViewAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2498,17 +2491,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5284974">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
-          <folding>
-            <element signature="e#3836#4335#0" expanded="true" />
-            <element signature="e#4334#4335#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.39637306">
@@ -2533,19 +2515,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://E:/Software/Matrix/Android/AndroidSDK/sources/android-22/android/content/SharedPreferences.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.082621">
+          <caret line="78" column="20" selection-start-line="78" selection-start-column="17" selection-end-line="78" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+          <folding>
+            <element signature="e#3127#3572#0" expanded="true" />
+            <element signature="e#3571#3572#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/FavoriteStatus.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/movie_details.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1602564">
-          <caret line="35" column="21" selection-start-line="35" selection-start-column="21" selection-end-line="35" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.18478261">
+          <caret line="46" column="45" selection-start-line="46" selection-start-column="45" selection-end-line="46" selection-end-column="45" />
           <folding>
             <element signature="e#636#688#0" expanded="true" />
             <element signature="e#1006#1046#0" expanded="true" />
             <element signature="e#1377#1428#0" expanded="true" />
             <element signature="e#2035#2085#0" expanded="true" />
-            <element signature="e#2771#2813#0" expanded="true" />
+            <element signature="e#2780#2822#0" expanded="true" />
           </folding>
         </state>
       </provider>

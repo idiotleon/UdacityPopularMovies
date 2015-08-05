@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -29,6 +31,7 @@ public class MovieDetailsActivity extends Activity {
     private ImageView imageViewPosterImage;
 
     private RatingBar ratingBar;
+    private CheckBox favoriteStatusCheckBox;
 
     private ListView movieTrailerListView;
     private ListView movieReviewListView;
@@ -59,6 +62,25 @@ public class MovieDetailsActivity extends Activity {
         imageViewPosterImage = (ImageView) findViewById(R.id.imageview_movie_poster_image);
 
         ratingBar = (RatingBar) findViewById(R.id.ratingbar_movie_details);
+
+        /**
+         * By SharedPreference, I can save the favorite status of a particular movie.
+         */
+        favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
+        if (1 == FavoriteStatus.getFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId(), 0)) {
+            favoriteStatusCheckBox.setChecked(true);
+        } else {
+            favoriteStatusCheckBox.setChecked(false);
+        }
+        favoriteStatusCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    FavoriteStatus.markAsFavorite(MovieDetailsActivity.this, movieModel.getMovieId());
+                else
+                    FavoriteStatus.cancelFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId());
+            }
+        });
 
         movieTrailerListView = (ListView) findViewById(R.id.listview_movietrailers);
         movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(MovieDetailsActivity.this, movieModel.getMovieTrailerUrlArrayList());
@@ -101,5 +123,7 @@ public class MovieDetailsActivity extends Activity {
                 Toast.makeText(MovieDetailsActivity.this, "You changed rating to: " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 }

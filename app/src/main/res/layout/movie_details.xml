@@ -57,7 +57,7 @@
                 android:stepSize="0.1" />
 
             <CheckBox
-                android:id="@+id/favorite_star_button"
+                android:id="@+id/checkbox_favorite_star_button"
                 style="?android:attr/starStyle"
                 android:layout_width="46dp"
                 android:layout_height="66dp"
