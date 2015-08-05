@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">UdacityPopularMovies</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="sort_popularity_desc_text">Popularity</string>
+    <string name="sort_highest_rating_desc_text">Highest Rating</string>
+
+    <string name="textview_text_mainactivity">Movies</string>
+
+
     <string name="textview_text_movie_details_title">Movie Details</string>
     <string name="textview_text_original_title_movie_details">Movie Original Title</string>
     <string name="imageview_movie_detail_content">The poster image of the movie</string>

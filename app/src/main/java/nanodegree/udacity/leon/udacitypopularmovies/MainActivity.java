@@ -1,13 +1,18 @@
 package nanodegree.udacity.leon.udacitypopularmovies;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,9 +34,13 @@ public class MainActivity extends Activity {
 
     private ArrayList<MovieModel> moviesInfo;
     private ArrayList<String> posterImageUrls = new ArrayList<String>();
+
+    // Variable to store API Key
     final String API_KEY = "74684520f47c025a768d03e231efe89c";
 
     private GridView gridView;
+
+    private TextView textView;
 
     private CustomGridViewAdapter customGridViewAdapter;
 
@@ -42,9 +51,27 @@ public class MainActivity extends Activity {
 
         gridView = (GridView) findViewById(R.id.gridview_mainactivity);
 
-        BuildConnection buildConnection = new BuildConnection();
-        buildConnection.execute(API_KEY);
+        textView = (TextView) findViewById(R.id.textview_mainactivity);
 
+        BuildConnection buildConnection = new BuildConnection();
+        buildConnection.execute(API_KEY, "popularity");
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, gridView.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                MovieModel tempMovieModel = (MovieModel) gridView.getItemAtPosition(position);
+                Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
+                detailsIntent.putExtra(CommonConstants.movieId, tempMovieModel.getMovieId());
+                detailsIntent.putExtra(CommonConstants.movieOriginalTitle, tempMovieModel.getMovieOriginalTitle());
+                detailsIntent.putExtra(CommonConstants.moviePosterImageURL, tempMovieModel.getMovieImageUrl());
+                Log.v(LOG_TAG, "tempMovieModel.getMovieImageUrl() - MainActivity: " + tempMovieModel.getMovieImageUrl());
+                detailsIntent.putExtra(CommonConstants.moviePlotSynopsis, tempMovieModel.getMoviePlotSynopsis());
+                detailsIntent.putExtra(CommonConstants.movieUserRating, tempMovieModel.getMovieUserRating());
+                detailsIntent.putExtra(CommonConstants.movieReleaseDate, tempMovieModel.getMovieReleaseDate());
+                startActivity(detailsIntent);
+            }
+        });
     }
 
     @Override
@@ -62,13 +89,21 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.sort_popularity_desc) {
+            BuildConnection buildConnection = new BuildConnection();
+            buildConnection.execute(API_KEY, "popularity");
+            textView.setText("Movies Sorted by Popularity");
+            return true;
+        }
+        if (id == R.id.sort_highest_rating_desc) {
+            BuildConnection buildConnection = new BuildConnection();
+            buildConnection.execute(API_KEY, "highestrating");
+            textView.setText("Movies Sorted by Rating");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public class BuildConnection extends AsyncTask<String, Void, ArrayList<MovieModel>> {
 
@@ -77,16 +112,14 @@ public class MainActivity extends Activity {
         private String APIKey;
         private ArrayList<MovieModel> moviesInfoAsArrayList;
         private String moviesJsonStr;
-        private String movieId;
-
         private URL defaultUrl;
 
-        private String moviesJsonDataAsString;
-        ArrayList<String> posterImageUrlArrayList;
+        private String movieId;
         private String movieOriginalTitle;
         private String moviePlotSynopsis;
         private String movieUserRating;
         private String movieReleaseDate;
+        private String moviePosterUrl;
 
         // final Strings to build URL to fetch movie info
         final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
@@ -96,7 +129,6 @@ public class MainActivity extends Activity {
         final String SETTINGS_PARAM_HIGHESTRATED_DESC = "vote_average.desc";
         final String SETTINGS_PARAM_POPULARITY_ASC = "popularity.aesc";
         final String SETTINGS_PARAM_HIGHESTRATED_ASC = "vote_average.asc";
-
         // parameters for parsing data of poster images
         final String BASE_MOVIES_POSTERIMAGE_API_URL = "http://api.themoviedb.org/3/movie/";
         final String IMAGE_PARAM = "/images?";
@@ -109,8 +141,77 @@ public class MainActivity extends Activity {
         // API Parameter for building URL
         final String API_KEY_PARAM = "api_key";
 
-        // This method is responsible for fetching all the JSON data from the URL defined by parameter of the method,
-        // no matter the URL is for movie info or poster image URLs.
+
+        /**
+         * Method doInBackground() will only call 2 setters, returning null.
+         * Method doInBackground()  will set moviesInfoArrayList(as an ArrayList of class MovieModel), and
+         * posterImageURLsArrayList(as an ArrayList of Strings), both of which will be returned by simple getters,
+         * within onPostExecute() method.
+         *
+         * @param params
+         * @return
+         */
+
+
+        @Override
+        protected ArrayList<MovieModel> doInBackground(String... params) {
+
+            // APIKey for later use (to build poster image URLs), although I did not find a better solution
+            APIKey = params[0];
+
+            Uri defaultUri;
+
+            if (params[1].toLowerCase() == "highestrating") {
+                defaultUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                        .appendQueryParameter(QUERY_PARAM, SETTINGS_PARAM_HIGHESTRATED_DESC)
+                        .appendQueryParameter(API_KEY_PARAM, params[0])
+                        .build();
+            } else {
+                defaultUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                        .appendQueryParameter(QUERY_PARAM, SETTINGS_PARAM_POPULARITY_DESC)
+                        .appendQueryParameter(API_KEY_PARAM, params[0])
+                        .build();
+            }
+
+            try {
+                defaultUrl = new URL(defaultUri.toString());
+                Log.v(LOG_TAG, "defaultUrl is: " + defaultUrl.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            moviesJsonStr = getAllJsonDataAsStringFromAPI(defaultUrl);
+            Log.v(LOG_TAG, "moviesJsonStr - all JSON data of movies info: " + moviesJsonStr);
+
+            try {
+                setMoviesInfoArrayList(parseMovieJsonData(moviesJsonStr));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * Setter method for movie info
+         *
+         * @param moviesInfoAsArrayList
+         * @throws JSONException
+         */
+        public void setMoviesInfoArrayList(ArrayList<MovieModel> moviesInfoAsArrayList) throws JSONException {
+            this.moviesInfoAsArrayList = moviesInfoAsArrayList;
+
+            for (int i = 0; i < moviesInfoAsArrayList.size(); i++) {
+                Log.v(LOG_TAG, "getMovieId(), setMoviesInfoArrayList() - setMoviesInfoArrayList()" + moviesInfoAsArrayList.get(i).getMovieId().toString());
+            }
+        }
+
+        /**
+         * Method is to get all the json data from the input URL as String.
+         * <improvement>: there should be URL check functions
+         *
+         * @param defaultUrl
+         * @return
+         */
         public String getAllJsonDataAsStringFromAPI(URL defaultUrl) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -157,57 +258,13 @@ public class MainActivity extends Activity {
             return moviesJsonStr;
         }
 
-        /*
-             Method doInBackground() will only call 2 setters, returning nothing.
-             Method doInBackground()  will set moviesInfoArrayList(as an ArrayList of class MovieModel), and
-             posterImageURLsArrayList(as an ArrayList of Strings), both of which will be returned by simple getters.
-
-             Bodies of all method called will be defined outside the method doInBackground().
-             But what's the final purpose of doInBackground() method? What should be returned finally?
+        /**
+         * JSON parsing method for movie info
+         *
+         * @param moviesJsonStr
+         * @return
+         * @throws JSONException
          */
-        @Override
-        protected ArrayList<MovieModel> doInBackground(String... params) {
-
-            // APIKey for later use (to build poster image URLs), although I did not find a better solution
-            APIKey = params[0];
-
-            Uri defaultUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
-                    .appendQueryParameter(QUERY_PARAM, SETTINGS_PARAM_POPULARITY_DESC)
-                    .appendQueryParameter(API_KEY_PARAM, params[0])
-                    .build();
-
-            // try...catch... block in the constructor?! What will happen if there is MalformedURLException
-            try {
-                defaultUrl = new URL(defaultUri.toString());
-                Log.v(LOG_TAG, "defaultUrl is: " + defaultUrl.toString());
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            moviesJsonStr = getAllJsonDataAsStringFromAPI(defaultUrl);
-            Log.v(LOG_TAG, "moviesJsonStr - all JSON data of movies info: " + moviesJsonStr);
-
-            try {
-                setMoviesInfoArrayList(parseMovieJsonData(moviesJsonStr));
-                setPosterImageUrl();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        // Setter for the ArrayList<MovieModel> of Movies Info
-        public void setMoviesInfoArrayList(ArrayList<MovieModel> moviesInfoAsArrayList) throws JSONException {
-            this.moviesInfoAsArrayList = moviesInfoAsArrayList;
-
-            for (int i = 0; i < moviesInfoAsArrayList.size(); i++) {
-                Log.v(LOG_TAG, "getMovieId(), setMoviesInfoArrayList() - setMoviesInfoArrayList()" + moviesInfoAsArrayList.get(i).getMovieId().toString());
-            }
-        }
-
-        // Parsing JSON data to acquire all movie info for details page
         public ArrayList<MovieModel> parseMovieJsonData(String moviesJsonStr) throws JSONException {
 
             final String OWN_RESULTS = "results";
@@ -216,6 +273,7 @@ public class MainActivity extends Activity {
             final String OWN_MOVIE_PLOT_SYNOPSIS = "overview";
             final String OWN_MOVIE_USER_RATING = "vote_average";
             final String OWN_RELEASE_DATE = "release_date";
+            final String OWN_POSTER_PATH = "poster_path";
 
             JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
             JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(OWN_RESULTS);
@@ -235,8 +293,9 @@ public class MainActivity extends Activity {
 //            Log.v(LOG_TAG, "movieUserRating - parseMovieJsonData(): " + movieUserRating);
                 movieReleaseDate = itemJson.getString(OWN_RELEASE_DATE);
 //            Log.v(LOG_TAG, "movieReleaseDate - parseMovieJsonData(): " + movieReleaseDate);
+                moviePosterUrl = BASE_POSTERIMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
 
-                MovieModel movieSimple = new MovieModel(movieId, movieOriginalTitle, moviePlotSynopsis, movieUserRating, movieReleaseDate);
+                MovieModel movieSimple = new MovieModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate);
                 moviesInfoAsArrayList.add(movieSimple);
             }
             Log.v(LOG_TAG, "moviesInfoAsArrayList - parseMovieJsonData(): " + moviesInfoAsArrayList.toString());
@@ -245,8 +304,20 @@ public class MainActivity extends Activity {
             return moviesInfoAsArrayList;
         }
 
-        // Poster Images Fetched
-        // Setter for  ArrayList<String> of posterImagesURL
+        @Override
+        protected void onPostExecute(ArrayList<MovieModel> movieModels) {
+            super.onPostExecute(movieModels);
+            customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
+            gridView.setAdapter(customGridViewAdapter);
+        }
+
+
+        /**
+         * Setter method for the URLs of poster images
+         *
+         * @throws JSONException
+         * @throws MalformedURLException
+         *//*
         public void setPosterImageUrl() throws JSONException, MalformedURLException {
             String tempMovieId;
 
@@ -264,12 +335,12 @@ public class MainActivity extends Activity {
             }
         }
 
-        /**
+        *//**
          * Parsing JSON data of poster image URLs
          *
          * @param posterImageJsonDataAsString is an ArrayList whose elements consist by final poster image urls (one url for one movieId)
          * @throws JSONException
-         */
+         *//*
         public String parsePosterImageUrlsJsonData(String posterImageJsonDataAsString) throws JSONException {
 
             final String OWN_POSTERS = "posters";
@@ -299,13 +370,6 @@ public class MainActivity extends Activity {
             }
             Log.v(LOG_TAG, "posterImageUrlsAsStringArrayList: " + posterImageUrls.toString());
             return posterImageUrls;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieModel> movieModels) {
-            super.onPostExecute(movieModels);
-            customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
-            gridView.setAdapter(customGridViewAdapter);
-        }
+        }*/
     }
 }

@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/textview_original_title_movie_details"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_layout_title_movie_details"
         android:layout_centerHorizontal="true"
@@ -23,7 +23,7 @@
         android:textSize="18sp" />
 
     <ImageView
-        android:id="@+id/imageview_movie_detail"
+        android:id="@+id/imageview_movie_posterimage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_original_title_movie_details"
@@ -35,27 +35,26 @@
         android:id="@+id/textview_plot_synopsis_movie_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageview_movie_detail"
+        android:layout_below="@id/imageview_movie_posterimage"
         android:layout_centerHorizontal="true"
         android:text="@string/textview_text_plot_synopsis_movie_details"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/textview_user_rating_movie_details"
+    <RatingBar
+        android:id="@+id/ratingbar_movie_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_plot_synopsis_movie_details"
-        android:layout_centerHorizontal="true"
-        android:text="@string/textview_text_user_rating_movie_details"
-        android:textSize="18sp" />
+        android:numStars="8" />
 
     <TextView
         android:id="@+id/textview_release_date_movie_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview_user_rating_movie_details"
+        android:layout_below="@id/ratingbar_movie_details"
         android:layout_centerHorizontal="true"
         android:text="@string/textview_text_release_date_movie_details"
         android:textSize="18sp" />
+
 
 </RelativeLayout>
