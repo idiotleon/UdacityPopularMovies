@@ -1,20 +1,35 @@
 package nanodegree.udacity.leon.udacitypopularmovies;
 
 
-public class MovieSimple {
+public class MovieModel {
 
+    private String movieId;
     private String movieTitle;
     private String movieImageUrl;
     private String moviePlotSynopsis;
     private String movieUserRating;
     private String releaseDate;
 
-    public MovieSimple(String movieTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String releaseDate) {
+    public MovieModel(String movieId, String movieTitle, String moviePlotSynopsis, String movieUserRating, String releaseDate) {
+        this.movieId = movieId;
+        this.movieTitle = movieTitle;
+        this.moviePlotSynopsis = moviePlotSynopsis;
+        this.movieUserRating = movieUserRating;
+        this.releaseDate = releaseDate;
+    }
+
+    public MovieModel(String movieId, String movieTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String releaseDate) {
+        this.movieId = movieId;
         this.movieTitle = movieTitle;
         this.movieImageUrl = movieImageUrl;
         this.moviePlotSynopsis = moviePlotSynopsis;
         this.movieUserRating = movieUserRating;
         this.releaseDate = releaseDate;
+    }
+
+
+    public String getMovieId() {
+        return movieId;
     }
 
     public String getMovieTitle() {
@@ -35,6 +50,10 @@ public class MovieSimple {
 
     public String getReleaseDate() {
         return releaseDate;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
     }
 
     public void setMovieTitle(String movieTitle) {

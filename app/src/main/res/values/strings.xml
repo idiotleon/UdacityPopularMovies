@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">UdacityPopularMovies</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="textview_text_movie_details_title">Movie Details</string>
+    <string name="textview_text_original_title_movie_details">Movie Original Title</string>
+    <string name="imageview_movie_detail_content">The poster image of the movie</string>
+    <string name="textview_text_plot_synopsis_movie_details">Plot Synopsis</string>
+    <string name="textview_text_user_rating_movie_details">User Rating</string>
+    <string name="textview_text_release_date_movie_details">Release Date</string>
+
+    <string name="textview_text_title_mainactivity">Movies</string>
 </resources>

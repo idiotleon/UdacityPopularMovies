@@ -1,27 +1,22 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
-
-import android.os.AsyncTask;
-
-import java.io.BufferedReader;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-
-public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieSimple>> {
-
-    private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
-
-    @Override
-    protected ArrayList<MovieSimple> doInBackground(String... params) {
-
-        if (params.length == 0) return null;
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        String moviesJsonStr = null;
-
-
-
-        return null;
-    }
-}
+//package nanodegree.udacity.leon.udacitypopularmovies;
+//
+//import android.os.AsyncTask;
+//
+//import java.util.ArrayList;
+//
+//public class FetchMovieTask {
+//
+//    private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
+//
+//    private ArrayList<MovieModel> moviesInfo;
+//    private ArrayList<String> posterImageUrls = new ArrayList<String>();
+//
+//    final String API_KEY = "74684520f47c025a768d03e231efe89c";
+//
+//    BuildConnection buildConnection = new BuildConnection(API_KEY);
+//    moviesInfo=buildConnection.getMoviesInfoArrayList();
+//
+//
+////    posterImageUrls=buildConnection.getPosterImageUrlArrayList();
+//
+//}
