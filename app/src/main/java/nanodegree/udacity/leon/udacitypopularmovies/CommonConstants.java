@@ -10,5 +10,6 @@ public class CommonConstants {
     public static final String moviePlotSynopsis = "movie_plot_synopsis";
     public static final String movieUserRating = "movie_user_rating";
     public static final String movieReleaseDate = "movie_release_date";
-    public static final String moviePosterImageURL = "movie_poster_iamge";
+    public static final String moviePosterImageURL = "movie_poster_image";
+    public static final String movieTrailersUrlArrayList = "movie_trailers_url_array_list";
 }

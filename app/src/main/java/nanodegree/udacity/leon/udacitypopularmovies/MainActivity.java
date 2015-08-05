@@ -38,11 +38,9 @@ public class MainActivity extends Activity {
      *  Type your API key here
      *  ============================================================
      */
-    final String API_KEY = "######################";
+    final String API_KEY = "74684520f47c025a768d03e231efe89c";
 
     private GridView gridView;
-
-    private TextView textView;
 
     private CustomGridViewAdapter customGridViewAdapter;
 
@@ -53,7 +51,6 @@ public class MainActivity extends Activity {
 
         gridView = (GridView) findViewById(R.id.gridview_mainactivity);
 
-        textView = (TextView) findViewById(R.id.textview_mainactivity);
 
         BuildConnection buildConnection = new BuildConnection();
         buildConnection.execute(API_KEY, "popularity");
@@ -61,7 +58,6 @@ public class MainActivity extends Activity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, gridView.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
                 MovieModel tempMovieModel = (MovieModel) gridView.getItemAtPosition(position);
                 Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
                 detailsIntent.putExtra(CommonConstants.movieId, tempMovieModel.getMovieId());
@@ -71,6 +67,8 @@ public class MainActivity extends Activity {
                 detailsIntent.putExtra(CommonConstants.moviePlotSynopsis, tempMovieModel.getMoviePlotSynopsis());
                 detailsIntent.putExtra(CommonConstants.movieUserRating, tempMovieModel.getMovieUserRating());
                 detailsIntent.putExtra(CommonConstants.movieReleaseDate, tempMovieModel.getMovieReleaseDate());
+                // Can I putExtra an ArrayList?
+                detailsIntent.putExtra(CommonConstants.movieTrailersUrlArrayList, tempMovieModel.getMovieTrailerUrlArrayList());
                 startActivity(detailsIntent);
             }
         });
@@ -94,13 +92,11 @@ public class MainActivity extends Activity {
         if (id == R.id.sort_popularity_desc) {
             BuildConnection buildConnection = new BuildConnection();
             buildConnection.execute(API_KEY, "popularity");
-            textView.setText("Movies Sorted by Popularity");
             return true;
         }
         if (id == R.id.sort_highest_rating_desc) {
             BuildConnection buildConnection = new BuildConnection();
             buildConnection.execute(API_KEY, "highestrating");
-            textView.setText("Movies Sorted by Rating");
             return true;
         }
 
@@ -115,25 +111,18 @@ public class MainActivity extends Activity {
         private String moviesJsonStr;
         private URL defaultUrl;
 
-        private String movieId;
-        private String movieOriginalTitle;
-        private String moviePlotSynopsis;
-        private String movieUserRating;
-        private String movieReleaseDate;
-        private String moviePosterUrl;
+        // base API URL to fetch movie info
+        final String BASE_API_MOVIE_INFO_URL = "http://api.themoviedb.org/3/discover/movie?";
+        // base URL for poster images
+        final String BASE_POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
 
-        // final Strings to build URL to fetch movie info
-        final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
         final String QUERY_PARAM = "sort_by";
         final String SETTINGS_PARAM_POPULARITY_DESC = "popularity.desc";
         // parameter options for settings
         final String SETTINGS_PARAM_HIGHESTRATED_DESC = "vote_average.desc";
 
-        // base url for poster images
-        final String BASE_POSTERIMAGE_URL = "http://image.tmdb.org/t/p/w500";
-
         // API Parameter for building URL
-        final String API_KEY_PARAM = "api_key";
+        final String PARAM_API_KEY = "api_key";
 
 
         /**
@@ -153,14 +142,14 @@ public class MainActivity extends Activity {
             Uri defaultUri;
 
             if (params[1].toLowerCase() == "highestrating") {
-                defaultUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                defaultUri = Uri.parse(BASE_API_MOVIE_INFO_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, SETTINGS_PARAM_HIGHESTRATED_DESC)
-                        .appendQueryParameter(API_KEY_PARAM, params[0])
+                        .appendQueryParameter(PARAM_API_KEY, params[0])
                         .build();
             } else {
-                defaultUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                defaultUri = Uri.parse(BASE_API_MOVIE_INFO_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, SETTINGS_PARAM_POPULARITY_DESC)
-                        .appendQueryParameter(API_KEY_PARAM, params[0])
+                        .appendQueryParameter(PARAM_API_KEY, params[0])
                         .build();
             }
 
@@ -175,7 +164,11 @@ public class MainActivity extends Activity {
             Log.v(LOG_TAG, "moviesJsonStr - all JSON data of movies info: " + moviesJsonStr);
 
             try {
-                setMoviesInfoArrayList(parseMovieJsonData(moviesJsonStr));
+                try {
+                    setMoviesInfoArrayList(parseMovieInfoJsonData(moviesJsonStr));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -256,7 +249,7 @@ public class MainActivity extends Activity {
          * @return
          * @throws JSONException
          */
-        public ArrayList<MovieModel> parseMovieJsonData(String moviesJsonStr) throws JSONException {
+        public ArrayList<MovieModel> parseMovieInfoJsonData(String moviesJsonStr) throws JSONException, MalformedURLException {
 
             final String OWN_RESULTS = "results";
             final String OWN_MOVIE_ID = "id";
@@ -265,6 +258,14 @@ public class MainActivity extends Activity {
             final String OWN_MOVIE_USER_RATING = "vote_average";
             final String OWN_RELEASE_DATE = "release_date";
             final String OWN_POSTER_PATH = "poster_path";
+
+            String movieId;
+            String movieOriginalTitle;
+            String moviePlotSynopsis;
+            String movieUserRating;
+            String movieReleaseDate;
+            String moviePosterUrl;
+            ArrayList<String> movieTrailerUrlArrayList;
 
             JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
             JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(OWN_RESULTS);
@@ -275,24 +276,64 @@ public class MainActivity extends Activity {
                 JSONObject itemJson = moviesJsonObjectArray.getJSONObject(i);
 
                 movieId = itemJson.getString(OWN_MOVIE_ID);
-//            Log.v(LOG_TAG, "movieId - parseMovieJsonData(): " + movieId);
+//            Log.v(LOG_TAG, "movieId - parseMovieInfoJsonData(): " + movieId);
                 movieOriginalTitle = itemJson.getString(OWN_ORIGINAL_TITLE);
-//            Log.v(LOG_TAG, "movieOriginalTitle - parseMovieJsonData(): " + movieOriginalTitle);
+//            Log.v(LOG_TAG, "movieOriginalTitle - parseMovieInfoJsonData(): " + movieOriginalTitle);
                 moviePlotSynopsis = itemJson.getString(OWN_MOVIE_PLOT_SYNOPSIS);
-//            Log.v(LOG_TAG, "moviePlotSynopsis - parseMovieJsonData(): " + moviePlotSynopsis);
+//            Log.v(LOG_TAG, "moviePlotSynopsis - parseMovieInfoJsonData(): " + moviePlotSynopsis);
                 movieUserRating = itemJson.getString(OWN_MOVIE_USER_RATING);
-//            Log.v(LOG_TAG, "movieUserRating - parseMovieJsonData(): " + movieUserRating);
+//            Log.v(LOG_TAG, "movieUserRating - parseMovieInfoJsonData(): " + movieUserRating);
                 movieReleaseDate = itemJson.getString(OWN_RELEASE_DATE);
-//            Log.v(LOG_TAG, "movieReleaseDate - parseMovieJsonData(): " + movieReleaseDate);
-                moviePosterUrl = BASE_POSTERIMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
+//            Log.v(LOG_TAG, "movieReleaseDate - parseMovieInfoJsonData(): " + movieReleaseDate);
+                moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
 
-                MovieModel movieSimple = new MovieModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate);
+                movieTrailerUrlArrayList = parseMovieTrailerUrlJsonData(movieId);
+
+                MovieModel movieSimple = new MovieModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate, movieTrailerUrlArrayList);
                 moviesInfoAsArrayList.add(movieSimple);
             }
-            Log.v(LOG_TAG, "moviesInfoAsArrayList - parseMovieJsonData(): " + moviesInfoAsArrayList.toString());
-            Log.v(LOG_TAG, "moviesInfoAsArrayList.size() - parseMovieJsonData(): " + moviesInfoAsArrayList.size());
+            Log.v(LOG_TAG, "moviesInfoAsArrayList - parseMovieInfoJsonData(): " + moviesInfoAsArrayList.toString());
+            Log.v(LOG_TAG, "moviesInfoAsArrayList.size() - parseMovieInfoJsonData(): " + moviesInfoAsArrayList.size());
 
             return moviesInfoAsArrayList;
+        }
+
+        /**
+         * For each specific movie id, this method will get all the "key"s from API/JSON data, when combined with base Youtube URL, return
+         * an ArrayList of all trailer urls, which can be played directly
+         *
+         * @param movieId
+         * @return
+         * @throws MalformedURLException
+         * @throws JSONException
+         */
+        public ArrayList<String> parseMovieTrailerUrlJsonData(String movieId) throws MalformedURLException, JSONException {
+
+            // base API URL for fetching trailer id
+            final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
+            // base Youtube URL for displaying trailer
+            final String BASE_YOUTUBE_URL = "http://www.youtube.com/v/";
+            final String PARAM_VIDEO = "/videos?";
+            final String OWN_RESULTS = "results";
+            final String OWN_KEY = "key";
+
+            String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + PARAM_API_KEY + "=" + API_KEY;
+            Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
+            URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
+            JSONObject movieTrailerAllJsonDataObject = new JSONObject(getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
+            JSONArray movieTrailerInfoJsonArray = movieTrailerAllJsonDataObject.getJSONArray(OWN_RESULTS);
+            Log.v(LOG_TAG, "movieTrailerInfoJsonArray: " + movieTrailerInfoJsonArray);
+
+            ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
+            for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
+                JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
+                String key = itemJson.getString(OWN_KEY);
+                Log.v(LOG_TAG, "key: " + key);
+                String url = BASE_YOUTUBE_URL + key;
+                Log.v(LOG_TAG, "url: " + url);
+                movieTrailerUrlArrayList.add(url);
+            }
+            return movieTrailerUrlArrayList;
         }
 
         @Override

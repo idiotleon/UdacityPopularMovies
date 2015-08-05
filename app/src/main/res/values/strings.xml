@@ -15,4 +15,7 @@
     <string name="textview_text_release_date_movie_details">Release Date</string>
 
     <string name="textview_text_title_mainactivity">Movies</string>
+
+    <string name="textview_text_row_list">Movie Trailer 1</string>
+    <string name="imageview_description_row_list">Movie Trailer Play Button Image</string>
 </resources>

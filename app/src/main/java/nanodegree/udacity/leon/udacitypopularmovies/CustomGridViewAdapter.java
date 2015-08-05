@@ -31,7 +31,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
     }
 
     public String getPosterImageUrl(int position) {
-        return moviesInfoAsArrayList.get(position).getMovieImageUrl();
+        return getItem(position).getMovieImageUrl();
     }
 
     @Override
