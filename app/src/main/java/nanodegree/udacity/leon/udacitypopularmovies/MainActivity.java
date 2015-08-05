@@ -32,11 +32,13 @@ public class MainActivity extends Activity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private ArrayList<MovieModel> moviesInfo;
-    private ArrayList<String> posterImageUrls = new ArrayList<String>();
-
-    // Variable to store API Key
-    final String API_KEY = "74684520f47c025a768d03e231efe89c";
+    /*
+     *  ============================================================
+     *  Variable to store API Key
+     *  Type your API key here
+     *  ============================================================
+     */
+    final String API_KEY = "######################";
 
     private GridView gridView;
 
@@ -109,7 +111,6 @@ public class MainActivity extends Activity {
 
         private final String LOG_TAG = BuildConnection.class.getSimpleName();
 
-        private String APIKey;
         private ArrayList<MovieModel> moviesInfoAsArrayList;
         private String moviesJsonStr;
         private URL defaultUrl;
@@ -127,16 +128,9 @@ public class MainActivity extends Activity {
         final String SETTINGS_PARAM_POPULARITY_DESC = "popularity.desc";
         // parameter options for settings
         final String SETTINGS_PARAM_HIGHESTRATED_DESC = "vote_average.desc";
-        final String SETTINGS_PARAM_POPULARITY_ASC = "popularity.aesc";
-        final String SETTINGS_PARAM_HIGHESTRATED_ASC = "vote_average.asc";
-        // parameters for parsing data of poster images
-        final String BASE_MOVIES_POSTERIMAGE_API_URL = "http://api.themoviedb.org/3/movie/";
-        final String IMAGE_PARAM = "/images?";
 
         // base url for poster images
         final String BASE_POSTERIMAGE_URL = "http://image.tmdb.org/t/p/w500";
-        final String LANGUAGE_PARAM = "language";
-        final String LANGUAGE = "en";
 
         // API Parameter for building URL
         final String API_KEY_PARAM = "api_key";
@@ -155,9 +149,6 @@ public class MainActivity extends Activity {
 
         @Override
         protected ArrayList<MovieModel> doInBackground(String... params) {
-
-            // APIKey for later use (to build poster image URLs), although I did not find a better solution
-            APIKey = params[0];
 
             Uri defaultUri;
 
@@ -310,66 +301,5 @@ public class MainActivity extends Activity {
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
             gridView.setAdapter(customGridViewAdapter);
         }
-
-
-        /**
-         * Setter method for the URLs of poster images
-         *
-         * @throws JSONException
-         * @throws MalformedURLException
-         *//*
-        public void setPosterImageUrl() throws JSONException, MalformedURLException {
-            String tempMovieId;
-
-            Log.v(LOG_TAG, "moviesInfoAsArrayList - setPosterImageUrl(): " + moviesInfoAsArrayList.toString());
-
-            for (int i = 0; i < moviesInfoAsArrayList.size(); i++) {
-                tempMovieId = moviesInfoAsArrayList.get(i).getMovieId();
-                String posterImageUrlAsString = BASE_MOVIES_POSTERIMAGE_API_URL + tempMovieId + IMAGE_PARAM + API_KEY_PARAM + "=" + APIKey + "&" + LANGUAGE_PARAM + "=" + LANGUAGE;
-                Log.v(LOG_TAG, "posterImageUrlAsString: " + posterImageUrlAsString);
-                URL posterImageAPIUrl = new URL(posterImageUrlAsString);
-                // parsing JSON data to get a poster image URL arraylist.
-                // The element of the arraylist can be the class, or simply strings.
-                String posterImageUrl = parsePosterImageUrlsJsonData(getAllJsonDataAsStringFromAPI(posterImageAPIUrl));
-                moviesInfoAsArrayList.get(i).setMovieImageUrl(posterImageUrl);
-            }
-        }
-
-        *//**
-         * Parsing JSON data of poster image URLs
-         *
-         * @param posterImageJsonDataAsString is an ArrayList whose elements consist by final poster image urls (one url for one movieId)
-         * @throws JSONException
-         *//*
-        public String parsePosterImageUrlsJsonData(String posterImageJsonDataAsString) throws JSONException {
-
-            final String OWN_POSTERS = "posters";
-            final String OWN_FILE_PATH = "file_path";
-
-            JSONObject posterImageJsonData = new JSONObject(posterImageJsonDataAsString);
-            JSONArray posterImageJsonArray = posterImageJsonData.getJSONArray(OWN_POSTERS);
-            Log.v(LOG_TAG, "posterImageJsonArray: " + posterImageJsonArray);
-
-
-            JSONObject itemJson = posterImageJsonArray.getJSONObject(0);
-            Log.v(LOG_TAG, "itemJson: " + itemJson);
-
-            String posterImageUrlFilePath = itemJson.getString(OWN_FILE_PATH);
-
-            String posterImageUrl = BASE_POSTERIMAGE_URL + posterImageUrlFilePath;
-
-            Log.v(LOG_TAG, "posterImageUrl: " + posterImageUrl);
-            return posterImageUrl;
-        }
-
-
-        public ArrayList<String> getPosterImageUrls(ArrayList<MovieModel> movieInfoArrayList) {
-            ArrayList<String> posterImageUrls = new ArrayList<String>();
-            for (int i = 0; i < movieInfoArrayList.size(); i++) {
-                posterImageUrls.add(movieInfoArrayList.get(i).getMovieImageUrl());
-            }
-            Log.v(LOG_TAG, "posterImageUrlsAsStringArrayList: " + posterImageUrls.toString());
-            return posterImageUrls;
-        }*/
     }
 }

@@ -1,0 +1,1 @@
+API is stored in a variable "API_KEY" in MainActivity
