@@ -69,6 +69,7 @@ public class MainActivity extends Activity {
                 detailsIntent.putExtra(CommonConstants.movieReleaseDate, tempMovieModel.getMovieReleaseDate());
                 // Can I putExtra an ArrayList?
                 detailsIntent.putExtra(CommonConstants.movieTrailersUrlArrayList, tempMovieModel.getMovieTrailerUrlArrayList());
+                detailsIntent.putExtra(CommonConstants.movieReviewArrayList, tempMovieModel.getMovieReviewArrayList());
                 startActivity(detailsIntent);
             }
         });
@@ -134,8 +135,6 @@ public class MainActivity extends Activity {
          * @param params
          * @return
          */
-
-
         @Override
         protected ArrayList<MovieModel> doInBackground(String... params) {
 
@@ -266,6 +265,7 @@ public class MainActivity extends Activity {
             String movieReleaseDate;
             String moviePosterUrl;
             ArrayList<String> movieTrailerUrlArrayList;
+            ArrayList<MovieReviewModel> movieReviewArrayList;
 
             JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
             JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(OWN_RESULTS);
@@ -289,7 +289,9 @@ public class MainActivity extends Activity {
 
                 movieTrailerUrlArrayList = parseMovieTrailerUrlJsonData(movieId);
 
-                MovieModel movieSimple = new MovieModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate, movieTrailerUrlArrayList);
+                movieReviewArrayList = parseMovieReviewJsonData(movieId);
+
+                MovieModel movieSimple = new MovieModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate, movieTrailerUrlArrayList, movieReviewArrayList);
                 moviesInfoAsArrayList.add(movieSimple);
             }
             Log.v(LOG_TAG, "moviesInfoAsArrayList - parseMovieInfoJsonData(): " + moviesInfoAsArrayList.toString());
@@ -320,7 +322,9 @@ public class MainActivity extends Activity {
             String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + PARAM_API_KEY + "=" + API_KEY;
             Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
             URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
+            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
             JSONObject movieTrailerAllJsonDataObject = new JSONObject(getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
+
             JSONArray movieTrailerInfoJsonArray = movieTrailerAllJsonDataObject.getJSONArray(OWN_RESULTS);
             Log.v(LOG_TAG, "movieTrailerInfoJsonArray: " + movieTrailerInfoJsonArray);
 
@@ -334,6 +338,42 @@ public class MainActivity extends Activity {
                 movieTrailerUrlArrayList.add(url);
             }
             return movieTrailerUrlArrayList;
+        }
+
+        public ArrayList<MovieReviewModel> parseMovieReviewJsonData(String movieId) throws MalformedURLException, JSONException {
+
+            // base API URL for fetching reviews
+            final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
+            final String PARAM_REVIEWS = "/reviews?";
+
+            final String OWN_RESULTS = "results";
+            final String OWN_AUTHOR = "author";
+            final String OWN_CONTENT = "content";
+            final String OWN_URL = "url";
+
+            String movieReviewAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_REVIEWS + PARAM_API_KEY + "=" + API_KEY;
+            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line355: " + movieReviewAPIUrl);
+            URL movieReviewAPIURL = new URL(movieReviewAPIUrl);
+            String allJsonData = getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
+            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line355: " + allJsonData);
+            JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
+            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line356: " + movieReviewAllJsonDataObject);
+            JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(OWN_RESULTS);
+            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
+
+            ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
+            for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
+                JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
+                String author = itemJson.getString(OWN_AUTHOR);
+                Log.v(LOG_TAG, "author: " + author);
+                String content = itemJson.getString(OWN_CONTENT);
+                Log.v(LOG_TAG, "content: " + content);
+                String url = itemJson.getString(OWN_URL);
+                Log.v(LOG_TAG, "review url: " + url);
+                MovieReviewModel movieReviewModel = new MovieReviewModel(author, content, url);
+                movieReviewArrayList.add(movieReviewModel);
+            }
+            return movieReviewArrayList;
         }
 
         @Override

@@ -18,4 +18,6 @@
 
     <string name="textview_text_row_list">Movie Trailer 1</string>
     <string name="imageview_description_row_list">Movie Trailer Play Button Image</string>
+
+    <string name="favorite_star_button_description">The favorite star button</string>
 </resources>

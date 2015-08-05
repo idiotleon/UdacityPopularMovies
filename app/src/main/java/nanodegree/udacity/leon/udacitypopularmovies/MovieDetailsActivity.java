@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class MovieDetailsActivity extends Activity {
 
     private final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
@@ -28,9 +30,11 @@ public class MovieDetailsActivity extends Activity {
 
     private RatingBar ratingBar;
 
-    private ListView listView;
+    private ListView movieTrailerListView;
+    private ListView movieReviewListView;
 
-    private CustomListViewAdapter customListViewAdapter;
+    private MovieTrailerCustomListViewAdapter movieTrailerListViewAdapter;
+    private MovieReviewCustomListViewAdapter movieReviewListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,21 +49,22 @@ public class MovieDetailsActivity extends Activity {
                 detailsIntent.getStringExtra(CommonConstants.moviePlotSynopsis),
                 detailsIntent.getStringExtra(CommonConstants.movieUserRating),
                 detailsIntent.getStringExtra(CommonConstants.movieReleaseDate),
-                detailsIntent.getStringArrayListExtra(CommonConstants.movieTrailersUrlArrayList)
+                detailsIntent.getStringArrayListExtra(CommonConstants.movieTrailersUrlArrayList),
+                (ArrayList<MovieReviewModel>) detailsIntent.getSerializableExtra(CommonConstants.movieReviewArrayList)
         );
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
         textViewPlotSynopsis = (TextView) findViewById(R.id.textview_plot_synopsis_movie_details);
         textViewReleaseDate = (TextView) findViewById(R.id.textview_release_date_movie_details);
-        imageViewPosterImage = (ImageView) findViewById(R.id.imageview_movie_posterimage);
+        imageViewPosterImage = (ImageView) findViewById(R.id.imageview_movie_poster_image);
 
         ratingBar = (RatingBar) findViewById(R.id.ratingbar_movie_details);
 
-        listView = (ListView) findViewById(R.id.listview_movietrailers);
-        customListViewAdapter = new CustomListViewAdapter(MovieDetailsActivity.this, movieModel.getMovieTrailerUrlArrayList());
+        movieTrailerListView = (ListView) findViewById(R.id.listview_movietrailers);
+        movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(MovieDetailsActivity.this, movieModel.getMovieTrailerUrlArrayList());
         Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieModel.getMovieTrailerUrlArrayList().toString());
-        listView.setAdapter(customListViewAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
+        movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = movieModel.getMovieTrailerUrlArrayList().get(position);
@@ -68,6 +73,20 @@ public class MovieDetailsActivity extends Activity {
                 startActivity(implicitVideoPlayIntent);
             }
         });
+
+        movieReviewListView = (ListView) findViewById(R.id.listview_moviereviews);
+        movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(MovieDetailsActivity.this, movieModel.getMovieReviewArrayList());
+        movieReviewListView.setAdapter(movieReviewListViewAdapter);
+        movieReviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String url = movieModel.getMovieReviewArrayList().get(position).getReviewUrl();
+                Log.v(LOG_TAG, "Review URL: " + url);
+                Intent implicitIntentReviewURLBrowsing = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(implicitIntentReviewURLBrowsing);
+            }
+        });
+
 
         Picasso.with(this).load(movieModel.getMovieImageUrl()).into(imageViewPosterImage);
         Log.v(LOG_TAG, "movieModel.getMovieImageUrl() - Line70, onCreate(): " + movieModel.getMovieImageUrl());
