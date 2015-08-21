@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
      *  Please type your API key here
      *  ============================================================
      */
-    final String API_KEY = "74684520f47c025a768d03e231efe89c";
+    final String API_KEY = "#################";
 
     private GridView gridView;
 
