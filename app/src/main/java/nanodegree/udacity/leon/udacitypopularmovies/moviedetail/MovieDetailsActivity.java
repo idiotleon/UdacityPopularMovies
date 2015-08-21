@@ -27,7 +27,7 @@ public class MovieDetailsActivity extends Activity {
 
     private final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
 
-    private MovieModel movieModel;
+    private MovieModel movieInfo;
 
     private TextView textViewOriginalTitle;
     private TextView textViewPlotSynopsis;
@@ -48,8 +48,12 @@ public class MovieDetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details);
 
-        Bundle data = getIntent().getExtras();
-        movieModel = (MovieModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
+        if (savedInstanceState != null) {
+            movieInfo = savedInstanceState.getParcelable(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
+        } else {
+            Bundle data = getIntent().getExtras();
+            movieInfo = (MovieModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
+        }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
         textViewPlotSynopsis = (TextView) findViewById(R.id.textview_plot_synopsis_movie_details);
@@ -62,7 +66,7 @@ public class MovieDetailsActivity extends Activity {
          * By SharedPreference, I can save the favorite status of a particular movie.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
-        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId(), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId(), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -71,23 +75,23 @@ public class MovieDetailsActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieModel.getMovieId());
+                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieInfo.getMovieId());
                     Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId());
+                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId());
                     Toast.makeText(MovieDetailsActivity.this, "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         movieTrailerListView = (ListView) findViewById(R.id.listview_movietrailers);
-        movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(MovieDetailsActivity.this, movieModel.getMovieTrailerUrlArrayList());
-//        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieModel.getMovieTrailerUrlArrayList().toString());
+        movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(MovieDetailsActivity.this, movieInfo.getMovieTrailerUrlArrayList());
+//        Log.v(LOG_TAG, "movieInfo.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieInfo.getMovieTrailerUrlArrayList().toString());
         movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
         movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = movieModel.getMovieTrailerUrlArrayList().get(position);
+                String url = movieInfo.getMovieTrailerUrlArrayList().get(position);
 //                Log.v(LOG_TAG, "Youtube Trailer URL is: " + url);
                 Intent implicitVideoPlayIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(implicitVideoPlayIntent);
@@ -95,24 +99,24 @@ public class MovieDetailsActivity extends Activity {
         });
 
         movieReviewListView = (ListView) findViewById(R.id.listview_moviereviews);
-        movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(MovieDetailsActivity.this, movieModel.getMovieReviewArrayList());
+        movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(MovieDetailsActivity.this, movieInfo.getMovieReviewArrayList());
         movieReviewListView.setAdapter(movieReviewListViewAdapter);
         movieReviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = movieModel.getMovieReviewArrayList().get(position).getReviewUrl();
+                String url = movieInfo.getMovieReviewArrayList().get(position).getReviewUrl();
 //                Log.v(LOG_TAG, "Review URL: " + url);
                 Intent implicitIntentReviewURLBrowsing = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(implicitIntentReviewURLBrowsing);
             }
         });
 
-        Picasso.with(this).load(movieModel.getMovieImageUrl()).into(imageViewPosterImage);
-//        Log.v(LOG_TAG, "movieModel.getMovieImageUrl() - Line70, onCreate(): " + movieModel.getMovieImageUrl());
-        textViewOriginalTitle.setText("Original Title: " + movieModel.getMovieOriginalTitle());
-        textViewPlotSynopsis.setText("Plot Synopsis: " + movieModel.getMoviePlotSynopsis());
-        ratingBar.setRating(Float.parseFloat(movieModel.getMovieUserRating()));
-        textViewReleaseDate.setText("Release Date: " + movieModel.getMovieReleaseDate());
+        Picasso.with(this).load(movieInfo.getMovieImageUrl()).into(imageViewPosterImage);
+//        Log.v(LOG_TAG, "movieInfo.getMovieImageUrl() - Line70, onCreate(): " + movieInfo.getMovieImageUrl());
+        textViewOriginalTitle.setText("Original Title: " + movieInfo.getMovieOriginalTitle());
+        textViewPlotSynopsis.setText("Plot Synopsis: " + movieInfo.getMoviePlotSynopsis());
+        ratingBar.setRating(Float.parseFloat(movieInfo.getMovieUserRating()));
+        textViewReleaseDate.setText("Release Date: " + movieInfo.getMovieReleaseDate());
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -120,5 +124,12 @@ public class MovieDetailsActivity extends Activity {
                 Toast.makeText(MovieDetailsActivity.this, "You changed rating to: " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
+        super.onSaveInstanceState(outState);
+
     }
 }

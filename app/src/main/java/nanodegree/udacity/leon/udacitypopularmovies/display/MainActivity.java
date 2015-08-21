@@ -58,52 +58,54 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // No matter it's phone or tablet, get movieInfo at first hand.
         if (savedInstanceState != null) {
-            movieInfo = savedInstanceState.getParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE);
+            movieInfo = savedInstanceState.getParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
             Log.v(LOG_TAG, "movieInfo - saveInstanceState: " + movieInfo);
+
+            if (GeneralHelper.isTablet(MainActivity.this)) {
+                Log.v(LOG_TAG, "This is a tablet.");
+                setContentView(R.layout.activity_main_tabletux);
+                Bundle displayFragmentArgs = new Bundle();
+                displayFragmentArgs.putParcelableArrayList(CommonConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER, movieInfo);
+                DisplayFragment displayFragment = new DisplayFragment();
+                displayFragment.setArguments(displayFragmentArgs);
+                getFragmentManager().beginTransaction().
+                        replace(R.layout.fragment_display_tabletux, displayFragment).commit();
+            } else {
+                Log.v(LOG_TAG, "This is a phone.");
+                setContentView(R.layout.activity_main);
+                gridView = (GridView) findViewById(R.id.gridview_mainactivity);
+                customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieInfo);
+                gridView.setAdapter(customGridViewAdapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        MovieModel clickedMovieInfo = (MovieModel) gridView.getItemAtPosition(position);
+                        Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
+                        detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new MovieModel(
+                                clickedMovieInfo.getMovieId(),
+                                clickedMovieInfo.getMovieOriginalTitle(),
+                                clickedMovieInfo.getMovieImageUrl(),
+                                clickedMovieInfo.getMoviePlotSynopsis(),
+                                clickedMovieInfo.getMovieUserRating(),
+                                clickedMovieInfo.getMovieReleaseDate(),
+                                clickedMovieInfo.getMovieTrailerUrlArrayList(),
+                                clickedMovieInfo.getMovieReviewArrayList()
+                        ));
+                        startActivity(detailsIntent);
+                    }
+                });
+            }
         } else {
             parsingForMovieInfo = new ParsingForMovieInfo();
             parsingForMovieInfo.execute(API_KEY, "popularity");
-        }
-
-        // After gettting movieInfo, depending on phone or tablet, setup the layout
-        if (GeneralHelper.isTablet(MainActivity.this)) {
-            Log.v(LOG_TAG, "This is a tablet.");
-            setContentView(R.layout.activity_main_tabletux);
-            getFragmentManager().beginTransaction().
-                    replace(R.layout.fragment_display_tabletux, new DisplayFragment()).commit();
-        } else {
-            Log.v(LOG_TAG, "This is a phone.");
-            setContentView(R.layout.activity_main);
-            gridView = (GridView) findViewById(R.id.gridview_mainactivity);
-            customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieInfo);
-            gridView.setAdapter(customGridViewAdapter);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    MovieModel clickedMovieInfo = (MovieModel) gridView.getItemAtPosition(position);
-                    Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-                    detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new MovieModel(
-                            clickedMovieInfo.getMovieId(),
-                            clickedMovieInfo.getMovieOriginalTitle(),
-                            clickedMovieInfo.getMovieImageUrl(),
-                            clickedMovieInfo.getMoviePlotSynopsis(),
-                            clickedMovieInfo.getMovieUserRating(),
-                            clickedMovieInfo.getMovieReleaseDate(),
-                            clickedMovieInfo.getMovieTrailerUrlArrayList(),
-                            clickedMovieInfo.getMovieReviewArrayList()
-                    ));
-                    startActivity(detailsIntent);
-                }
-            });
         }
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE, movieInfo);
+        savedInstanceState.putParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, movieInfo);
 //        Log.v(LOG_TAG, "movieInfo - onSaveInstanceState: " + movieInfo);
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -196,14 +198,16 @@ public class MainActivity extends Activity {
 
             try {
                 try {
-                    setMoviesInfoArrayList(parseJsonDataForMovieInfo(moviesJsonStr));
+                    ArrayList<MovieModel> movieInfo = parseJsonDataForMovieInfo(moviesJsonStr);
+                    setMoviesInfoArrayList(movieInfo);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return null;
+
+            return movieInfo;
         }
 
         /**
@@ -428,6 +432,42 @@ public class MainActivity extends Activity {
             super.onPostExecute(movieModels);
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
             movieInfo = parsingForMovieInfo.getMoviesInfoArrayList();
+
+            if (GeneralHelper.isTablet(MainActivity.this)) {
+                Log.v(LOG_TAG, "This is a tablet.");
+                setContentView(R.layout.activity_main_tabletux);
+                Bundle displayFragmentArgs = new Bundle();
+                displayFragmentArgs.putParcelableArrayList(CommonConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER, movieInfo);
+                DisplayFragment displayFragment = new DisplayFragment();
+                displayFragment.setArguments(displayFragmentArgs);
+                getFragmentManager().beginTransaction().
+                        replace(R.layout.fragment_display_tabletux, displayFragment).commit();
+            } else {
+                Log.v(LOG_TAG, "This is a phone.");
+                setContentView(R.layout.activity_main);
+                gridView = (GridView) findViewById(R.id.gridview_mainactivity);
+                customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieInfo);
+                gridView.setAdapter(customGridViewAdapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        MovieModel clickedMovieInfo = (MovieModel) gridView.getItemAtPosition(position);
+                        Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
+                        detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new MovieModel(
+                                clickedMovieInfo.getMovieId(),
+                                clickedMovieInfo.getMovieOriginalTitle(),
+                                clickedMovieInfo.getMovieImageUrl(),
+                                clickedMovieInfo.getMoviePlotSynopsis(),
+                                clickedMovieInfo.getMovieUserRating(),
+                                clickedMovieInfo.getMovieReleaseDate(),
+                                clickedMovieInfo.getMovieTrailerUrlArrayList(),
+                                clickedMovieInfo.getMovieReviewArrayList()
+                        ));
+                        startActivity(detailsIntent);
+                    }
+                });
+            }
+
             Log.v(LOG_TAG, "movieInfo after parsing:" + movieInfo.toString());
             gridView.setAdapter(customGridViewAdapter);
         }
