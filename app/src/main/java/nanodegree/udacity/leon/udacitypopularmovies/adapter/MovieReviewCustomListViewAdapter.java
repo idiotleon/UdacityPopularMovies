@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,9 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+
+import nanodegree.udacity.leon.udacitypopularmovies.R;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
 
 /**
  * Created by Leon on 8/5/2015.

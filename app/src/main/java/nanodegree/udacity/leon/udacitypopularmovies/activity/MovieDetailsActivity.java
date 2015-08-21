@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +17,12 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import nanodegree.udacity.leon.udacitypopularmovies.CommonConstants;
+import nanodegree.udacity.leon.udacitypopularmovies.FavoriteStatus;
+import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
+import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
+import nanodegree.udacity.leon.udacitypopularmovies.R;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
 
 public class MovieDetailsActivity extends Activity {
 
@@ -44,17 +49,20 @@ public class MovieDetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details);
 
-        Intent detailsIntent = getIntent();
+        Bundle data = getIntent().getExtras();
+        movieModel = (MovieModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
+        /*
         movieModel = new MovieModel(
-                detailsIntent.getStringExtra(CommonConstants.movieId),
-                detailsIntent.getStringExtra(CommonConstants.movieOriginalTitle),
-                detailsIntent.getStringExtra(CommonConstants.moviePosterImageURL),
-                detailsIntent.getStringExtra(CommonConstants.moviePlotSynopsis),
-                detailsIntent.getStringExtra(CommonConstants.movieUserRating),
-                detailsIntent.getStringExtra(CommonConstants.movieReleaseDate),
-                detailsIntent.getStringArrayListExtra(CommonConstants.movieTrailersUrlArrayList),
-                (ArrayList<MovieReviewModel>) detailsIntent.getSerializableExtra(CommonConstants.movieReviewArrayList)
+                detailsIntent.getStringExtra(CommonConstants.MOVIE_ID),
+                detailsIntent.getStringExtra(CommonConstants.MOVIE_ORIGINAL_TITLE),
+                detailsIntent.getStringExtra(CommonConstants.MOVIE_POSTER_IMAGE),
+                detailsIntent.getStringExtra(CommonConstants.MOVIE_PLOT_SYNOPSIS),
+                detailsIntent.getStringExtra(CommonConstants.MOVIE_USER_RATING),
+                detailsIntent.getStringExtra(CommonConstants.MOVIE_RELEASE_DATE),
+                detailsIntent.getStringArrayListExtra(CommonConstants.MOVIE_TRAILERS_URL_ARRAY_LIST),
+                (ArrayList<MovieReviewModel>) detailsIntent.getSerializableExtra(CommonConstants.MOVIE_REVIEWS_ARRAY_LIST)
         );
+        */
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
         textViewPlotSynopsis = (TextView) findViewById(R.id.textview_plot_synopsis_movie_details);
@@ -84,13 +92,13 @@ public class MovieDetailsActivity extends Activity {
 
         movieTrailerListView = (ListView) findViewById(R.id.listview_movietrailers);
         movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(MovieDetailsActivity.this, movieModel.getMovieTrailerUrlArrayList());
-        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieModel.getMovieTrailerUrlArrayList().toString());
+//        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieModel.getMovieTrailerUrlArrayList().toString());
         movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
         movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = movieModel.getMovieTrailerUrlArrayList().get(position);
-                Log.v(LOG_TAG, "Youtube Trailer URL is: " + url);
+//                Log.v(LOG_TAG, "Youtube Trailer URL is: " + url);
                 Intent implicitVideoPlayIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(implicitVideoPlayIntent);
             }
@@ -103,15 +111,14 @@ public class MovieDetailsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = movieModel.getMovieReviewArrayList().get(position).getReviewUrl();
-                Log.v(LOG_TAG, "Review URL: " + url);
+//                Log.v(LOG_TAG, "Review URL: " + url);
                 Intent implicitIntentReviewURLBrowsing = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(implicitIntentReviewURLBrowsing);
             }
         });
 
-
         Picasso.with(this).load(movieModel.getMovieImageUrl()).into(imageViewPosterImage);
-        Log.v(LOG_TAG, "movieModel.getMovieImageUrl() - Line70, onCreate(): " + movieModel.getMovieImageUrl());
+//        Log.v(LOG_TAG, "movieModel.getMovieImageUrl() - Line70, onCreate(): " + movieModel.getMovieImageUrl());
         textViewOriginalTitle.setText("Original Title: " + movieModel.getMovieOriginalTitle());
         textViewPlotSynopsis.setText("Plot Synopsis: " + movieModel.getMoviePlotSynopsis());
         ratingBar.setRating(Float.parseFloat(movieModel.getMovieUserRating()));
@@ -123,7 +130,5 @@ public class MovieDetailsActivity extends Activity {
                 Toast.makeText(MovieDetailsActivity.this, "You changed rating to: " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 }

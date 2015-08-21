@@ -3,6 +3,8 @@ package nanodegree.udacity.leon.udacitypopularmovies;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
+
 /**
  * This class is just a data wrapper class for an ArrayList of objects of type MovieReviewModel
  */

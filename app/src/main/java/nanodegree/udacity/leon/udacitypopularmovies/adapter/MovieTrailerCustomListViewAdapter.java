@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import nanodegree.udacity.leon.udacitypopularmovies.R;
 
 public class MovieTrailerCustomListViewAdapter extends BaseAdapter {
 
