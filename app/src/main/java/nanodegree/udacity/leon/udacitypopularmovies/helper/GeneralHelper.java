@@ -1,13 +1,20 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 
 /**
- * Created by Leon on 8/5/2015.
+ * Created by Leon on 8/21/2015.
  */
-public class FavoriteStatus {
+public class GeneralHelper {
+
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
 
     public static void markAsFavorite(Context context, String key) {
         SharedPreferences sharedPreferences = PreferenceManager

@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.moviedetail;
 
 import java.io.Serializable;
 import java.util.ArrayList;

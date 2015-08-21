@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.helper;
 
 /**
  * Constants used as keys to store value
@@ -6,7 +6,10 @@ package nanodegree.udacity.leon.udacitypopularmovies;
 public class CommonConstants {
 
     public static final String MOVIE_PARCEL = "movieParcel";
-    public static final String MOVIE_SAVED_INSTANCE_STATE = "movieSavedInstanceState";
+    public static final String MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY = "movieSavedInstanceStateMainActivity";
+    public static final String MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY = "movieSavedInstanceStateDetailActivity";
+    public static final String MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER = "movieInfoDisplayFragmentIdentifier";
+    public static final String MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER = "movieInfoDetailFragmentIdentifier";
     /*
     public static final String MOVIE_ID = "movie_id";
     public static final String MOVIE_ORIGINAL_TITLE = "movie_original_title";
