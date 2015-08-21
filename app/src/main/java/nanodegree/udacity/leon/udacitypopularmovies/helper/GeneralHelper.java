@@ -16,6 +16,7 @@ public class GeneralHelper {
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
+
     public static void markAsFavorite(Context context, String key) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -25,7 +26,7 @@ public class GeneralHelper {
     public static void cancelFavoriteStatus(Context context, String key) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putInt(key, 2).commit();
+        sharedPreferences.edit().putInt(key, 0).commit();
     }
 
     public static int getFavoriteStatus(Context context, String key, int defaultValue) {

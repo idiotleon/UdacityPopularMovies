@@ -3,6 +3,7 @@
 
     <string name="sort_popularity_desc_text">Popularity</string>
     <string name="sort_highest_rating_desc_text">Highest Rating</string>
+    <string name="sort_favorite">Favorites</string>
 
     <string name="textview_text_mainactivity">Movies</string>
 
