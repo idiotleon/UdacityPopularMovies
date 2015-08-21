@@ -1,7 +1,6 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.display;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,9 +25,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.detail.MovieDetailsActivity;
-import nanodegree.udacity.leon.udacitypopularmovies.fragment.DisplayFragment;
+import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
@@ -70,10 +69,12 @@ public class MainActivity extends Activity {
 
         // After gettting movieInfo, depending on phone or tablet, setup the layout
         if (GeneralHelper.isTablet(MainActivity.this)) {
+            Log.v(LOG_TAG, "This is a tablet.");
             setContentView(R.layout.activity_main_tabletux);
             getFragmentManager().beginTransaction().
                     replace(R.layout.fragment_display_tabletux, new DisplayFragment()).commit();
         } else {
+            Log.v(LOG_TAG, "This is a phone.");
             setContentView(R.layout.activity_main);
             gridView = (GridView) findViewById(R.id.gridview_mainactivity);
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieInfo);

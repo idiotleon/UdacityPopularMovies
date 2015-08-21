@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies.fragment;
+package nanodegree.udacity.leon.udacitypopularmovies.display;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +13,7 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
+import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.DetailFragment;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
@@ -25,7 +26,7 @@ public class DisplayFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View displayFragmentView = inflater.inflate(R.layout.fragment_detail_tabletux, null);
+        View displayFragmentView = inflater.inflate(R.layout.fragment_details_tabletux, null);
         gridView = (GridView) displayFragmentView.findViewById(R.id.gridview_displayfragment);
         return displayFragmentView;
     }

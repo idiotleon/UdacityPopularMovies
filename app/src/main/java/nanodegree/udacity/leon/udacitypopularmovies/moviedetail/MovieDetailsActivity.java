@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies.detail;
+package nanodegree.udacity.leon.udacitypopularmovies.moviedetail;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
 
 public class MovieDetailsActivity extends Activity {
@@ -61,7 +62,7 @@ public class MovieDetailsActivity extends Activity {
          * By SharedPreference, I can save the favorite status of a particular movie.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
-        if (1 == FavoriteStatus.getFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId(), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId(), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -70,10 +71,11 @@ public class MovieDetailsActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    FavoriteStatus.markAsFavorite(MovieDetailsActivity.this, movieModel.getMovieId());
+                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieModel.getMovieId());
                     Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    FavoriteStatus.cancelFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId());
+                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId());
+                    Toast.makeText(MovieDetailsActivity.this, "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }
         });
