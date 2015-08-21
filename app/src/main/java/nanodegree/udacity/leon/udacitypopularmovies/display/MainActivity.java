@@ -136,6 +136,19 @@ public class MainActivity extends Activity {
             return true;
         }
 
+        if (id == R.id.show_favorite) {
+            ArrayList<MovieModel> favoriteMovieArrayList = new ArrayList<>();
+            for (int i = 0; i < movieInfo.size(); i++) {
+                if (1 == GeneralHelper.getFavoriteStatus(MainActivity.this, movieInfo.get(i).getMovieId(), 0)) {
+                    favoriteMovieArrayList.add(movieInfo.get(i));
+                }
+            }
+
+            gridView.setAdapter(new CustomGridViewAdapter(MainActivity.this, favoriteMovieArrayList));
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
