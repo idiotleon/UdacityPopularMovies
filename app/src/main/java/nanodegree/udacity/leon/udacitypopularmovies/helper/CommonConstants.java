@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.helper;
 
 /**
  * Constants used as keys to store value

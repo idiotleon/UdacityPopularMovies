@@ -2,7 +2,6 @@ package nanodegree.udacity.leon.udacitypopularmovies.detail;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import nanodegree.udacity.leon.udacitypopularmovies.CommonConstants;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
