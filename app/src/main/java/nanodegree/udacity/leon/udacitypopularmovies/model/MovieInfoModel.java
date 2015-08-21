@@ -6,10 +6,10 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class MovieModel implements Parcelable {
+public class MovieInfoModel implements Parcelable {
 
-    // Movie features
-    private String movieId;
+    // Movie info
+    private Long movieId;
     private String movieOriginalTitle;
     private String movieImageUrl;
     private String moviePlotSynopsis;
@@ -18,7 +18,10 @@ public class MovieModel implements Parcelable {
     private ArrayList<String> movieTrailerUrlArrayList = null;
     private ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
 
-    public MovieModel(String movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
+    public MovieInfoModel() {
+    }
+
+    public MovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
         this.movieId = movieId;
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieImageUrl = movieImageUrl;
@@ -33,6 +36,34 @@ public class MovieModel implements Parcelable {
         this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
     }
 
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
+    }
+
+    public void setMovieOriginalTitle(String movieOriginalTitle) {
+        this.movieOriginalTitle = movieOriginalTitle;
+    }
+
+    public void setMovieImageUrl(String movieImageUrl) {
+        this.movieImageUrl = movieImageUrl;
+    }
+
+    public void setMoviePlotSynopsis(String moviePlotSynopsis) {
+        this.moviePlotSynopsis = moviePlotSynopsis;
+    }
+
+    public void setMovieUserRating(String movieUserRating) {
+        this.movieUserRating = movieUserRating;
+    }
+
+    public void setMovieReleaseDate(String movieReleaseDate) {
+        this.movieReleaseDate = movieReleaseDate;
+    }
+
+    public void setMovieReviewArrayList(ArrayList<MovieReviewModel> movieReviewArrayList) {
+        this.movieReviewArrayList = movieReviewArrayList;
+    }
+
     public ArrayList<MovieReviewModel> getMovieReviewArrayList() {
         return movieReviewArrayList;
     }
@@ -41,7 +72,7 @@ public class MovieModel implements Parcelable {
         return movieTrailerUrlArrayList;
     }
 
-    public String getMovieId() {
+    public Long getMovieId() {
         return movieId;
     }
 
@@ -70,8 +101,8 @@ public class MovieModel implements Parcelable {
         return 0;
     }
 
-    protected MovieModel(Parcel in) {
-        movieId = in.readString();
+    protected MovieInfoModel(Parcel in) {
+        movieId = in.readLong();
         movieOriginalTitle = in.readString();
         movieImageUrl = in.readString();
         moviePlotSynopsis = in.readString();
@@ -83,7 +114,7 @@ public class MovieModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(movieId);
+        dest.writeLong(movieId);
         dest.writeString(movieOriginalTitle);
         dest.writeString(movieImageUrl);
         dest.writeString(moviePlotSynopsis);
@@ -93,15 +124,15 @@ public class MovieModel implements Parcelable {
         dest.writeTypedList(movieReviewArrayList);
     }
 
-    public static final Creator<MovieModel> CREATOR = new Creator<MovieModel>() {
+    public static final Creator<MovieInfoModel> CREATOR = new Creator<MovieInfoModel>() {
         @Override
-        public MovieModel createFromParcel(Parcel in) {
-            return new MovieModel(in);
+        public MovieInfoModel createFromParcel(Parcel in) {
+            return new MovieInfoModel(in);
         }
 
         @Override
-        public MovieModel[] newArray(int size) {
-            return new MovieModel[size];
+        public MovieInfoModel[] newArray(int size) {
+            return new MovieInfoModel[size];
         }
     };
 }

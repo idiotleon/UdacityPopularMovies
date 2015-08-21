@@ -21,13 +21,13 @@ import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomLis
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 
 public class MovieDetailsActivity extends Activity {
 
     private final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
 
-    private MovieModel movieInfo;
+    private MovieInfoModel movieInfo;
 
     private TextView textViewOriginalTitle;
     private TextView textViewPlotSynopsis;
@@ -52,7 +52,7 @@ public class MovieDetailsActivity extends Activity {
             movieInfo = savedInstanceState.getParcelable(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
         } else {
             Bundle data = getIntent().getExtras();
-            movieInfo = (MovieModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
+            movieInfo = (MovieInfoModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);

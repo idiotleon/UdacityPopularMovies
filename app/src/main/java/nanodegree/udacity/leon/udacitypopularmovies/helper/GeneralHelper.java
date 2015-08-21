@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 
-/**
- * Created by Leon on 8/21/2015.
- */
 public class GeneralHelper {
 
     public static boolean isTablet(Context context) {
@@ -25,7 +22,7 @@ public class GeneralHelper {
     public static void cancelFavoriteStatus(Context context, String key) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putInt(key, 2).commit();
+        sharedPreferences.edit().putInt(key, 0).commit();
     }
 
     public static int getFavoriteStatus(Context context, String key, int defaultValue) {

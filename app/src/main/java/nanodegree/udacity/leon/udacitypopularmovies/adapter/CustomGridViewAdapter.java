@@ -10,14 +10,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 
 public class CustomGridViewAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<MovieModel> moviesInfoAsArrayList;
+    private ArrayList<MovieInfoModel> moviesInfoAsArrayList;
 
-    public CustomGridViewAdapter(Context context, ArrayList<MovieModel> moviesInfoAsArrayList) {
+    public CustomGridViewAdapter(Context context, ArrayList<MovieInfoModel> moviesInfoAsArrayList) {
         mContext = context;
         this.moviesInfoAsArrayList = moviesInfoAsArrayList;
     }
@@ -28,7 +28,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public MovieModel getItem(int position) {
+    public MovieInfoModel getItem(int position) {
         return moviesInfoAsArrayList.get(position);
     }
 

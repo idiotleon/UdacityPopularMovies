@@ -24,13 +24,13 @@ import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomLis
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 
 public class DetailFragment extends Fragment {
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
 
-    private MovieModel movie;
+    private MovieInfoModel movie;
 
     private TextView textViewOriginalTitle;
     private TextView textViewPlotSynopsis;
