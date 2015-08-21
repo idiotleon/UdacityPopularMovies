@@ -3,9 +3,6 @@ package nanodegree.udacity.leon.udacitypopularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Leon on 8/5/2015.
- */
 public class MovieReviewModel implements Parcelable {
 
     private String reviewAuthor;

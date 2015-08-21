@@ -16,7 +16,7 @@ public class MovieModel implements Parcelable {
     private String movieUserRating;
     private String movieReleaseDate;
     private ArrayList<String> movieTrailerUrlArrayList = null;
-    private ArrayList<MovieReviewModel> movieReviewArrayList = null;
+    private ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
 
     public MovieModel(String movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
         this.movieId = movieId;
@@ -27,17 +27,6 @@ public class MovieModel implements Parcelable {
         this.movieReleaseDate = movieReleaseDate;
         this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
         this.movieReviewArrayList = movieReviewArrayList;
-    }
-
-    protected MovieModel(Parcel in) {
-        movieId = in.readString();
-        movieOriginalTitle = in.readString();
-        movieImageUrl = in.readString();
-        moviePlotSynopsis = in.readString();
-        movieUserRating = in.readString();
-        movieReleaseDate = in.readString();
-        movieTrailerUrlArrayList = in.createStringArrayList();
-        movieReviewArrayList = in.readParcelable(MovieReviewModel.class.getClassLoader());
     }
 
     public void setMovieTrailerUrlArrayList(ArrayList<String> movieTrailerUrlArrayList) {
@@ -79,6 +68,17 @@ public class MovieModel implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    protected MovieModel(Parcel in) {
+        movieId = in.readString();
+        movieOriginalTitle = in.readString();
+        movieImageUrl = in.readString();
+        moviePlotSynopsis = in.readString();
+        movieUserRating = in.readString();
+        movieReleaseDate = in.readString();
+        movieTrailerUrlArrayList = in.createStringArrayList();
+        in.readTypedList(movieReviewArrayList, MovieReviewModel.CREATOR);
     }
 
     @Override

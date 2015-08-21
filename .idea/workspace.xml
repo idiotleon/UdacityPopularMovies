@@ -5,29 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af0f07b8-c32a-4c1f-9986-7f3eb8dd3dbc" name="Default" comment="">
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\.idea\inspectionProfiles\Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\.idea\inspectionProfiles\profiles_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\CustomGridViewAdapter.java" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\MainActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\MovieDetailsActivity.java" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\MovieModel.java" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\MovieReviewCustomListViewAdapter.java" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\MovieReviewModel.java" afterPath="" />
-      <change type="DELETED" beforePath="E:\Downloads\Github\UdacityPopularMovies\app\src\main\java\nanodegree\udacity\leon\udacitypopularmovies\MovieTrailerCustomListViewAdapter.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/gradle_project_sync_data.bin" afterPath="$PROJECT_DIR$/build/intermediates/gradle_project_sync_data.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/outputFileStates.bin" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/outputFileStates.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.4/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CommonConstants.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CommonConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieReviewDataWrapper.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieReviewDataWrapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieModel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieReviewModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieReviewModel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="UdacityPopularMovies.iws" />
@@ -57,28 +40,7 @@
     <favorites_list name="UdacityPopularMovies" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/activity/MainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2626728">
-              <caret line="64" column="74" selection-start-line="64" selection-start-column="74" selection-end-line="64" selection-end-column="74" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2705#4895#0" expanded="true" />
-                <element signature="e#4894#4895#0" expanded="true" />
-                <element signature="method#doInBackground#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#setMoviesInfoArrayList#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
-                <element signature="e#9594#9664#0" expanded="false" />
-                <element signature="method#getAllJsonDataAsStringFromAPI#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#parseJsonDataForMovieInfo#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#parseJsonDataForMovieReview#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -1526,10 +1488,10 @@
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/MovieDetailsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/helper/BuildConnectionHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CommonConstants.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieReviewModel.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/activity/MovieDetailsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/activity/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieReviewModel.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieModel.java" />
       </list>
     </option>
   </component>
@@ -1537,8 +1499,8 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="712" />
-    <option name="y" value="8" />
+    <option name="x" value="747" />
+    <option name="y" value="5" />
     <option name="width" value="860" />
     <option name="height" value="861" />
   </component>
@@ -1891,8 +1853,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="712" y="8" width="860" height="861" extended-state="0" />
-    <editor active="true" />
+    <frame x="747" y="5" width="860" height="861" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30790192" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -1906,9 +1868,9 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32842416" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" x="-21" y="59" width="1397" height="765" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32842416" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" x="3" y="62" width="797" height="799" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22709164" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32842416" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1939,14 +1901,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://E:/Software/Matrix/Android/AndroidSDK/sources/android-22/android/os/Parcel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.2242703">
-          <caret line="181" column="19" selection-start-line="181" selection-start-column="19" selection-end-line="181" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/CommonConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4423963">
@@ -1963,50 +1917,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieReviewModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.29032257">
-          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#872#873#0" expanded="true" />
-            <element signature="e#927#928#0" expanded="true" />
-            <element signature="e#1001#1002#0" expanded="true" />
-            <element signature="e#1058#1059#0" expanded="true" />
-            <element signature="e#1334#1335#0" expanded="true" />
-            <element signature="e#1358#1359#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.1013825">
-          <caret line="40" column="5" selection-start-line="40" selection-start-column="5" selection-end-line="40" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2589#2590#0" expanded="true" />
-            <element signature="e#2613#2614#0" expanded="true" />
-            <element signature="e#3208#3209#0" expanded="true" />
-            <element signature="e#3257#3258#0" expanded="true" />
-            <element signature="e#3325#3326#0" expanded="true" />
-            <element signature="e#3376#3377#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/activity/MovieDetailsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.3179724">
-          <caret line="121" column="44" selection-start-line="121" selection-start-column="44" selection-end-line="121" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/activity/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2626728">
-          <caret line="64" column="74" selection-start-line="64" selection-start-column="74" selection-end-line="64" selection-end-column="74" />
+        <state vertical-scroll-proportion="0.44700462">
+          <caret line="69" column="56" selection-start-line="69" selection-start-column="56" selection-end-line="69" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2705#4895#0" expanded="true" />
@@ -2017,6 +1931,132 @@
             <element signature="method#getAllJsonDataAsStringFromAPI#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
             <element signature="method#parseJsonDataForMovieInfo#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
             <element signature="method#parseJsonDataForMovieReview#0;class#ParsingForMovieInfo#0;class#MainActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieReviewModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44859812">
+          <caret line="8" column="31" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://E:/Software/Matrix/Android/AndroidSDK/sources/android-22/android/os/Parcel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3317757">
+          <caret line="2478" column="0" selection-start-line="2478" selection-start-column="0" selection-end-line="2478" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#87352#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#14199#14200#0" expanded="false" />
+            <element signature="e#14249#14250#0" expanded="false" />
+            <element signature="e#14294#14295#0" expanded="false" />
+            <element signature="e#14341#14342#0" expanded="false" />
+            <element signature="e#15809#15810#0" expanded="false" />
+            <element signature="e#15858#15859#0" expanded="false" />
+            <element signature="e#16040#16041#0" expanded="false" />
+            <element signature="e#16090#16091#0" expanded="false" />
+            <element signature="e#16244#16245#0" expanded="false" />
+            <element signature="e#16297#16298#0" expanded="false" />
+            <element signature="e#16591#16592#0" expanded="false" />
+            <element signature="e#16644#16645#0" expanded="false" />
+            <element signature="e#16959#16960#0" expanded="false" />
+            <element signature="e#17010#17011#0" expanded="false" />
+            <element signature="e#17227#17228#0" expanded="false" />
+            <element signature="e#17281#17282#0" expanded="false" />
+            <element signature="e#17599#17600#0" expanded="false" />
+            <element signature="e#17654#17655#0" expanded="false" />
+            <element signature="e#18523#18524#0" expanded="false" />
+            <element signature="e#18572#18573#0" expanded="false" />
+            <element signature="e#19086#19087#0" expanded="false" />
+            <element signature="e#19145#19146#0" expanded="false" />
+            <element signature="e#19877#19878#0" expanded="false" />
+            <element signature="e#19941#19942#0" expanded="false" />
+            <element signature="e#21036#21037#0" expanded="false" />
+            <element signature="e#21083#21084#0" expanded="false" />
+            <element signature="e#21266#21267#0" expanded="false" />
+            <element signature="e#21314#21315#0" expanded="false" />
+            <element signature="e#21501#21502#0" expanded="false" />
+            <element signature="e#21550#21551#0" expanded="false" />
+            <element signature="e#21756#21757#0" expanded="false" />
+            <element signature="e#21806#21807#0" expanded="false" />
+            <element signature="e#21987#21988#0" expanded="false" />
+            <element signature="e#22037#22038#0" expanded="false" />
+            <element signature="e#22249#22250#0" expanded="false" />
+            <element signature="e#22302#22303#0" expanded="false" />
+            <element signature="e#22485#22486#0" expanded="false" />
+            <element signature="e#22541#22542#0" expanded="false" />
+            <element signature="e#23616#23617#0" expanded="false" />
+            <element signature="e#23645#23646#0" expanded="false" />
+            <element signature="e#24245#24246#0" expanded="false" />
+            <element signature="e#24304#24305#0" expanded="false" />
+            <element signature="e#26047#26048#0" expanded="false" />
+            <element signature="e#26089#26090#0" expanded="false" />
+            <element signature="e#55316#55317#0" expanded="false" />
+            <element signature="e#55364#55365#0" expanded="false" />
+            <element signature="e#55496#55497#0" expanded="false" />
+            <element signature="e#55545#55546#0" expanded="false" />
+            <element signature="e#55688#55689#0" expanded="false" />
+            <element signature="e#55738#55739#0" expanded="false" />
+            <element signature="e#55900#55901#0" expanded="false" />
+            <element signature="e#55951#55952#0" expanded="false" />
+            <element signature="e#56081#56082#0" expanded="false" />
+            <element signature="e#56132#56133#0" expanded="false" />
+            <element signature="e#56502#56503#0" expanded="false" />
+            <element signature="e#56559#56560#0" expanded="false" />
+            <element signature="e#57542#57543#0" expanded="false" />
+            <element signature="e#57589#57590#0" expanded="false" />
+            <element signature="e#59183#59184#0" expanded="false" />
+            <element signature="e#59222#59223#0" expanded="false" />
+            <element signature="e#60178#60179#0" expanded="false" />
+            <element signature="e#60228#60229#0" expanded="false" />
+            <element signature="e#61581#61582#0" expanded="false" />
+            <element signature="e#61637#61638#0" expanded="false" />
+            <element signature="e#62252#62253#0" expanded="false" />
+            <element signature="e#62301#62302#0" expanded="false" />
+            <element signature="e#67941#67949#0" expanded="false" />
+            <element signature="e#68687#68696#0" expanded="false" />
+            <element signature="e#71653#71654#0" expanded="false" />
+            <element signature="e#71695#71696#0" expanded="false" />
+            <element signature="e#80149#80150#0" expanded="false" />
+            <element signature="e#80194#80195#0" expanded="false" />
+            <element signature="e#82228#82276#0" expanded="false" />
+            <element signature="e#82371#82372#0" expanded="false" />
+            <element signature="e#82428#82429#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Software/Matrix/Android/AndroidSDK/platforms/android-22/android.jar!/android/os/Parcel.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.29925188">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/activity/MovieDetailsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3317757">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38785046">
+          <caret line="35" column="54" selection-start-line="35" selection-start-column="54" selection-end-line="35" selection-end-column="54" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1474#1475#0" expanded="true" />
+            <element signature="e#1517#1518#0" expanded="true" />
+            <element signature="e#3204#3205#0" expanded="true" />
+            <element signature="e#3253#3254#0" expanded="true" />
           </folding>
         </state>
       </provider>
