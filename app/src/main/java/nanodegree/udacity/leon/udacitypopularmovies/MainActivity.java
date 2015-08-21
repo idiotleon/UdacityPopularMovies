@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies.activity;
+package nanodegree.udacity.leon.udacitypopularmovies;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,9 +25,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import nanodegree.udacity.leon.udacitypopularmovies.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.R;
+import nanodegree.udacity.leon.udacitypopularmovies.detail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
 
@@ -68,8 +67,6 @@ public class MainActivity extends Activity {
         } else {
             parsingForMovieInfo = new ParsingForMovieInfo();
             parsingForMovieInfo.execute(API_KEY, "popularity");
-//        movieInfo = parsingForMovieInfo.getMoviesInfoArrayList();
-//        Log.v(LOG_TAG, "movieInfo after parsing:" + movieInfo.toString());
         }
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -87,18 +84,6 @@ public class MainActivity extends Activity {
                         clickedMovieInfo.getMovieTrailerUrlArrayList(),
                         clickedMovieInfo.getMovieReviewArrayList()
                 ));
-                /*
-                detailsIntent.putExtra(CommonConstants.MOVIE_ID, clickedMovieInfo.getMovieId());
-                detailsIntent.putExtra(CommonConstants.MOVIE_ORIGINAL_TITLE, clickedMovieInfo.getMovieOriginalTitle());
-                detailsIntent.putExtra(CommonConstants.MOVIE_POSTER_IMAGE, clickedMovieInfo.getMovieImageUrl());
-                Log.v(LOG_TAG, "clickedMovieInfo.getMovieImageUrl() - MainActivity: " + clickedMovieInfo.getMovieImageUrl());
-                detailsIntent.putExtra(CommonConstants.MOVIE_PLOT_SYNOPSIS, clickedMovieInfo.getMoviePlotSynopsis());
-                detailsIntent.putExtra(CommonConstants.MOVIE_USER_RATING, clickedMovieInfo.getMovieUserRating());
-                detailsIntent.putExtra(CommonConstants.MOVIE_RELEASE_DATE, clickedMovieInfo.getMovieReleaseDate());
-                // Can I putExtra an ArrayList?
-                detailsIntent.putExtra(CommonConstants.MOVIE_TRAILERS_URL_ARRAY_LIST, clickedMovieInfo.getMovieTrailerUrlArrayList());
-                detailsIntent.putExtra(CommonConstants.MOVIE_REVIEWS_ARRAY_LIST, clickedMovieInfo.getMovieReviewArrayList());
-                */
                 startActivity(detailsIntent);
             }
         });
@@ -106,9 +91,8 @@ public class MainActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // How to save all the movie data (in parcelables)
         savedInstanceState.putParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE, movieInfo);
-        Log.v(LOG_TAG, "movieInfo - onSaveInstanceState: " + movieInfo);
+//        Log.v(LOG_TAG, "movieInfo - onSaveInstanceState: " + movieInfo);
         super.onSaveInstanceState(savedInstanceState);
     }
 

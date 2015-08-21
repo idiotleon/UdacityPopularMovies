@@ -1,10 +1,10 @@
-package nanodegree.udacity.leon.udacitypopularmovies.activity;
+package nanodegree.udacity.leon.udacitypopularmovies.detail;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Movie;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import nanodegree.udacity.leon.udacitypopularmovies.CommonConstants;
-import nanodegree.udacity.leon.udacitypopularmovies.FavoriteStatus;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
@@ -51,18 +50,6 @@ public class MovieDetailsActivity extends Activity {
 
         Bundle data = getIntent().getExtras();
         movieModel = (MovieModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
-        /*
-        movieModel = new MovieModel(
-                detailsIntent.getStringExtra(CommonConstants.MOVIE_ID),
-                detailsIntent.getStringExtra(CommonConstants.MOVIE_ORIGINAL_TITLE),
-                detailsIntent.getStringExtra(CommonConstants.MOVIE_POSTER_IMAGE),
-                detailsIntent.getStringExtra(CommonConstants.MOVIE_PLOT_SYNOPSIS),
-                detailsIntent.getStringExtra(CommonConstants.MOVIE_USER_RATING),
-                detailsIntent.getStringExtra(CommonConstants.MOVIE_RELEASE_DATE),
-                detailsIntent.getStringArrayListExtra(CommonConstants.MOVIE_TRAILERS_URL_ARRAY_LIST),
-                (ArrayList<MovieReviewModel>) detailsIntent.getSerializableExtra(CommonConstants.MOVIE_REVIEWS_ARRAY_LIST)
-        );
-        */
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
         textViewPlotSynopsis = (TextView) findViewById(R.id.textview_plot_synopsis_movie_details);
@@ -83,10 +70,12 @@ public class MovieDetailsActivity extends Activity {
         favoriteStatusCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
+                if (isChecked) {
                     FavoriteStatus.markAsFavorite(MovieDetailsActivity.this, movieModel.getMovieId());
-                else
+                    Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
+                } else {
                     FavoriteStatus.cancelFavoriteStatus(MovieDetailsActivity.this, movieModel.getMovieId());
+                }
             }
         });
 
