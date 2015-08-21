@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gridview_mainactivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/textview_mainactivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/textview_text_mainactivity"
-        android:textSize="24sp" />
-
-    <GridView
-        android:id="@+id/gridview_mainactivity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/textview_mainactivity"
-        android:numColumns="2"
-        android:verticalSpacing="20dp"></GridView>
-</RelativeLayout>
+    android:layout_height="match_parent"
+    android:columnWidth="190sp"
+    android:gravity="center"
+    android:horizontalSpacing="0dp"
+    android:numColumns="auto_fit"
+    android:verticalSpacing="0dp"></GridView>
 

@@ -1,4 +1,4 @@
-package nanodegree.udacity.leon.udacitypopularmovies;
+package nanodegree.udacity.leon.udacitypopularmovies.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
 
 public class CustomGridViewAdapter extends BaseAdapter {
 
@@ -31,7 +33,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
     }
 
     public String getPosterImageUrl(int position) {
-        return moviesInfoAsArrayList.get(position).getMovieImageUrl();
+        return getItem(position).getMovieImageUrl();
     }
 
     @Override
