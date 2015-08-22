@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
             movieInfo = savedInstanceState.getParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
             Log.v(LOG_TAG, "movieInfo - saveInstanceState: " + movieInfo);
             customSetContentView(movieInfo);
-        } else if (dbHelper.getAllMovieInfo() != null) {
+        } else if ((dbHelper.getAllMovieInfo()).size() > 0) {
             movieInfo = dbHelper.getAllMovieInfo();
             customSetContentView(movieInfo);
             // For update (database) purpose
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
             DisplayFragment displayFragment = new DisplayFragment();
             displayFragment.setArguments(displayFragmentArgs);
             getFragmentManager().beginTransaction().
-                    replace(R.layout.fragment_display_tabletux, displayFragment).commit();
+                    replace(R.id.tabletux_container1, displayFragment).commit();
         } else {
             Log.v(LOG_TAG, "This is a phone.");
             setContentView(R.layout.activity_main);
@@ -426,12 +426,12 @@ public class MainActivity extends Activity {
             final String OWN_URL = "url";
 
             String movieReviewAPIUrl = BASE_API_TRAILER_URL + movieId.toString() + PARAM_REVIEWS + PARAM_API_KEY + "=" + API_KEY;
-//            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line355: " + movieReviewAPIUrl);
+//            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line428: " + movieReviewAPIUrl);
             URL movieReviewAPIURL = new URL(movieReviewAPIUrl);
             String allJsonData = getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
-//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line355: " + allJsonData);
+//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line431: " + allJsonData);
             JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
-//            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line356: " + movieReviewAllJsonDataObject);
+            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
             JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(OWN_RESULTS);
 //            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
 
@@ -457,44 +457,10 @@ public class MainActivity extends Activity {
             movieInfo = parsingForMovieInfo.getMoviesInfoArrayList();
 
             updateDatabase(movieInfo);
-
-            if (GeneralHelper.isTablet(MainActivity.this)) {
-                Log.v(LOG_TAG, "This is a tablet.");
-                setContentView(R.layout.activity_main_tabletux);
-                Bundle displayFragmentArgs = new Bundle();
-                displayFragmentArgs.putParcelableArrayList(CommonConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER, movieInfo);
-                DisplayFragment displayFragment = new DisplayFragment();
-                displayFragment.setArguments(displayFragmentArgs);
-                getFragmentManager().beginTransaction().
-                        replace(R.layout.fragment_display_tabletux, displayFragment).commit();
-            } else {
-                Log.v(LOG_TAG, "This is a phone.");
-                setContentView(R.layout.activity_main);
-                gridView = (GridView) findViewById(R.id.gridview_mainactivity);
-                customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieInfo);
-                gridView.setAdapter(customGridViewAdapter);
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        MovieInfoModel clickedMovieInfo = (MovieInfoModel) gridView.getItemAtPosition(position);
-                        Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-                        detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new MovieInfoModel(
-                                clickedMovieInfo.getMovieId(),
-                                clickedMovieInfo.getMovieOriginalTitle(),
-                                clickedMovieInfo.getMovieImageUrl(),
-                                clickedMovieInfo.getMoviePlotSynopsis(),
-                                clickedMovieInfo.getMovieUserRating(),
-                                clickedMovieInfo.getMovieReleaseDate(),
-                                clickedMovieInfo.getMovieTrailerUrlArrayList(),
-                                clickedMovieInfo.getMovieReviewArrayList()
-                        ));
-                        startActivity(detailsIntent);
-                    }
-                });
-            }
+            customSetContentView(movieInfo);
 
             Log.v(LOG_TAG, "movieInfo after parsing:" + movieInfo.toString());
-            gridView.setAdapter(customGridViewAdapter);
+//            gridView.setAdapter(customGridViewAdapter);
         }
 
         private void updateDatabase(ArrayList<MovieInfoModel> movieInfoArrayList) {

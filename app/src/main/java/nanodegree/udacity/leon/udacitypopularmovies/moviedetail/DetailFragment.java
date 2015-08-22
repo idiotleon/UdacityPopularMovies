@@ -72,7 +72,7 @@ public class DetailFragment extends Fragment {
          * By SharedPreference, I can save the favorite status of a particular movie.
          */
         favoriteStatusCheckBox = (CheckBox) detailFragmentView.findViewById(R.id.checkbox_favorite_star_button_tabletux);
-        if (1 == GeneralHelper.getFavoriteStatus(getActivity(), movie.getMovieId(), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(getActivity(), movie.getMovieId().toString(), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -81,10 +81,10 @@ public class DetailFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(getActivity(), movie.getMovieId());
+                    GeneralHelper.markAsFavorite(getActivity(), movie.getMovieId().toString());
                     Toast.makeText(getActivity(), "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(getActivity(), movie.getMovieId());
+                    GeneralHelper.cancelFavoriteStatus(getActivity(), movie.getMovieId().toString());
                     Toast.makeText(getActivity(), "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }

@@ -66,7 +66,7 @@ public class MovieDetailsActivity extends Activity {
          * By SharedPreference, I can save the favorite status of a particular movie.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
-        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId(), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId().toString(), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -75,10 +75,10 @@ public class MovieDetailsActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieInfo.getMovieId());
+                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieInfo.getMovieId().toString());
                     Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId());
+                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId().toString());
                     Toast.makeText(MovieDetailsActivity.this, "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }

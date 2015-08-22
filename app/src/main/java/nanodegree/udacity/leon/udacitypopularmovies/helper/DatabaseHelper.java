@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
+import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -37,19 +38,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, versioin);
+        this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createStoredTableQuery = "CREATE TABLE " + STORED_TABLE_NAME + " (" + MOVIE_ID + " LONG PRIMARY KEY " +
-                MOVIE_ORIGINAL_TITLE + " TEXT " +
-                MOVIE_IMAGE_URL + " TEXT " +
-                MOVIE_PLOT_SYNOPSIS + " TEXT " +
-                MOVIE_USER_RATING + " FLOAT " +
+        String createStoredTableQuery = "CREATE TABLE " + STORED_TABLE_NAME + " (" + MOVIE_ID + " LONG PRIMARY KEY, " +
+                MOVIE_ORIGINAL_TITLE + " TEXT, " +
+                MOVIE_IMAGE_URL + " TEXT, " +
+                MOVIE_PLOT_SYNOPSIS + " TEXT, " +
+                MOVIE_USER_RATING + " FLOAT, " +
                 // todo: Date type might be better
-                MOVIE_RELEASE_DATE + " TEXT " +
-                MOVIE_TRAILER_URL_JSON_STRING + " TEXT " +
-                MOVIE_REVIEW_JSON_STRING + " TEXT " +
+                MOVIE_RELEASE_DATE + " TEXT, " +
+                MOVIE_TRAILER_URL_JSON_STRING + " TEXT, " +
+                MOVIE_REVIEW_JSON_STRING + " TEXT, " +
                 MOVIE_FAVORITE_STATUS + " BOOLEAN)";
         Log.v(LOG_TAG, "createStoredTableQuery: " + createStoredTableQuery);
         db.execSQL(createStoredTableQuery);
@@ -139,6 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String getAllMovieInfoQuery = "SELECT * FROM " + STORED_TABLE_NAME;
         Cursor cursor = db.rawQuery(getAllMovieInfoQuery, null);
+        cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Gson gson = new Gson();
             MovieInfoModel movieInfo = new MovieInfoModel();

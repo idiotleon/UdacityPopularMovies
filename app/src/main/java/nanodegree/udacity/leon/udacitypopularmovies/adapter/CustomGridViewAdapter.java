@@ -50,7 +50,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        Picasso.with(mContext).load(getPosterImageUrl(position)).into(imageView);
+        Picasso.with(mContext).load(getPosterImageUrl(position)).resize(1000, 1000).fit().into(imageView);
         return imageView;
     }
 }
