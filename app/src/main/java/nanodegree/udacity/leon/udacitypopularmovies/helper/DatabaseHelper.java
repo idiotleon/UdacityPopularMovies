@@ -12,9 +12,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
-import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -74,12 +73,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(updateDatabaseQuery);
     }
 
-    public void updateTableData(MovieInfoModel movieInfo) {
+    public void updateTableData(CompleteMovieInfoModel movieInfo) {
         if (checkMovieInfoStored(movieInfo)) updateMovieInfo(movieInfo);
         else insertMovieInfo(movieInfo);
     }
 
-    public boolean checkMovieInfoStored(MovieInfoModel movieInfo) {
+    public boolean checkMovieInfoStored(CompleteMovieInfoModel movieInfo) {
         Log.v(LOG_TAG, "movieInfo, checkMovieInfoStored - Line81, DatabaseHelper: " + movieInfo.toString());
         SQLiteDatabase db = this.getReadableDatabase();
         String checkStoredQuery = "SELECT " + MOVIE_ID + " FROM " + STORED_TABLE_NAME + " WHERE " + MOVIE_ID + " = " + movieInfo.getMovieId().toString();
@@ -91,7 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public void insertMovieInfo(MovieInfoModel movieInfo) {
+    public void insertMovieInfo(CompleteMovieInfoModel movieInfo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(MOVIE_ID, movieInfo.getMovieId());
@@ -106,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(STORED_TABLE_NAME, null, contentValues);
     }
 
-    public void updateMovieInfo(MovieInfoModel movieInfo) {
+    public void updateMovieInfo(CompleteMovieInfoModel movieInfo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(MOVIE_ID, movieInfo.getMovieId());
@@ -128,23 +127,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return gsonizedData;
     }
 
-    public boolean CheckFavoriteStatus(MovieInfoModel movieInfo) {
+    public boolean CheckFavoriteStatus(CompleteMovieInfoModel movieInfo) {
         if (1 == GeneralHelper.getFavoriteStatus(context, movieInfo.getMovieId().toString(), 0))
             return true;
         return false;
     }
 
-    public ArrayList<MovieInfoModel> getAllMovieInfo() {
+    public ArrayList<CompleteMovieInfoModel> getAllMovieInfo() {
         Log.v(LOG_TAG, "getAllMovieInfo() executed.");
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<MovieInfoModel> allMovieInfoArrayList = new ArrayList<>();
+        ArrayList<CompleteMovieInfoModel> allMovieInfoArrayList = new ArrayList<>();
 
         String getAllMovieInfoQuery = "SELECT * FROM " + STORED_TABLE_NAME;
         Cursor cursor = db.rawQuery(getAllMovieInfoQuery, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Gson gson = new Gson();
-            MovieInfoModel movieInfo = new MovieInfoModel();
+            CompleteMovieInfoModel movieInfo = new CompleteMovieInfoModel();
             movieInfo.setMovieId(cursor.getLong(cursor.getColumnIndex(MOVIE_ID)));
             movieInfo.setMovieOriginalTitle(cursor.getString(cursor.getColumnIndex(MOVIE_ORIGINAL_TITLE)));
             movieInfo.setMoviePlotSynopsis(cursor.getString(cursor.getColumnIndex(MOVIE_PLOT_SYNOPSIS)));
@@ -162,17 +161,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return allMovieInfoArrayList;
     }
 
-    public ArrayList<MovieInfoModel> getAllMovieInfoOrderByUserRating() {
+    public ArrayList<CompleteMovieInfoModel> getAllMovieInfoOrderByUserRating() {
         Log.v(LOG_TAG, "getAllMovieInfoOrderByUserRating() executed.");
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<MovieInfoModel> allMovieInfoOrderByUserRatingArrayList = new ArrayList<>();
+        ArrayList<CompleteMovieInfoModel> allMovieInfoOrderByUserRatingArrayList = new ArrayList<>();
 
         String getAllMovieInfoOrderByUserRatingQuery = "SELECT * FROM " + STORED_TABLE_NAME + " ORDER BY " + MOVIE_USER_RATING;
         Log.v(LOG_TAG, "getAllMovieInfoOrderByUserRatingQuery: " + getAllMovieInfoOrderByUserRatingQuery);
         Cursor cursor = db.rawQuery(getAllMovieInfoOrderByUserRatingQuery, null);
         while (!cursor.isAfterLast()) {
             Gson gson = new Gson();
-            MovieInfoModel movieInfo = new MovieInfoModel();
+            CompleteMovieInfoModel movieInfo = new CompleteMovieInfoModel();
             movieInfo.setMovieId(cursor.getLong(cursor.getColumnIndex(MOVIE_ID)));
             movieInfo.setMovieOriginalTitle(cursor.getString(cursor.getColumnIndex(MOVIE_ORIGINAL_TITLE)));
             movieInfo.setMoviePlotSynopsis(cursor.getString(cursor.getColumnIndex(MOVIE_PLOT_SYNOPSIS)));

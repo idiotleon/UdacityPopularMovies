@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class MovieInfoModel implements Parcelable {
+public class CompleteMovieInfoModel implements Parcelable {
 
     // Movie info
     private Long movieId;
@@ -18,10 +18,10 @@ public class MovieInfoModel implements Parcelable {
     private ArrayList<String> movieTrailerUrlArrayList = null;
     private ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
 
-    public MovieInfoModel() {
+    public CompleteMovieInfoModel() {
     }
 
-    public MovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
+    public CompleteMovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
         this.movieId = movieId;
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieImageUrl = movieImageUrl;
@@ -101,7 +101,7 @@ public class MovieInfoModel implements Parcelable {
         return 0;
     }
 
-    protected MovieInfoModel(Parcel in) {
+    protected CompleteMovieInfoModel(Parcel in) {
         movieId = in.readLong();
         movieOriginalTitle = in.readString();
         movieImageUrl = in.readString();
@@ -124,15 +124,15 @@ public class MovieInfoModel implements Parcelable {
         dest.writeTypedList(movieReviewArrayList);
     }
 
-    public static final Creator<MovieInfoModel> CREATOR = new Creator<MovieInfoModel>() {
+    public static final Creator<CompleteMovieInfoModel> CREATOR = new Creator<CompleteMovieInfoModel>() {
         @Override
-        public MovieInfoModel createFromParcel(Parcel in) {
-            return new MovieInfoModel(in);
+        public CompleteMovieInfoModel createFromParcel(Parcel in) {
+            return new CompleteMovieInfoModel(in);
         }
 
         @Override
-        public MovieInfoModel[] newArray(int size) {
-            return new MovieInfoModel[size];
+        public CompleteMovieInfoModel[] newArray(int size) {
+            return new CompleteMovieInfoModel[size];
         }
     };
 }

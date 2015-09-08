@@ -13,7 +13,7 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.DetailFragment;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
@@ -34,12 +34,12 @@ public class DisplayFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ArrayList<MovieInfoModel> movieModelArrayList = getArguments().getParcelableArrayList(CommonConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
+        ArrayList<CompleteMovieInfoModel> movieModelArrayList = getArguments().getParcelableArrayList(CommonConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
         gridView.setAdapter(new CustomGridViewAdapter(getActivity(), movieModelArrayList));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MovieInfoModel clickedMovieInfo = (MovieInfoModel) gridView.getItemAtPosition(position);
+                CompleteMovieInfoModel clickedMovieInfo = (CompleteMovieInfoModel) gridView.getItemAtPosition(position);
                 Bundle detailsArgs = new Bundle();
                 detailsArgs.putParcelable(CommonConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER, clickedMovieInfo);
                 DetailFragment detailFragment = new DetailFragment();

@@ -27,8 +27,7 @@ import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.helper.DatabaseHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
@@ -51,7 +50,7 @@ public class MainActivity extends Activity {
 
     private CustomGridViewAdapter customGridViewAdapter;
 
-    private ArrayList<MovieInfoModel> movieInfo;
+    private ArrayList<CompleteMovieInfoModel> movieInfo;
 
     private ParsingJSONForMovieInfo parsingJSONForMovieInfo;
 
@@ -81,7 +80,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void customSetContentView(ArrayList<MovieInfoModel> movieInfo) {
+    private void customSetContentView(ArrayList<CompleteMovieInfoModel> movieInfo) {
         if (GeneralHelper.isTablet(MainActivity.this)) {
             Log.v(LOG_TAG, "This is a tablet.");
             setContentView(R.layout.activity_main_tabletux);
@@ -100,9 +99,9 @@ public class MainActivity extends Activity {
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    MovieInfoModel clickedMovieInfo = (MovieInfoModel) gridView.getItemAtPosition(position);
+                    CompleteMovieInfoModel clickedMovieInfo = (CompleteMovieInfoModel) gridView.getItemAtPosition(position);
                     Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-                    detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new MovieInfoModel(
+                    detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new CompleteMovieInfoModel(
                             clickedMovieInfo.getMovieId(),
                             clickedMovieInfo.getMovieOriginalTitle(),
                             clickedMovieInfo.getMovieImageUrl(),
@@ -164,11 +163,11 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ParsingJSONForMovieInfo extends AsyncTask<String, Void, ArrayList<MovieInfoModel>> {
+    public class ParsingJSONForMovieInfo extends AsyncTask<String, Void, ArrayList<CompleteMovieInfoModel>> {
 
         private final String LOG_TAG = ParsingJSONForMovieInfo.class.getSimpleName();
 
-        private ArrayList<MovieInfoModel> moviesInfoAsArrayList;
+        private ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList;
         private String moviesJsonStr;
         private URL defaultUrl;
 
@@ -187,7 +186,7 @@ public class MainActivity extends Activity {
 
         /**
          * Method doInBackground() will only call 2 setters, returning null.
-         * Method doInBackground()  will set moviesInfoArrayList(as an ArrayList of class MovieInfoModel), and
+         * Method doInBackground()  will set moviesInfoArrayList(as an ArrayList of class CompleteMovieInfoModel), and
          * posterImageURLsArrayList(as an ArrayList of Strings), both of which will be returned by simple getters,
          * within onPostExecute() method.
          *
@@ -195,7 +194,7 @@ public class MainActivity extends Activity {
          * @return
          */
         @Override
-        protected ArrayList<MovieInfoModel> doInBackground(String... params) {
+        protected ArrayList<CompleteMovieInfoModel> doInBackground(String... params) {
 
             Uri defaultUri;
 
@@ -223,7 +222,7 @@ public class MainActivity extends Activity {
 
             try {
                 try {
-                    ArrayList<MovieInfoModel> movieInfo = parseJsonDataForMovieInfo(moviesJsonStr);
+                    ArrayList<CompleteMovieInfoModel> movieInfo = parseJsonDataForMovieInfo(moviesJsonStr);
                     setMoviesInfoArrayList(movieInfo);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -241,7 +240,7 @@ public class MainActivity extends Activity {
          * @param moviesInfoAsArrayList
          * @throws JSONException
          */
-        public void setMoviesInfoArrayList(ArrayList<MovieInfoModel> moviesInfoAsArrayList) throws JSONException {
+        public void setMoviesInfoArrayList(ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList) throws JSONException {
             this.moviesInfoAsArrayList = moviesInfoAsArrayList;
 
 //            for (int i = 0; i < moviesInfoAsArrayList.size(); i++) {
@@ -255,7 +254,7 @@ public class MainActivity extends Activity {
          *
          * @return
          */
-        public ArrayList<MovieInfoModel> getMoviesInfoArrayList() {
+        public ArrayList<CompleteMovieInfoModel> getMoviesInfoArrayList() {
             if (moviesInfoAsArrayList != null) {
                 Log.v(LOG_TAG, "moviesInfoAsArrayList is returned");
                 return moviesInfoAsArrayList;
@@ -324,7 +323,7 @@ public class MainActivity extends Activity {
          * @return
          * @throws JSONException
          */
-        public ArrayList<MovieInfoModel> parseJsonDataForMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException {
+        public ArrayList<CompleteMovieInfoModel> parseJsonDataForMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException {
 
             final String OWN_RESULTS = "results";
             final String OWN_MOVIE_ID = "id";
@@ -346,7 +345,7 @@ public class MainActivity extends Activity {
             JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
             JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(OWN_RESULTS);
 
-            ArrayList<MovieInfoModel> moviesInfoAsArrayList = new ArrayList<MovieInfoModel>();
+            ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList = new ArrayList<CompleteMovieInfoModel>();
             for (int i = 0; i < moviesJsonObjectArray.length(); i++) {
 
                 JSONObject itemJson = moviesJsonObjectArray.getJSONObject(i);
@@ -368,7 +367,7 @@ public class MainActivity extends Activity {
 
                 movieReviewArrayList = parseJsonDataForMovieReview(movieId);
 
-                MovieInfoModel movieSimple = new MovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate, movieTrailerUrlArrayList, movieReviewArrayList);
+                CompleteMovieInfoModel movieSimple = new CompleteMovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate, movieTrailerUrlArrayList, movieReviewArrayList);
                 moviesInfoAsArrayList.add(movieSimple);
             }
 //            Log.v(LOG_TAG, "moviesInfoAsArrayList - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.toString());
@@ -454,7 +453,7 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<MovieInfoModel> movieModels) {
+        protected void onPostExecute(ArrayList<CompleteMovieInfoModel> movieModels) {
             super.onPostExecute(movieModels);
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
             movieInfo = parsingJSONForMovieInfo.getMoviesInfoArrayList();
@@ -466,7 +465,7 @@ public class MainActivity extends Activity {
 //            gridView.setAdapter(customGridViewAdapter);
         }
 
-/*        private void updateDatabase(ArrayList<MovieInfoModel> movieInfoArrayList) {
+/*        private void updateDatabase(ArrayList<CompleteMovieInfoModel> movieInfoArrayList) {
             for (int i = 0; i < movieInfoArrayList.size(); i++) {
                 dbHelper.updateTableData(movieInfo.get(i));
             }

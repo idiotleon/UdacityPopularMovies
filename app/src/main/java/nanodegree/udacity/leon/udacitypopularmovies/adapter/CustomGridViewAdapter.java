@@ -7,21 +7,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
 
 public class CustomGridViewAdapter extends BaseAdapter {
 
     private static final String LOG_TAG = CustomGridViewAdapter.class.getSimpleName();
 
     private Context mContext;
-    private ArrayList<MovieInfoModel> moviesInfoAsArrayList;
+    private ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList;
 
-    public CustomGridViewAdapter(Context context, ArrayList<MovieInfoModel> moviesInfoAsArrayList) {
+    public CustomGridViewAdapter(Context context, ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList) {
         mContext = context;
         this.moviesInfoAsArrayList = moviesInfoAsArrayList;
     }
@@ -32,7 +31,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public MovieInfoModel getItem(int position) {
+    public CompleteMovieInfoModel getItem(int position) {
         return moviesInfoAsArrayList.get(position);
     }
 
