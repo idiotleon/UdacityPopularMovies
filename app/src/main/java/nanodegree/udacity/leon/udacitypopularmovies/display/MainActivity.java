@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
@@ -50,9 +50,9 @@ public class MainActivity extends Activity {
 
     private CustomGridViewAdapter customGridViewAdapter;
 
-    private ArrayList<CompleteMovieInfoModel> movieInfo;
+    private ArrayList<MediumMovieInfoModel> mediumMovieInfoArrayList;
 
-    private ParsingJSONForMovieInfo parsingJSONForMovieInfo;
+    private ParsingJSONForMediumMovieInfo parsingJSONForMediumMovieInfo;
 
 //    private DatabaseHelper dbHelper;
 
@@ -63,24 +63,24 @@ public class MainActivity extends Activity {
 //        dbHelper = new DatabaseHelper(MainActivity.this);
 
         if (savedInstanceState != null) {
-            movieInfo = savedInstanceState.getParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
-            Log.v(LOG_TAG, "movieInfo, fetched from saveInstanceState(): " + movieInfo);
-            customSetContentView(movieInfo);
+            mediumMovieInfoArrayList = savedInstanceState.getParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
+            Log.v(LOG_TAG, "movieInfo, fetched from saveInstanceState(): " + mediumMovieInfoArrayList);
+            customSetContentView(mediumMovieInfoArrayList);
         }
 /*        else if ((dbHelper.getAllMovieInfo()).size() > 0) {
             movieInfo = dbHelper.getAllMovieInfo();
             customSetContentView(movieInfo);
             // For update (database) purpose
-            parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(API_KEY, "popularity");
+            parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
+            parsingJSONForMediumMovieInfo.execute(API_KEY, "popularity");
         } */
         else {
-            parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(API_KEY, "popularity");
+            parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
+            parsingJSONForMediumMovieInfo.execute(API_KEY, "popularity");
         }
     }
 
-    private void customSetContentView(ArrayList<CompleteMovieInfoModel> movieInfo) {
+    private void customSetContentView(ArrayList<MediumMovieInfoModel> movieInfo) {
         if (GeneralHelper.isTablet(MainActivity.this)) {
             Log.v(LOG_TAG, "This is a tablet.");
             setContentView(R.layout.activity_main_tabletux);
@@ -99,17 +99,15 @@ public class MainActivity extends Activity {
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    CompleteMovieInfoModel clickedMovieInfo = (CompleteMovieInfoModel) gridView.getItemAtPosition(position);
+                    MediumMovieInfoModel clickedMovieInfo = (MediumMovieInfoModel) gridView.getItemAtPosition(position);
                     Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-                    detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new CompleteMovieInfoModel(
+                    detailsIntent.putExtra(CommonConstants.MOVIE_PARCEL, new MediumMovieInfoModel(
                             clickedMovieInfo.getMovieId(),
                             clickedMovieInfo.getMovieOriginalTitle(),
                             clickedMovieInfo.getMovieImageUrl(),
                             clickedMovieInfo.getMoviePlotSynopsis(),
                             clickedMovieInfo.getMovieUserRating(),
-                            clickedMovieInfo.getMovieReleaseDate(),
-                            clickedMovieInfo.getMovieTrailerUrlArrayList(),
-                            clickedMovieInfo.getMovieReviewArrayList()
+                            clickedMovieInfo.getMovieReleaseDate()
                     ));
                     startActivity(detailsIntent);
                 }
@@ -120,7 +118,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, movieInfo);
+        savedInstanceState.putParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, mediumMovieInfoArrayList);
 //        Log.v(LOG_TAG, "movieInfo - onSaveInstanceState: " + movieInfo);
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -148,13 +146,13 @@ public class MainActivity extends Activity {
              * Should I add popularity in the model and parse it in JSON parsing part,
              * or simply use WebAPI each time for such sort?
              */
-            ParsingJSONForMovieInfo parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(API_KEY, "popularity");
+            ParsingJSONForMediumMovieInfo parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
+            parsingJSONForMediumMovieInfo.execute(API_KEY, "popularity");
             return true;
         }
         if (id == R.id.sort_highest_rating_desc) {
-            ParsingJSONForMovieInfo parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(API_KEY, "highestrating");
+            ParsingJSONForMediumMovieInfo parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
+            parsingJSONForMediumMovieInfo.execute(API_KEY, "highestrating");
 /*            movieInfo = dbHelper.getAllMovieInfoOrderByUserRating();
             customSetContentView(movieInfo);*/
             return true;
@@ -163,11 +161,11 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ParsingJSONForMovieInfo extends AsyncTask<String, Void, ArrayList<CompleteMovieInfoModel>> {
+    public class ParsingJSONForMediumMovieInfo extends AsyncTask<String, Void, ArrayList<MediumMovieInfoModel>> {
 
-        private final String LOG_TAG = ParsingJSONForMovieInfo.class.getSimpleName();
+        private final String LOG_TAG = ParsingJSONForMediumMovieInfo.class.getSimpleName();
 
-        private ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList;
+        private ArrayList<MediumMovieInfoModel> mediumMovieInfoArrayList;
         private String moviesJsonStr;
         private URL defaultUrl;
 
@@ -194,7 +192,7 @@ public class MainActivity extends Activity {
          * @return
          */
         @Override
-        protected ArrayList<CompleteMovieInfoModel> doInBackground(String... params) {
+        protected ArrayList<MediumMovieInfoModel> doInBackground(String... params) {
 
             Uri defaultUri;
 
@@ -222,8 +220,8 @@ public class MainActivity extends Activity {
 
             try {
                 try {
-                    ArrayList<CompleteMovieInfoModel> movieInfo = parseJsonDataForMovieInfo(moviesJsonStr);
-                    setMoviesInfoArrayList(movieInfo);
+                    ArrayList<MediumMovieInfoModel> mediumMovieInfo = parseJsonDataForMediumMovieInfo(moviesJsonStr);
+                    setMoviesInfoArrayList(mediumMovieInfo);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -231,17 +229,17 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
 
-            return movieInfo;
+            return mediumMovieInfoArrayList;
         }
 
         /**
          * Setter method for udacity_popular_movie info
          *
-         * @param moviesInfoAsArrayList
+         * @param mediumMoviesInfoAsArrayList
          * @throws JSONException
          */
-        public void setMoviesInfoArrayList(ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList) throws JSONException {
-            this.moviesInfoAsArrayList = moviesInfoAsArrayList;
+        public void setMoviesInfoArrayList(ArrayList<MediumMovieInfoModel> mediumMoviesInfoAsArrayList) throws JSONException {
+            this.mediumMovieInfoArrayList = mediumMoviesInfoAsArrayList;
 
 //            for (int i = 0; i < moviesInfoAsArrayList.size(); i++) {
 //                Log.v(LOG_TAG, "getMovieId(), setMoviesInfoArrayList() - setMoviesInfoArrayList()" + moviesInfoAsArrayList.get(i).getMovieId().toString());
@@ -254,12 +252,12 @@ public class MainActivity extends Activity {
          *
          * @return
          */
-        public ArrayList<CompleteMovieInfoModel> getMoviesInfoArrayList() {
-            if (moviesInfoAsArrayList != null) {
-                Log.v(LOG_TAG, "moviesInfoAsArrayList is returned");
-                return moviesInfoAsArrayList;
+        public ArrayList<MediumMovieInfoModel> getMoviesInfoArrayList() {
+            if (mediumMovieInfoArrayList != null) {
+                Log.v(LOG_TAG, "mediumMovieInfoArrayList is returned");
+                return mediumMovieInfoArrayList;
             } else {
-                Log.e(LOG_TAG, "moviesInfoAsArrayList is null, please execute(API, 'sort-starndards') first.");
+                Log.e(LOG_TAG, "mediumMovieInfoArrayList is null, please execute(API, 'sort-starndards') first.");
                 return null;
             }
         }
@@ -317,14 +315,15 @@ public class MainActivity extends Activity {
         }
 
         /**
-         * JSON parsing method for udacity_popular_movie info
+         * JSON parsing method for medium udacity_popular_movie info (without TrailerUrl and MovieReview ArrayLists)
          *
          * @param moviesJsonStr
          * @return
          * @throws JSONException
          */
-        public ArrayList<CompleteMovieInfoModel> parseJsonDataForMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException {
+        public ArrayList<MediumMovieInfoModel> parseJsonDataForMediumMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException {
 
+            // Keywords for JSON parsing purpose
             final String OWN_RESULTS = "results";
             final String OWN_MOVIE_ID = "id";
             final String OWN_ORIGINAL_TITLE = "original_title";
@@ -333,47 +332,41 @@ public class MainActivity extends Activity {
             final String OWN_RELEASE_DATE = "release_date";
             final String OWN_POSTER_PATH = "poster_path";
 
-            Long movieId;
+            // Fields for buidling models
+            long movieId;
             String movieOriginalTitle;
             String moviePlotSynopsis;
             String movieUserRating;
             String movieReleaseDate;
             String moviePosterUrl;
-            ArrayList<String> movieTrailerUrlArrayList;
-            ArrayList<MovieReviewModel> movieReviewArrayList;
 
             JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
             JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(OWN_RESULTS);
 
-            ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList = new ArrayList<CompleteMovieInfoModel>();
+            ArrayList<MediumMovieInfoModel> mediumMoviesInfoAsArrayList = new ArrayList<MediumMovieInfoModel>();
             for (int i = 0; i < moviesJsonObjectArray.length(); i++) {
 
                 JSONObject itemJson = moviesJsonObjectArray.getJSONObject(i);
 
                 movieId = itemJson.getLong(OWN_MOVIE_ID);
-//            Log.v(LOG_TAG, "MOVIE_ID, parseJsonDataForMovieInfo(): " + movieId);
+//            Log.v(LOG_TAG, "MOVIE_ID, parseJsonDataForMediumMovieInfo(): " + movieId);
                 movieOriginalTitle = itemJson.getString(OWN_ORIGINAL_TITLE);
-//            Log.v(LOG_TAG, "MOVIE_ORIGINAL_TITLE, parseJsonDataForMovieInfo(): " + movieOriginalTitle);
+//            Log.v(LOG_TAG, "MOVIE_ORIGINAL_TITLE, parseJsonDataForMediumMovieInfo(): " + movieOriginalTitle);
                 moviePlotSynopsis = itemJson.getString(OWN_MOVIE_PLOT_SYNOPSIS);
-//            Log.v(LOG_TAG, "MOVIE_PLOT_SYNOPSIS, parseJsonDataForMovieInfo(): " + moviePlotSynopsis);
+//            Log.v(LOG_TAG, "MOVIE_PLOT_SYNOPSIS, parseJsonDataForMediumMovieInfo(): " + moviePlotSynopsis);
                 movieUserRating = itemJson.getString(OWN_MOVIE_USER_RATING);
-//            Log.v(LOG_TAG, "MOVIE_USER_RATING, parseJsonDataForMovieInfo(): " + movieUserRating);
+//            Log.v(LOG_TAG, "MOVIE_USER_RATING, parseJsonDataForMediumMovieInfo(): " + movieUserRating);
                 movieReleaseDate = itemJson.getString(OWN_RELEASE_DATE);
-//            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE, parseJsonDataForMovieInfo(): " + movieReleaseDate);
+//            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE, parseJsonDataForMediumMovieInfo(): " + movieReleaseDate);
                 moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
-                Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMovieInfo(): " + moviePosterUrl);
+//                Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMediumMovieInfo(): " + moviePosterUrl);
 
-                movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
-
-                movieReviewArrayList = parseJsonDataForMovieReview(movieId);
-
-                CompleteMovieInfoModel movieSimple = new CompleteMovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate, movieTrailerUrlArrayList, movieReviewArrayList);
-                moviesInfoAsArrayList.add(movieSimple);
+                MediumMovieInfoModel mediumMovieInfoModel = new MediumMovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl,
+                        moviePlotSynopsis, movieUserRating, movieReleaseDate);
+                mediumMoviesInfoAsArrayList.add(mediumMovieInfoModel);
             }
-//            Log.v(LOG_TAG, "moviesInfoAsArrayList - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.toString());
-//            Log.v(LOG_TAG, "moviesInfoAsArrayList.size() - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.size());
 
-            return moviesInfoAsArrayList;
+            return mediumMoviesInfoAsArrayList;
         }
 
         /**
@@ -385,7 +378,7 @@ public class MainActivity extends Activity {
          * @throws MalformedURLException
          * @throws JSONException
          */
-        public ArrayList<String> parseJsonDataForMovieTrailerUrl(Long movieId) throws MalformedURLException, JSONException {
+        public ArrayList<String> parseJsonDataForMovieTrailerUrl(long movieId) throws MalformedURLException, JSONException {
 
             // base API URL for fetching trailer id
             final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
@@ -395,7 +388,7 @@ public class MainActivity extends Activity {
             final String OWN_RESULTS = "results";
             final String OWN_KEY = "key";
 
-            String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId.toString() + PARAM_VIDEO + PARAM_API_KEY + "=" + API_KEY;
+            String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + PARAM_API_KEY + "=" + API_KEY;
 //            Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
             URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
 //            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
@@ -453,15 +446,15 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<CompleteMovieInfoModel> movieModels) {
+        protected void onPostExecute(ArrayList<MediumMovieInfoModel> movieModels) {
             super.onPostExecute(movieModels);
-            customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
-            movieInfo = parsingJSONForMovieInfo.getMoviesInfoArrayList();
+            customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), mediumMovieInfoArrayList);
+            mediumMovieInfoArrayList = parsingJSONForMediumMovieInfo.getMoviesInfoArrayList();
 
 //            updateDatabase(movieInfo);
-            customSetContentView(movieInfo);
+            customSetContentView(mediumMovieInfoArrayList);
 
-            Log.v(LOG_TAG, "movieInfo after parsing:" + movieInfo.toString());
+            Log.v(LOG_TAG, "movieInfo after parsing:" + mediumMovieInfoArrayList.toString());
 //            gridView.setAdapter(customGridViewAdapter);
         }
 

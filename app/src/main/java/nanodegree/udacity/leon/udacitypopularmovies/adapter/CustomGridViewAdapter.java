@@ -12,15 +12,16 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 
 public class CustomGridViewAdapter extends BaseAdapter {
 
     private static final String LOG_TAG = CustomGridViewAdapter.class.getSimpleName();
 
     private Context mContext;
-    private ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList;
+    private ArrayList<MediumMovieInfoModel> moviesInfoAsArrayList;
 
-    public CustomGridViewAdapter(Context context, ArrayList<CompleteMovieInfoModel> moviesInfoAsArrayList) {
+    public CustomGridViewAdapter(Context context, ArrayList<MediumMovieInfoModel> moviesInfoAsArrayList) {
         mContext = context;
         this.moviesInfoAsArrayList = moviesInfoAsArrayList;
     }
@@ -31,7 +32,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public CompleteMovieInfoModel getItem(int position) {
+    public MediumMovieInfoModel getItem(int position) {
         return moviesInfoAsArrayList.get(position);
     }
 
@@ -54,7 +55,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
         String imageUrl = getPosterImageUrl(position);
-        Log.v(LOG_TAG, "imageUrl, CustomGridViewAdapter: " + imageUrl);
+//        Log.v(LOG_TAG, "imageUrl, CustomGridViewAdapter: " + imageUrl);
         Picasso.with(mContext).load(imageUrl).into(imageView);
 //                .memoryPolicy(MemoryPolicy.NO_STORE).centerCrop().fit().into(imageView);
         return imageView;
