@@ -3,13 +3,18 @@ package nanodegree.udacity.leon.udacitypopularmovies.helper;
 /**
  * Constants used as keys to store value
  */
-public class CommonConstants {
+public class GeneralConstants {
 
     public static final String MOVIE_PARCEL = "movieParcel";
     public static final String MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY = "movieSavedInstanceStateMainActivity";
     public static final String MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY = "movieSavedInstanceStateDetailActivity";
     public static final String MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER = "movieInfoDisplayFragmentIdentifier";
     public static final String MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER = "movieInfoDetailFragmentIdentifier";
+
+    public static final int MOVIE_SORTED_BY_POPULARITY = 0;
+    public static final int MOVIE_SORTED_BY_AVERAGED_VOTING = 1;
+    public static final int MOVIE_SORTED_DESC = 0;
+    public static final int MOVIE_SORTED_ASC = 1;
     /*
     public static final String MOVIE_ID = "movie_id";
     public static final String MOVIE_ORIGINAL_TITLE = "movie_original_title";

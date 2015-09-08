@@ -14,8 +14,9 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.DetailFragment;
-import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
 
@@ -34,14 +35,14 @@ public class DisplayFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ArrayList<CompleteMovieInfoModel> movieModelArrayList = getArguments().getParcelableArrayList(CommonConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
+        ArrayList<MediumMovieInfoModel> movieModelArrayList = getArguments().getParcelableArrayList(GeneralConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
         gridView.setAdapter(new CustomGridViewAdapter(getActivity(), movieModelArrayList));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CompleteMovieInfoModel clickedMovieInfo = (CompleteMovieInfoModel) gridView.getItemAtPosition(position);
+                MediumMovieInfoModel clickedMovieInfo = (MediumMovieInfoModel) gridView.getItemAtPosition(position);
                 Bundle detailsArgs = new Bundle();
-                detailsArgs.putParcelable(CommonConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER, clickedMovieInfo);
+                detailsArgs.putParcelable(GeneralConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER, clickedMovieInfo);
                 DetailFragment detailFragment = new DetailFragment();
                 detailFragment.setArguments(detailsArgs);
                 FragmentManager fragmentManager = getFragmentManager();

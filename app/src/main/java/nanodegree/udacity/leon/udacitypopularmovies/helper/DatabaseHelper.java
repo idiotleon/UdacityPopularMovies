@@ -120,12 +120,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public ArrayList<MediumMovieInfoModel> getAllMediumMovieInfo() {
+    public ArrayList<MediumMovieInfoModel> getAllMediumMovieInfo(int sortedByPopularityOrAveragedVoting, int sortDescOrAsc) {
         Log.v(LOG_TAG, "getAllMediumMovieInfo(), DatabaseHelper executed.");
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<MediumMovieInfoModel> allMediumMovieInfoArrayList = new ArrayList<>();
 
         String getAllMovieInfoQuery = "SELECT * FROM " + MEDIUM_MOVIEINFO_TABLE_NAME;
+
+        switch (sortedByPopularityOrAveragedVoting) {
+            case GeneralConstants.MOVIE_SORTED_BY_AVERAGED_VOTING:
+                getAllMovieInfoQuery += " ORDER BY " + MOVIE_USER_RATING;
+                break;
+            default:
+                getAllMovieInfoQuery += " ORDER BY " + MOVIE_POPULAIRY;
+        }
+
+        switch (sortDescOrAsc) {
+            case GeneralConstants.MOVIE_SORTED_ASC:
+                getAllMovieInfoQuery += " ASC";
+                break;
+            default:
+                getAllMovieInfoQuery += " DESC";
+        }
+
+        getAllMovieInfoQuery += " LIMIT 20";
+        Log.v(LOG_TAG, "getAllMovieInfoQuery, DatabaseHelper: " + getAllMovieInfoQuery);
         Cursor cursor = db.rawQuery(getAllMovieInfoQuery, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -140,6 +159,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             allMediumMovieInfoArrayList.add(movieInfo);
         }
         return allMediumMovieInfoArrayList;
+    }
+
+    public int getMovieInfoStoredCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + MEDIUM_MOVIEINFO_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        return cursor.getCount();
     }
 
 
