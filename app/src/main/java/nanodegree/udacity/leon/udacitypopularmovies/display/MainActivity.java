@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.DatabaseHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
@@ -34,7 +36,7 @@ import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -52,31 +54,31 @@ public class MainActivity extends Activity {
 
     private ArrayList<MediumMovieInfoModel> mediumMovieInfoArrayList;
 
-    private ParsingJSONForMediumMovieInfo parsingJSONForMediumMovieInfo;
+    private ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo;
 
-//    private DatabaseHelper dbHelper;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        dbHelper = new DatabaseHelper(MainActivity.this);
+        dbHelper = new DatabaseHelper(MainActivity.this);
 
         if (savedInstanceState != null) {
             mediumMovieInfoArrayList = savedInstanceState.getParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
-            Log.v(LOG_TAG, "movieInfo, fetched from saveInstanceState(): " + mediumMovieInfoArrayList);
+            Log.v(LOG_TAG, "movieInfo, fetched from savedInstanceState(): " + mediumMovieInfoArrayList);
             customSetContentView(mediumMovieInfoArrayList);
         }
-/*        else if ((dbHelper.getAllMovieInfo()).size() > 0) {
-            movieInfo = dbHelper.getAllMovieInfo();
-            customSetContentView(movieInfo);
+/*        else if ((dbHelper.getAllMediumMovieInfo()).size() > 0) {
+            mediumMovieInfoArrayList = dbHelper.getAllMediumMovieInfo();
+            customSetContentView(mediumMovieInfoArrayList);
             // For update (database) purpose
-            parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
-            parsingJSONForMediumMovieInfo.execute(API_KEY, "popularity");
+            parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
+            parsingJsonForMediumMovieInfo.execute(API_KEY, "popularity");
         } */
         else {
-            parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
-            parsingJSONForMediumMovieInfo.execute(API_KEY, "popularity");
+            parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
+            parsingJsonForMediumMovieInfo.execute(API_KEY, "popularity");
         }
     }
 
@@ -115,11 +117,10 @@ public class MainActivity extends Activity {
         }
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, mediumMovieInfoArrayList);
-//        Log.v(LOG_TAG, "movieInfo - onSaveInstanceState: " + movieInfo);
+//        Log.v(LOG_TAG, "movieInfo - onSaveInstanceState(), MainActivity: " + movieInfo);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -146,13 +147,13 @@ public class MainActivity extends Activity {
              * Should I add popularity in the model and parse it in JSON parsing part,
              * or simply use WebAPI each time for such sort?
              */
-            ParsingJSONForMediumMovieInfo parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
-            parsingJSONForMediumMovieInfo.execute(API_KEY, "popularity");
+            ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
+            parsingJsonForMediumMovieInfo.execute(API_KEY, "popularity");
             return true;
         }
         if (id == R.id.sort_highest_rating_desc) {
-            ParsingJSONForMediumMovieInfo parsingJSONForMediumMovieInfo = new ParsingJSONForMediumMovieInfo();
-            parsingJSONForMediumMovieInfo.execute(API_KEY, "highestrating");
+            ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
+            parsingJsonForMediumMovieInfo.execute(API_KEY, "highestrating");
 /*            movieInfo = dbHelper.getAllMovieInfoOrderByUserRating();
             customSetContentView(movieInfo);*/
             return true;
@@ -161,9 +162,9 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ParsingJSONForMediumMovieInfo extends AsyncTask<String, Void, ArrayList<MediumMovieInfoModel>> {
+    public class ParsingJsonForMediumMovieInfo extends AsyncTask<String, Void, ArrayList<MediumMovieInfoModel>> {
 
-        private final String LOG_TAG = ParsingJSONForMediumMovieInfo.class.getSimpleName();
+        private final String LOG_TAG = ParsingJsonForMediumMovieInfo.class.getSimpleName();
 
         private ArrayList<MediumMovieInfoModel> mediumMovieInfoArrayList;
         private String moviesJsonStr;
@@ -409,7 +410,7 @@ public class MainActivity extends Activity {
             return movieTrailerUrlArrayList;
         }
 
-        public ArrayList<MovieReviewModel> parseJsonDataForMovieReview(Long movieId) throws MalformedURLException, JSONException {
+        public ArrayList<MovieReviewModel> parseJsonDataForMovieReview(long movieId) throws MalformedURLException, JSONException {
 
             // base API URL for fetching reviews
             final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
@@ -420,7 +421,7 @@ public class MainActivity extends Activity {
             final String OWN_CONTENT = "content";
             final String OWN_URL = "url";
 
-            String movieReviewAPIUrl = BASE_API_TRAILER_URL + movieId.toString() + PARAM_REVIEWS + PARAM_API_KEY + "=" + API_KEY;
+            String movieReviewAPIUrl = BASE_API_TRAILER_URL + Long.toString(movieId) + PARAM_REVIEWS + PARAM_API_KEY + "=" + API_KEY;
 //            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line428: " + movieReviewAPIUrl);
             URL movieReviewAPIURL = new URL(movieReviewAPIUrl);
             String allJsonData = getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
@@ -448,14 +449,15 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(ArrayList<MediumMovieInfoModel> movieModels) {
             super.onPostExecute(movieModels);
+            mediumMovieInfoArrayList = parsingJsonForMediumMovieInfo.getMoviesInfoArrayList();
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), mediumMovieInfoArrayList);
-            mediumMovieInfoArrayList = parsingJSONForMediumMovieInfo.getMoviesInfoArrayList();
+            gridView.setAdapter(customGridViewAdapter);
 
 //            updateDatabase(movieInfo);
             customSetContentView(mediumMovieInfoArrayList);
+            dbHelper.updateDatabaseMovieInfo(mediumMovieInfoArrayList);
 
-            Log.v(LOG_TAG, "movieInfo after parsing:" + mediumMovieInfoArrayList.toString());
-//            gridView.setAdapter(customGridViewAdapter);
+            Log.v(LOG_TAG, "mediumMovieInfoArrayList after parsing:" + mediumMovieInfoArrayList.toString());
         }
 
 /*        private void updateDatabase(ArrayList<CompleteMovieInfoModel> movieInfoArrayList) {
