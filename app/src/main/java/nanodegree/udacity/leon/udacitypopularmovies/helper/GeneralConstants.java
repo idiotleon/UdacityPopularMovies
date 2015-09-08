@@ -5,6 +5,14 @@ package nanodegree.udacity.leon.udacitypopularmovies.helper;
  */
 public class GeneralConstants {
 
+    /*
+ *  ============================================================
+ *  Variable to store API Key
+ *  Please type your API key here
+ *  ============================================================
+ */
+    public static final String API_KEY = "74684520f47c025a768d03e231efe89c";
+
     public static final String MOVIE_PARCEL = "movieParcel";
     public static final String MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY = "movieSavedInstanceStateMainActivity";
     public static final String MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY = "movieSavedInstanceStateDetailActivity";
@@ -15,6 +23,9 @@ public class GeneralConstants {
     public static final int MOVIE_SORTED_BY_AVERAGED_VOTING = 1;
     public static final int MOVIE_SORTED_DESC = 0;
     public static final int MOVIE_SORTED_ASC = 1;
+
+    // API Parameter for building URL
+    public static final String PARAM_API_KEY = "api_key";
     /*
     public static final String MOVIE_ID = "movie_id";
     public static final String MOVIE_ORIGINAL_TITLE = "movie_original_title";

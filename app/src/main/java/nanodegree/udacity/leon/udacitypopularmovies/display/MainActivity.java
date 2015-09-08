@@ -39,14 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    /*
-     *  ============================================================
-     *  Variable to store API Key
-     *  Please type your API key here
-     *  ============================================================
-     */
-    final String API_KEY = "74684520f47c025a768d03e231efe89c";
-
     private GridView gridView;
 
     private CustomGridViewAdapter customGridViewAdapter;
@@ -72,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
             refreshPageView(mediumMovieInfoArrayList);
             // For update (database) purpose
             parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(API_KEY, "popularity");
+            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
         } else {
             parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(API_KEY, "popularity");
+            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
         }
     }
 
@@ -146,12 +138,12 @@ public class MainActivity extends AppCompatActivity {
              * or simply use WebAPI each time for such sort?
              */
             ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(API_KEY, "popularity");
+            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
             return true;
         }
         if (id == R.id.sort_highest_rating_desc) {
             ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(API_KEY, "highestrating");
+            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "highestrating");
 /*            movieInfo = dbHelper.getAllMovieInfoOrderByUserRating();
             refreshPageView(movieInfo);*/
             return true;
@@ -178,9 +170,6 @@ public class MainActivity extends AppCompatActivity {
         // parameter options for settings
         final String SETTINGS_PARAM_HIGHESTRATED_DESC = "vote_average.desc";
 
-        // API Parameter for building URL
-        final String PARAM_API_KEY = "api_key";
-
         /**
          * Method doInBackground() will only call 2 setters, returning null.
          * Method doInBackground()  will set moviesInfoArrayList(as an ArrayList of class CompleteMovieInfoModel), and
@@ -198,12 +187,12 @@ public class MainActivity extends AppCompatActivity {
             if (params[1].toLowerCase() == "highestrating") {
                 defaultUri = Uri.parse(BASE_API_MOVIE_INFO_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, SETTINGS_PARAM_HIGHESTRATED_DESC)
-                        .appendQueryParameter(PARAM_API_KEY, params[0])
+                        .appendQueryParameter(GeneralConstants.PARAM_API_KEY, params[0])
                         .build();
             } else {
                 defaultUri = Uri.parse(BASE_API_MOVIE_INFO_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, SETTINGS_PARAM_POPULARITY_DESC)
-                        .appendQueryParameter(PARAM_API_KEY, params[0])
+                        .appendQueryParameter(GeneralConstants.PARAM_API_KEY, params[0])
                         .build();
             }
 
@@ -214,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            moviesJsonStr = getAllJsonDataAsStringFromAPI(defaultUrl);
+            moviesJsonStr = GeneralHelper.getAllJsonDataAsStringFromAPI(defaultUrl);
 //            Log.v(LOG_TAG, "moviesJsonStr - all JSON data of movies info: " + moviesJsonStr);
 
             try {
@@ -259,58 +248,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, "mediumMovieInfoArrayList is null, please execute(API, 'sort-starndards') first.");
                 return null;
             }
-        }
-
-        /**
-         * Method is to get all the json data from the input URL as String.
-         * <improvement>: there should be URL check methods
-         *
-         * @param defaultUrl
-         * @return
-         */
-        public String getAllJsonDataAsStringFromAPI(URL defaultUrl) {
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-            String moviesJsonStr = null;
-            try {
-                urlConnection = (HttpURLConnection) defaultUrl.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                InputStream inputStream = urlConnection.getInputStream();
-//                Log.v(LOG_TAG, "inputStream - getAllJsonDataAsStringFromAPI(): " + inputStream.toString());
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    return null;
-                }
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() == 0) {
-                    return null;
-                }
-                moviesJsonStr = buffer.toString();
-
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } finally {
-                if (urlConnection != null) urlConnection.disconnect();
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
-                    }
-                }
-            }
-
-//            Log.v(LOG_TAG, "moviesJsonStr - getAllJsonDataAsStringFromAPI(): " + moviesJsonStr);
-            return moviesJsonStr;
         }
 
         /**
@@ -374,82 +311,6 @@ public class MainActivity extends AppCompatActivity {
             return mediumMoviesInfoAsArrayList;
         }
 
-        /**
-         * For each specific udacity_popular_movie id, this method will get all the "key"s from API/JSON data, when combined with base Youtube URL, return
-         * an ArrayList of all trailer urls, which can be played directly
-         *
-         * @param movieId
-         * @return
-         * @throws MalformedURLException
-         * @throws JSONException
-         */
-        public ArrayList<String> parseJsonDataForMovieTrailerUrl(long movieId) throws MalformedURLException, JSONException {
-
-            // base API URL for fetching trailer id
-            final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
-            // base Youtube URL for displaying trailer
-            final String BASE_YOUTUBE_URL = "http://www.youtube.com/v/";
-            final String PARAM_VIDEO = "/videos?";
-            final String UPM_RESULTS = "results";
-            final String UPM_KEY = "key";
-
-            String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + PARAM_API_KEY + "=" + API_KEY;
-//            Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
-            URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
-//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
-            JSONObject movieTrailerAllJsonDataObject = new JSONObject(getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
-
-            JSONArray movieTrailerInfoJsonArray = movieTrailerAllJsonDataObject.getJSONArray(UPM_RESULTS);
-//            Log.v(LOG_TAG, "movieTrailerInfoJsonArray: " + movieTrailerInfoJsonArray);
-
-            ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
-            for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
-                JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
-                String key = itemJson.getString(UPM_KEY);
-//                Log.v(LOG_TAG, "key: " + key);
-                String url = BASE_YOUTUBE_URL + key;
-//                Log.v(LOG_TAG, "url: " + url);
-                movieTrailerUrlArrayList.add(url);
-            }
-            return movieTrailerUrlArrayList;
-        }
-
-        public ArrayList<MovieReviewModel> parseJsonDataForMovieReview(long movieId) throws MalformedURLException, JSONException {
-
-            // base API URL for fetching reviews
-            final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
-            final String PARAM_REVIEWS = "/reviews?";
-
-            final String OWN_RESULTS = "results";
-            final String OWN_AUTHOR = "author";
-            final String OWN_CONTENT = "content";
-            final String OWN_URL = "url";
-
-            String movieReviewAPIUrl = BASE_API_TRAILER_URL + Long.toString(movieId) + PARAM_REVIEWS + PARAM_API_KEY + "=" + API_KEY;
-//            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line428: " + movieReviewAPIUrl);
-            URL movieReviewAPIURL = new URL(movieReviewAPIUrl);
-            String allJsonData = getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
-//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line431: " + allJsonData);
-            JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
-            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
-            JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(OWN_RESULTS);
-//            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
-
-            ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
-            for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
-                JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
-                String author = itemJson.getString(OWN_AUTHOR);
-//                Log.v(LOG_TAG, "author: " + author);
-                String content = itemJson.getString(OWN_CONTENT);
-//                Log.v(LOG_TAG, "content: " + content);
-                String url = itemJson.getString(OWN_URL);
-//                Log.v(LOG_TAG, "review url: " + url);
-                MovieReviewModel movieReviewModel = new MovieReviewModel(author, content, url);
-                movieReviewArrayList.add(movieReviewModel);
-            }
-            return movieReviewArrayList;
-        }
-
         @Override
         protected void onPostExecute(ArrayList<MediumMovieInfoModel> movieModels) {
             super.onPostExecute(movieModels);
@@ -460,11 +321,5 @@ public class MainActivity extends AppCompatActivity {
 
             refreshPageView(mediumMovieInfoArrayList);
         }
-
-/*        private void updateDatabase(ArrayList<CompleteMovieInfoModel> movieInfoArrayList) {
-            for (int i = 0; i < movieInfoArrayList.size(); i++) {
-                dbHelper.updateTableData(movieInfo.get(i));
-            }
-        }     */
     }
 }

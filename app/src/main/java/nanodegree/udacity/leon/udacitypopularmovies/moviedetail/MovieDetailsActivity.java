@@ -3,7 +3,10 @@ package nanodegree.udacity.leon.udacitypopularmovies.moviedetail;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -16,18 +19,28 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
 
-public class MovieDetailsActivity extends Activity {
+public class MovieDetailsActivity extends AppCompatActivity {
 
     private final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
 
-    private CompleteMovieInfoModel movieInfo;
+    private MediumMovieInfoModel movieInfo;
 
     private TextView textViewOriginalTitle;
     private TextView textViewPlotSynopsis;
@@ -52,7 +65,7 @@ public class MovieDetailsActivity extends Activity {
             movieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
         } else {
             Bundle data = getIntent().getExtras();
-            movieInfo = (CompleteMovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_PARCEL);
+            movieInfo = (MediumMovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_PARCEL);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
@@ -66,7 +79,7 @@ public class MovieDetailsActivity extends Activity {
          * By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
-        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId().toString(), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieInfo.getMovieId()), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -75,10 +88,10 @@ public class MovieDetailsActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieInfo.getMovieId().toString());
+                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, Long.toString(movieInfo.getMovieId()));
                     Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId().toString());
+                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieInfo.getMovieId()));
                     Toast.makeText(MovieDetailsActivity.this, "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -115,7 +128,7 @@ public class MovieDetailsActivity extends Activity {
 //        Log.v(LOG_TAG, "movieInfo.getMovieImageUrl() - Line70, onCreate(): " + movieInfo.getMovieImageUrl());
         textViewOriginalTitle.setText("Original Title: " + movieInfo.getMovieOriginalTitle());
         textViewPlotSynopsis.setText("Plot Synopsis: " + movieInfo.getMoviePlotSynopsis());
-        ratingBar.setRating(Float.parseFloat(movieInfo.getMovieUserRating()));
+        ratingBar.setRating(movieInfo.getMovieUserRating());
         textViewReleaseDate.setText("Release Date: " + movieInfo.getMovieReleaseDate());
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -130,6 +143,93 @@ public class MovieDetailsActivity extends Activity {
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
         super.onSaveInstanceState(outState);
-
     }
+
+    public class ParseForMovieTralierAndReviews extends AsyncTask<Long, Void, CompleteMovieInfoModel>{
+
+        @Override
+        protected CompleteMovieInfoModel doInBackground(Long... params) {
+            long MovieId = params[0];
+
+            return null;
+        }
+
+        /**
+         * For each specific udacity_popular_movie id, this method will get all the "key"s from API/JSON data, when combined with base Youtube URL, return
+         * an ArrayList of all trailer urls, which can be played directly
+         *
+         * @param movieId
+         * @return
+         * @throws MalformedURLException
+         * @throws JSONException
+         */
+        public ArrayList<String> parseJsonDataForMovieTrailerUrl(long movieId) throws MalformedURLException, JSONException {
+
+            // base API URL for fetching trailer id
+            final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
+            // base Youtube URL for displaying trailer
+            final String BASE_YOUTUBE_URL = "http://www.youtube.com/v/";
+            final String PARAM_VIDEO = "/videos?";
+            final String UPM_RESULTS = "results";
+            final String UPM_KEY = "key";
+
+            String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
+//            Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
+            URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
+//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
+            JSONObject movieTrailerAllJsonDataObject = new JSONObject(GeneralHelper.getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
+
+            JSONArray movieTrailerInfoJsonArray = movieTrailerAllJsonDataObject.getJSONArray(UPM_RESULTS);
+//            Log.v(LOG_TAG, "movieTrailerInfoJsonArray: " + movieTrailerInfoJsonArray);
+
+            ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
+            for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
+                JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
+                String key = itemJson.getString(UPM_KEY);
+//                Log.v(LOG_TAG, "key: " + key);
+                String url = BASE_YOUTUBE_URL + key;
+//                Log.v(LOG_TAG, "url: " + url);
+                movieTrailerUrlArrayList.add(url);
+            }
+            return movieTrailerUrlArrayList;
+        }
+
+        public ArrayList<MovieReviewModel> parseJsonDataForMovieReview(long movieId) throws MalformedURLException, JSONException {
+
+            // base API URL for fetching reviews
+            final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
+            final String PARAM_REVIEWS = "/reviews?";
+
+            final String OWN_RESULTS = "results";
+            final String OWN_AUTHOR = "author";
+            final String OWN_CONTENT = "content";
+            final String OWN_URL = "url";
+
+            String movieReviewAPIUrl = BASE_API_TRAILER_URL + Long.toString(movieId) + PARAM_REVIEWS + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
+//            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line428: " + movieReviewAPIUrl);
+            URL movieReviewAPIURL = new URL(movieReviewAPIUrl);
+            String allJsonData = GeneralHelper.getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
+//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line431: " + allJsonData);
+            JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
+            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
+            JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(OWN_RESULTS);
+//            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
+
+            ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
+            for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
+                JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
+                String author = itemJson.getString(OWN_AUTHOR);
+//                Log.v(LOG_TAG, "author: " + author);
+                String content = itemJson.getString(OWN_CONTENT);
+//                Log.v(LOG_TAG, "content: " + content);
+                String url = itemJson.getString(OWN_URL);
+//                Log.v(LOG_TAG, "review url: " + url);
+                MovieReviewModel movieReviewModel = new MovieReviewModel(author, content, url);
+                movieReviewArrayList.add(movieReviewModel);
+            }
+            return movieReviewArrayList;
+        }
+    }
+
+
 }
