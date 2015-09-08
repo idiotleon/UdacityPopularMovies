@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                             clickedMovieInfo.getMovieImageUrl(),
                             clickedMovieInfo.getMoviePlotSynopsis(),
                             clickedMovieInfo.getMovieUserRating(),
-                            clickedMovieInfo.getMovieReleaseDate()
+                            clickedMovieInfo.getMovieReleaseDate(),
+                            clickedMovieInfo.getMoviePopularity()
                     ));
                     startActivity(detailsIntent);
                 }
@@ -325,45 +326,48 @@ public class MainActivity extends AppCompatActivity {
         public ArrayList<MediumMovieInfoModel> parseJsonDataForMediumMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException {
 
             // Keywords for JSON parsing purpose
-            final String OWN_RESULTS = "results";
-            final String OWN_MOVIE_ID = "id";
-            final String OWN_ORIGINAL_TITLE = "original_title";
-            final String OWN_MOVIE_PLOT_SYNOPSIS = "overview";
-            final String OWN_MOVIE_USER_RATING = "vote_average";
-            final String OWN_RELEASE_DATE = "release_date";
-            final String OWN_POSTER_PATH = "poster_path";
+            final String UPM_RESULTS = "results";
+            final String UPM_MOVIE_ID = "id";
+            final String UPM_ORIGINAL_TITLE = "original_title";
+            final String UPM_MOVIE_PLOT_SYNOPSIS = "overview";
+            final String UPM_MOVIE_USER_RATING = "vote_average";
+            final String UPM_RELEASE_DATE = "release_date";
+            final String UPM_POSTER_PATH = "poster_path";
+            final String UPM_POPULAIRY = "popularity";
 
-            // Fields for buidling models
+            // Fields for building models
             long movieId;
             String movieOriginalTitle;
             String moviePlotSynopsis;
-            String movieUserRating;
+            float movieUserRating;
             String movieReleaseDate;
             String moviePosterUrl;
+            double moviePopularity;
 
             JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
-            JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(OWN_RESULTS);
+            JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(UPM_RESULTS);
 
             ArrayList<MediumMovieInfoModel> mediumMoviesInfoAsArrayList = new ArrayList<MediumMovieInfoModel>();
             for (int i = 0; i < moviesJsonObjectArray.length(); i++) {
 
                 JSONObject itemJson = moviesJsonObjectArray.getJSONObject(i);
 
-                movieId = itemJson.getLong(OWN_MOVIE_ID);
+                movieId = itemJson.getLong(UPM_MOVIE_ID);
 //            Log.v(LOG_TAG, "MOVIE_ID, parseJsonDataForMediumMovieInfo(): " + movieId);
-                movieOriginalTitle = itemJson.getString(OWN_ORIGINAL_TITLE);
+                movieOriginalTitle = itemJson.getString(UPM_ORIGINAL_TITLE);
 //            Log.v(LOG_TAG, "MOVIE_ORIGINAL_TITLE, parseJsonDataForMediumMovieInfo(): " + movieOriginalTitle);
-                moviePlotSynopsis = itemJson.getString(OWN_MOVIE_PLOT_SYNOPSIS);
+                moviePlotSynopsis = itemJson.getString(UPM_MOVIE_PLOT_SYNOPSIS);
 //            Log.v(LOG_TAG, "MOVIE_PLOT_SYNOPSIS, parseJsonDataForMediumMovieInfo(): " + moviePlotSynopsis);
-                movieUserRating = itemJson.getString(OWN_MOVIE_USER_RATING);
+                movieUserRating = Float.parseFloat(itemJson.getString(UPM_MOVIE_USER_RATING));
 //            Log.v(LOG_TAG, "MOVIE_USER_RATING, parseJsonDataForMediumMovieInfo(): " + movieUserRating);
-                movieReleaseDate = itemJson.getString(OWN_RELEASE_DATE);
+                movieReleaseDate = itemJson.getString(UPM_RELEASE_DATE);
 //            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE, parseJsonDataForMediumMovieInfo(): " + movieReleaseDate);
-                moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
+                moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(UPM_POSTER_PATH);
 //                Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMediumMovieInfo(): " + moviePosterUrl);
+                moviePopularity = itemJson.getDouble(UPM_POPULAIRY);
 
                 MediumMovieInfoModel mediumMovieInfoModel = new MediumMovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl,
-                        moviePlotSynopsis, movieUserRating, movieReleaseDate);
+                        moviePlotSynopsis, movieUserRating, movieReleaseDate, moviePopularity);
                 mediumMoviesInfoAsArrayList.add(mediumMovieInfoModel);
             }
 
@@ -386,8 +390,8 @@ public class MainActivity extends AppCompatActivity {
             // base Youtube URL for displaying trailer
             final String BASE_YOUTUBE_URL = "http://www.youtube.com/v/";
             final String PARAM_VIDEO = "/videos?";
-            final String OWN_RESULTS = "results";
-            final String OWN_KEY = "key";
+            final String UPM_RESULTS = "results";
+            final String UPM_KEY = "key";
 
             String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + PARAM_API_KEY + "=" + API_KEY;
 //            Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
@@ -395,13 +399,13 @@ public class MainActivity extends AppCompatActivity {
 //            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
             JSONObject movieTrailerAllJsonDataObject = new JSONObject(getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
 
-            JSONArray movieTrailerInfoJsonArray = movieTrailerAllJsonDataObject.getJSONArray(OWN_RESULTS);
+            JSONArray movieTrailerInfoJsonArray = movieTrailerAllJsonDataObject.getJSONArray(UPM_RESULTS);
 //            Log.v(LOG_TAG, "movieTrailerInfoJsonArray: " + movieTrailerInfoJsonArray);
 
             ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
             for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
                 JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
-                String key = itemJson.getString(OWN_KEY);
+                String key = itemJson.getString(UPM_KEY);
 //                Log.v(LOG_TAG, "key: " + key);
                 String url = BASE_YOUTUBE_URL + key;
 //                Log.v(LOG_TAG, "url: " + url);

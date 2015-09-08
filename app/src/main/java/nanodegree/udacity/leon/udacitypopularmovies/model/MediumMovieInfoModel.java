@@ -12,17 +12,19 @@ public class MediumMovieInfoModel implements Parcelable {
     private String movieOriginalTitle;
     private String movieImageUrl;
     private String moviePlotSynopsis;
-    private String movieUserRating;
+    private float movieUserRating;
     private String movieReleaseDate;
+    private double moviePopularity;
 
     public MediumMovieInfoModel(long movieId, String movieOriginalTitle, String movieImageUrl,
-                                String moviePlotSynopsis, String movieUserRating, String movieReleaseDate) {
+                                String moviePlotSynopsis, float movieUserRating, String movieReleaseDate, double moviePopularity) {
         this.movieId = movieId;
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieImageUrl = movieImageUrl;
         this.moviePlotSynopsis = moviePlotSynopsis;
         this.movieUserRating = movieUserRating;
         this.movieReleaseDate = movieReleaseDate;
+        this.moviePopularity = moviePopularity;
     }
 
     protected MediumMovieInfoModel(Parcel in) {
@@ -30,8 +32,9 @@ public class MediumMovieInfoModel implements Parcelable {
         movieOriginalTitle = in.readString();
         movieImageUrl = in.readString();
         moviePlotSynopsis = in.readString();
-        movieUserRating = in.readString();
+        movieUserRating = in.readFloat();
         movieReleaseDate = in.readString();
+        moviePopularity = in.readDouble();
     }
 
     public static final Creator<MediumMovieInfoModel> CREATOR = new Creator<MediumMovieInfoModel>() {
@@ -57,8 +60,9 @@ public class MediumMovieInfoModel implements Parcelable {
         dest.writeString(movieOriginalTitle);
         dest.writeString(movieImageUrl);
         dest.writeString(moviePlotSynopsis);
-        dest.writeString(movieUserRating);
+        dest.writeFloat(movieUserRating);
         dest.writeString(movieReleaseDate);
+        dest.writeDouble(moviePopularity);
     }
 
     public long getMovieId() {
@@ -77,12 +81,16 @@ public class MediumMovieInfoModel implements Parcelable {
         return moviePlotSynopsis;
     }
 
-    public String getMovieUserRating() {
+    public float getMovieUserRating() {
         return movieUserRating;
     }
 
     public String getMovieReleaseDate() {
         return movieReleaseDate;
+    }
+
+    public double getMoviePopularity() {
+        return moviePopularity;
     }
 
     public static Creator<MediumMovieInfoModel> getCREATOR() {
@@ -105,11 +113,15 @@ public class MediumMovieInfoModel implements Parcelable {
         this.moviePlotSynopsis = moviePlotSynopsis;
     }
 
-    public void setMovieUserRating(String movieUserRating) {
+    public void setMovieUserRating(float movieUserRating) {
         this.movieUserRating = movieUserRating;
     }
 
     public void setMovieReleaseDate(String movieReleaseDate) {
         this.movieReleaseDate = movieReleaseDate;
+    }
+
+    public void setMoviePopularity(double moviePopularity) {
+        this.moviePopularity = moviePopularity;
     }
 }
