@@ -5,27 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
-import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.model.CompleteMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
@@ -45,11 +31,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String MOVIE_PLOT_SYNOPSIS = "movie_plot_synopsis";
     public static final String MOVIE_USER_RATING = "movie_rating";
     public static final String MOVIE_RELEASE_DATE = "movie_date";
-    public static final String MOVIE_FAVORITE_STATUS = "movie_favorite_status";
+    public static final String MOVIE_POPULAIRY = "movie_popularity";
     public static final int versioin = 1;
 
-    public static final String MOVIE_TRAILER_URL_JSON_STRING = "movie_trailer_url_json_string";
     public static final String MOVIE_REVIEW_JSON_STRING = "movie_review_json_string";
+    public static final String MOVIE_TRAILER_URL_JSON_STRING = "movie_trailer_url_json_string";
+    public static final String MOVIE_FAVORITE_STATUS = "movie_favorite_status";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, versioin);
@@ -62,9 +49,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 MOVIE_ORIGINAL_TITLE + " TEXT, " +
                 MOVIE_IMAGE_URL + " TEXT, " +
                 MOVIE_PLOT_SYNOPSIS + " TEXT, " +
-                MOVIE_USER_RATING + " FLOAT, " +
+                MOVIE_USER_RATING + " REAL, " +
                 // todo: Date type might be better
                 MOVIE_RELEASE_DATE + " TEXT, " +
+                MOVIE_POPULAIRY + " REAL, " +
                 MOVIE_FAVORITE_STATUS + " BOOLEAN)";
         Log.v(LOG_TAG, "createMediumMovieInfoTableQuery: " + createMediumMovieInfoTableQuery);
         db.execSQL(createMediumMovieInfoTableQuery);
@@ -107,7 +95,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(MOVIE_PLOT_SYNOPSIS, movieInfo.getMoviePlotSynopsis());
         contentValues.put(MOVIE_USER_RATING, movieInfo.getMovieUserRating());
         contentValues.put(MOVIE_RELEASE_DATE, movieInfo.getMovieReleaseDate());
-        contentValues.put(MOVIE_FAVORITE_STATUS, CheckFavoriteStatus(movieInfo));
+        contentValues.put(MOVIE_POPULAIRY, movieInfo.getMoviePopularity());
+        contentValues.put(MOVIE_FAVORITE_STATUS, checkFavoriteStatus(movieInfo));
         db.insert(MEDIUM_MOVIEINFO_TABLE_NAME, null, contentValues);
     }
 
@@ -120,11 +109,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(MOVIE_PLOT_SYNOPSIS, movieInfo.getMoviePlotSynopsis());
         contentValues.put(MOVIE_USER_RATING, movieInfo.getMovieUserRating());
         contentValues.put(MOVIE_RELEASE_DATE, movieInfo.getMovieReleaseDate());
-        contentValues.put(MOVIE_FAVORITE_STATUS, CheckFavoriteStatus(movieInfo));
+        contentValues.put(MOVIE_POPULAIRY, movieInfo.getMoviePopularity());
+        contentValues.put(MOVIE_FAVORITE_STATUS, checkFavoriteStatus(movieInfo));
         db.update(MEDIUM_MOVIEINFO_TABLE_NAME, contentValues, MOVIE_ID + " = ? ", new String[]{Long.toString(movieInfo.getMovieId())});
     }
 
-    public boolean CheckFavoriteStatus(MediumMovieInfoModel movieInfo) {
+    public boolean checkFavoriteStatus(MediumMovieInfoModel movieInfo) {
         if (1 == GeneralHelper.getFavoriteStatus(context, Long.toString(movieInfo.getMovieId()), 0))
             return true;
         return false;
@@ -144,8 +134,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(MOVIE_ORIGINAL_TITLE)),
                     cursor.getString(cursor.getColumnIndex(MOVIE_IMAGE_URL)),
                     cursor.getString(cursor.getColumnIndex(MOVIE_PLOT_SYNOPSIS)),
-                    cursor.getString(cursor.getColumnIndex(MOVIE_USER_RATING)),
-                    cursor.getString(cursor.getColumnIndex(MOVIE_RELEASE_DATE)));
+                    cursor.getFloat(cursor.getColumnIndex(MOVIE_USER_RATING)),
+                    cursor.getString(cursor.getColumnIndex(MOVIE_RELEASE_DATE)),
+                    cursor.getDouble(cursor.getColumnIndex(MOVIE_POPULAIRY)));
             allMediumMovieInfoArrayList.add(movieInfo);
         }
         return allMediumMovieInfoArrayList;
@@ -175,7 +166,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(MOVIE_RELEASE_DATE, movieInfo.getMovieReleaseDate());
         contentValues.put(MOVIE_TRAILER_URL_JSON_STRING, GsonizeData(movieInfo.getMovieTrailerUrlArrayList()));
         contentValues.put(MOVIE_REVIEW_JSON_STRING, GsonizeData(movieInfo.getMovieReviewArrayList()));
-        contentValues.put(MOVIE_FAVORITE_STATUS, CheckFavoriteStatus(movieInfo));
+        contentValues.put(MOVIE_FAVORITE_STATUS, checkFavoriteStatus(movieInfo));
         db.insert(MEDIUM_MOVIEINFO_TABLE_NAME, null, contentValues);
     }
 
@@ -190,7 +181,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(MOVIE_RELEASE_DATE, movieInfo.getMovieReleaseDate());
         contentValues.put(MOVIE_TRAILER_URL_JSON_STRING, GsonizeData(movieInfo.getMovieTrailerUrlArrayList()));
         contentValues.put(MOVIE_REVIEW_JSON_STRING, GsonizeData(movieInfo.getMovieReviewArrayList()));
-        contentValues.put(MOVIE_FAVORITE_STATUS, CheckFavoriteStatus(movieInfo));
+        contentValues.put(MOVIE_FAVORITE_STATUS, checkFavoriteStatus(movieInfo));
         db.update(MEDIUM_MOVIEINFO_TABLE_NAME, contentValues, MOVIE_ID + " = ? ", new String[]{Long.toString(movieInfo.getMovieId())});
     }
 
@@ -201,7 +192,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return gsonizedData;
     }
 
-    public boolean CheckFavoriteStatus(CompleteMovieInfoModel movieInfo) {
+    public boolean checkFavoriteStatus(CompleteMovieInfoModel movieInfo) {
         if (1 == GeneralHelper.getFavoriteStatus(context, movieInfo.getMovieId().toString(), 0))
             return true;
         return false;
