@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class CompleteMovieInfoModel implements Parcelable {
 
     // Movie info
-    private Long movieId;
+    private long movieId;
     private String movieOriginalTitle;
     private String movieImageUrl;
     private String moviePlotSynopsis;
