@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,9 +91,9 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        movieTrailerListView = (ListView) detailFragmentView.findViewById(R.id.listview_movietrailers);
+        movieTrailerListView = (ListView) detailFragmentView.findViewById(R.id.listview_movietrailers_tabletux);
         movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(getActivity(), movie.getMovieTrailerUrlArrayList());
-//        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieModel.getMovieTrailerUrlArrayList().toString());
+//        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList(), Line95, onCreate(), DetailFragment: " + udacity_popular_movie.getMovieTrailerUrlArrayList().toString());
         movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
         movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -104,7 +105,7 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        movieReviewListView = (ListView) detailFragmentView.findViewById(R.id.listview_moviereviews);
+        movieReviewListView = (ListView) detailFragmentView.findViewById(R.id.listview_moviereviews_tabletux);
         movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(getActivity(), movie.getMovieReviewArrayList());
         movieReviewListView.setAdapter(movieReviewListViewAdapter);
         movieReviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

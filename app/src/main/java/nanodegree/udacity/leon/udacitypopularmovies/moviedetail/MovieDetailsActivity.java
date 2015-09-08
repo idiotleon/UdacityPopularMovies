@@ -52,7 +52,7 @@ public class MovieDetailsActivity extends Activity {
             movieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
         } else {
             Bundle data = getIntent().getExtras();
-            movieInfo = (MovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_PARCEL);
+            movieInfo = (MovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_DETAILED_IDENTIFIER);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);

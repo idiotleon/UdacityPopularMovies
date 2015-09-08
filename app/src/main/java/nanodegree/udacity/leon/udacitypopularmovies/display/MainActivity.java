@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
 
     private ArrayList<MovieInfoModel> movieInfo;
 
-    private ParsingJSONForMovieInfo parsingJSONForMovieInfo;
+    private ParsingJsonForIncompleteMovieInfo parsingJsonForIncompleteMovieInfo;
 
 //    private DatabaseHelper dbHelper;
 
@@ -63,12 +63,12 @@ public class MainActivity extends Activity {
             movieInfo = dbHelper.getAllMovieInfo();
             customSetContentView(movieInfo);
             // For update (database) purpose
-            parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(API_KEY, "popularity");
+            parsingJsonForIncompleteMovieInfo = new ParsingJsonForIncompleteMovieInfo();
+            parsingJsonForIncompleteMovieInfo.execute(API_KEY, "popularity");
         } */
         else {
-            parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
+            parsingJsonForIncompleteMovieInfo = new ParsingJsonForIncompleteMovieInfo();
+            parsingJsonForIncompleteMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
         }
     }
 
@@ -92,23 +92,12 @@ public class MainActivity extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     MovieInfoModel clickedMovieInfo = (MovieInfoModel) gridView.getItemAtPosition(position);
-                    Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-                    detailsIntent.putExtra(GeneralConstants.MOVIE_PARCEL, new MovieInfoModel(
-                            clickedMovieInfo.getMovieId(),
-                            clickedMovieInfo.getMovieOriginalTitle(),
-                            clickedMovieInfo.getMovieImageUrl(),
-                            clickedMovieInfo.getMoviePlotSynopsis(),
-                            clickedMovieInfo.getMovieUserRating(),
-                            clickedMovieInfo.getMovieReleaseDate(),
-                            clickedMovieInfo.getMovieTrailerUrlArrayList(),
-                            clickedMovieInfo.getMovieReviewArrayList()
-                    ));
-                    startActivity(detailsIntent);
+                    ParseJsonForTheCompleteMovieInfo parseJsonForTheCompleteMovieInfo = new ParseJsonForTheCompleteMovieInfo();
+                    parseJsonForTheCompleteMovieInfo.execute(clickedMovieInfo);
                 }
             });
         }
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -140,13 +129,13 @@ public class MainActivity extends Activity {
              * Should I add popularity in the model and parse it in JSON parsing part,
              * or simply use WebAPI each time for such sort?
              */
-            ParsingJSONForMovieInfo parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
+            ParsingJsonForIncompleteMovieInfo parsingJsonForIncompleteMovieInfo = new ParsingJsonForIncompleteMovieInfo();
+            parsingJsonForIncompleteMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
             return true;
         }
         if (id == R.id.sort_highest_rating_desc) {
-            ParsingJSONForMovieInfo parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
-            parsingJSONForMovieInfo.execute(GeneralConstants.API_KEY, "highestrating");
+            ParsingJsonForIncompleteMovieInfo parsingJsonForIncompleteMovieInfo = new ParsingJsonForIncompleteMovieInfo();
+            parsingJsonForIncompleteMovieInfo.execute(GeneralConstants.API_KEY, "highestrating");
 /*            movieInfo = dbHelper.getAllMovieInfoOrderByUserRating();
             customSetContentView(movieInfo);*/
             return true;
@@ -155,16 +144,16 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ParsingJSONForMovieInfo extends AsyncTask<String, Void, ArrayList<MovieInfoModel>> {
+    public class ParsingJsonForIncompleteMovieInfo extends AsyncTask<String, Void, ArrayList<MovieInfoModel>> {
 
-        private final String LOG_TAG = ParsingJSONForMovieInfo.class.getSimpleName();
+        private final String LOG_TAG = ParsingJsonForIncompleteMovieInfo.class.getSimpleName();
 
         private ArrayList<MovieInfoModel> moviesInfoAsArrayList;
         private String moviesJsonStr;
         private URL defaultUrl;
 
         // base API URL to fetch udacity_popular_movie info
-        final String BASE_API_MOVIE_INFO_URL = "http://api.themoviedb.org/3/discover/movie?";
+        final String BASE_API_MOVIE_INFO_URL = "http://api.themoviedb.org/3/discover/udacity_popular_movie?";
 
         final String QUERY_PARAM = "sort_by";
         final String SETTINGS_PARAM_POPULARITY_DESC = "popularity.desc";
@@ -255,7 +244,7 @@ public class MainActivity extends Activity {
         protected void onPostExecute(ArrayList<MovieInfoModel> movieModels) {
             super.onPostExecute(movieModels);
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
-            movieInfo = parsingJSONForMovieInfo.getMoviesInfoArrayList();
+            movieInfo = parsingJsonForIncompleteMovieInfo.getMoviesInfoArrayList();
 
 //            updateDatabase(movieInfo);
             customSetContentView(movieInfo);
@@ -269,5 +258,34 @@ public class MainActivity extends Activity {
                 dbHelper.updateTableData(movieInfo.get(i));
             }
         }     */
+    }
+
+    class ParseJsonForTheCompleteMovieInfo extends AsyncTask<MovieInfoModel, Void, Void> {
+
+        MovieInfoModel completeMovieInfo;
+
+        @Override
+        protected Void doInBackground(MovieInfoModel... params) {
+            MovieInfoModel movieInfoModelWithoutTrailerAndReviews = params[0];
+            Long movieId = movieInfoModelWithoutTrailerAndReviews.getMovieId();
+            try {
+                completeMovieInfo = new MovieInfoModel(movieInfoModelWithoutTrailerAndReviews,
+                        GeneralHelper.parseJsonDataForMovieTrailerUrl(movieId),
+                        GeneralHelper.parseJsonDataForMovieReview(movieId));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
+            detailsIntent.putExtra(GeneralConstants.MOVIE_DETAILED_IDENTIFIER, completeMovieInfo);
+            startActivity(detailsIntent);
+        }
     }
 }

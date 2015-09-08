@@ -21,7 +21,29 @@ public class MovieInfoModel implements Parcelable {
     public MovieInfoModel() {
     }
 
-    public MovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
+    public MovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis,
+                          String movieUserRating, String movieReleaseDate) {
+        this.movieId = movieId;
+        this.movieOriginalTitle = movieOriginalTitle;
+        this.movieImageUrl = movieImageUrl;
+        this.moviePlotSynopsis = moviePlotSynopsis;
+        this.movieUserRating = movieUserRating;
+        this.movieReleaseDate = movieReleaseDate;
+    }
+
+    public MovieInfoModel(MovieInfoModel movieInfoModel, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
+        this.movieId = movieInfoModel.getMovieId();
+        this.movieOriginalTitle = movieInfoModel.getMovieOriginalTitle();
+        this.movieImageUrl = movieInfoModel.getMovieImageUrl();
+        this.moviePlotSynopsis = movieInfoModel.getMoviePlotSynopsis();
+        this.movieUserRating = movieInfoModel.getMovieUserRating();
+        this.movieReleaseDate = movieInfoModel.getMovieReleaseDate();
+        this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
+        this.movieReviewArrayList = movieReviewArrayList;
+    }
+
+    public MovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating,
+                          String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
         this.movieId = movieId;
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieImageUrl = movieImageUrl;

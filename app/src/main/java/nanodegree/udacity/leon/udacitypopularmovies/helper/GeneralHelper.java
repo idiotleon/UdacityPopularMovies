@@ -3,6 +3,7 @@ package nanodegree.udacity.leon.udacitypopularmovies.helper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -150,20 +151,19 @@ public class GeneralHelper {
             movieReleaseDate = itemJson.getString(OWN_RELEASE_DATE);
 //            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE, parseJsonDataForMovieInfo(): " + movieReleaseDate);
             moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
-            Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMovieInfo(): " + moviePosterUrl);
+//            Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMovieInfo(): " + moviePosterUrl);
 
-            movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
-            movieReviewArrayList = parseJsonDataForMovieReview(movieId);
+/*            movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
+            movieReviewArrayList = parseJsonDataForMovieReview(movieId);*/
 
-            MovieInfoModel movieSimple = new MovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate, movieTrailerUrlArrayList, movieReviewArrayList);
-            moviesInfoAsArrayList.add(movieSimple);
+            MovieInfoModel movieModelWithoutTrailerOrReviews = new MovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate);
+            moviesInfoAsArrayList.add(movieModelWithoutTrailerOrReviews);
         }
 //            Log.v(LOG_TAG, "moviesInfoAsArrayList - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.toString());
 //            Log.v(LOG_TAG, "moviesInfoAsArrayList.size() - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.size());
 
         return moviesInfoAsArrayList;
     }
-
 
     /**
      * For each specific udacity_popular_movie id, this method will get all the "key"s from API/JSON data, when combined with base Youtube URL, return
@@ -174,11 +174,12 @@ public class GeneralHelper {
      * @throws MalformedURLException
      * @throws JSONException
      */
+
     public static ArrayList<String> parseJsonDataForMovieTrailerUrl(Long movieId) throws MalformedURLException, JSONException {
 
 
         // base API URL for fetching trailer id
-        final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
+        final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/udacity_popular_movie/";
         // base Youtube URL for displaying trailer
         final String BASE_YOUTUBE_URL = "http://www.youtube.com/v/";
         final String PARAM_VIDEO = "/videos?";
@@ -209,7 +210,7 @@ public class GeneralHelper {
     public static ArrayList<MovieReviewModel> parseJsonDataForMovieReview(Long movieId) throws MalformedURLException, JSONException {
 
         // base API URL for fetching reviews
-        final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
+        final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/udacity_popular_movie/";
         final String PARAM_REVIEWS = "/reviews?";
 
         final String OWN_RESULTS = "results";
@@ -223,7 +224,7 @@ public class GeneralHelper {
         String allJsonData = getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
 //            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line431: " + allJsonData);
         JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
-        Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
+//        Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
         JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(OWN_RESULTS);
 //            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
 
@@ -241,4 +242,5 @@ public class GeneralHelper {
         }
         return movieReviewArrayList;
     }
+
 }
