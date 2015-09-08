@@ -16,18 +16,18 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 
 public class MovieDetailsActivity extends Activity {
 
     private final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
 
-    private MovieModel movieInfo;
+    private MovieInfoModel movieInfo;
 
     private TextView textViewOriginalTitle;
     private TextView textViewPlotSynopsis;
@@ -49,10 +49,10 @@ public class MovieDetailsActivity extends Activity {
         setContentView(R.layout.movie_details);
 
         if (savedInstanceState != null) {
-            movieInfo = savedInstanceState.getParcelable(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
+            movieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
         } else {
             Bundle data = getIntent().getExtras();
-            movieInfo = (MovieModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
+            movieInfo = (MovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_DETAILED_IDENTIFIER);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
@@ -63,10 +63,10 @@ public class MovieDetailsActivity extends Activity {
         ratingBar = (RatingBar) findViewById(R.id.ratingbar_movie_details);
 
         /**
-         * By SharedPreference, I can save the favorite status of a particular movie.
+         * By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
-        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId(), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId().toString(), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -75,10 +75,10 @@ public class MovieDetailsActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieInfo.getMovieId());
+                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, movieInfo.getMovieId().toString());
                     Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId());
+                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId().toString());
                     Toast.makeText(MovieDetailsActivity.this, "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -128,7 +128,7 @@ public class MovieDetailsActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
+        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
         super.onSaveInstanceState(outState);
 
     }

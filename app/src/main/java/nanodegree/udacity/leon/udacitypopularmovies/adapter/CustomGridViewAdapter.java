@@ -1,23 +1,27 @@
 package nanodegree.udacity.leon.udacitypopularmovies.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 
 public class CustomGridViewAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private ArrayList<MovieModel> moviesInfoAsArrayList;
+    private static final String LOG_TAG = CustomGridViewAdapter.class.getSimpleName();
 
-    public CustomGridViewAdapter(Context context, ArrayList<MovieModel> moviesInfoAsArrayList) {
+    private Context mContext;
+    private ArrayList<MovieInfoModel> moviesInfoAsArrayList;
+
+    public CustomGridViewAdapter(Context context, ArrayList<MovieInfoModel> moviesInfoAsArrayList) {
         mContext = context;
         this.moviesInfoAsArrayList = moviesInfoAsArrayList;
     }
@@ -28,7 +32,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public MovieModel getItem(int position) {
+    public MovieInfoModel getItem(int position) {
         return moviesInfoAsArrayList.get(position);
     }
 
@@ -43,14 +47,17 @@ public class CustomGridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+//        Log.v(LOG_TAG, "getView(), CustomGridViewAdapter executed.");
         ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(mContext);
         } else {
             imageView = (ImageView) convertView;
         }
-
-        Picasso.with(mContext).load(getPosterImageUrl(position)).into(imageView);
+        String imageUrl = getPosterImageUrl(position);
+        Log.v(LOG_TAG, "imageUrl, CustomGridViewAdapter: " + imageUrl);
+        Picasso.with(mContext).load(imageUrl).into(imageView);
+//                .memoryPolicy(MemoryPolicy.NO_STORE).centerCrop().fit().into(imageView);
         return imageView;
     }
 }

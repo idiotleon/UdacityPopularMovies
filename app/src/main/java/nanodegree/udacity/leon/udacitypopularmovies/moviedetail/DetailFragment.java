@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +23,15 @@ import com.squareup.picasso.Picasso;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 
 public class DetailFragment extends Fragment {
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
 
-    private MovieModel movie;
+    private MovieInfoModel movie;
 
     private TextView textViewOriginalTitle;
     private TextView textViewPlotSynopsis;
@@ -59,7 +60,7 @@ public class DetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        movie = getArguments().getParcelable(CommonConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER);
+        movie = getArguments().getParcelable(GeneralConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER);
 
         textViewOriginalTitle = (TextView) detailFragmentView.findViewById(R.id.textview_original_title_movie_details_tabletux);
         textViewPlotSynopsis = (TextView) detailFragmentView.findViewById(R.id.textview_plot_synopsis_movie_details_tabletux);
@@ -69,10 +70,10 @@ public class DetailFragment extends Fragment {
         ratingBar = (RatingBar) detailFragmentView.findViewById(R.id.ratingbar_movie_details_tabletux);
 
         /**
-         * By SharedPreference, I can save the favorite status of a particular movie.
+         * By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
          */
         favoriteStatusCheckBox = (CheckBox) detailFragmentView.findViewById(R.id.checkbox_favorite_star_button_tabletux);
-        if (1 == GeneralHelper.getFavoriteStatus(getActivity(), movie.getMovieId(), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(getActivity(), movie.getMovieId().toString(), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -81,18 +82,18 @@ public class DetailFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(getActivity(), movie.getMovieId());
+                    GeneralHelper.markAsFavorite(getActivity(), movie.getMovieId().toString());
                     Toast.makeText(getActivity(), "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(getActivity(), movie.getMovieId());
+                    GeneralHelper.cancelFavoriteStatus(getActivity(), movie.getMovieId().toString());
                     Toast.makeText(getActivity(), "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        movieTrailerListView = (ListView) detailFragmentView.findViewById(R.id.listview_movietrailers);
+        movieTrailerListView = (ListView) detailFragmentView.findViewById(R.id.listview_movietrailers_tabletux);
         movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(getActivity(), movie.getMovieTrailerUrlArrayList());
-//        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieModel.getMovieTrailerUrlArrayList().toString());
+//        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList(), Line95, onCreate(), DetailFragment: " + udacity_popular_movie.getMovieTrailerUrlArrayList().toString());
         movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
         movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -104,7 +105,7 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        movieReviewListView = (ListView) detailFragmentView.findViewById(R.id.listview_moviereviews);
+        movieReviewListView = (ListView) detailFragmentView.findViewById(R.id.listview_moviereviews_tabletux);
         movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(getActivity(), movie.getMovieReviewArrayList());
         movieReviewListView.setAdapter(movieReviewListViewAdapter);
         movieReviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
