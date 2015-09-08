@@ -145,12 +145,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public class ParseForMovieTralierAndReviews extends AsyncTask<Long, Void, CompleteMovieInfoModel>{
+    public class ParseForMovieTralierAndReviews extends AsyncTask<Long, Void, Void> {
 
         @Override
-        protected CompleteMovieInfoModel doInBackground(Long... params) {
-            long MovieId = params[0];
-
+        protected Void doInBackground(Long... params) {
+            long movieId = params[0];
+            try {
+                ArrayList<String> movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
+                ArrayList<MovieReviewModel> movieReviewModelArrayList = parseJsonDataForMovieReview(movieId);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
