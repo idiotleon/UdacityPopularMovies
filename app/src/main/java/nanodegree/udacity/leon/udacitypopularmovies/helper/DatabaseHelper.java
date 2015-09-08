@@ -22,19 +22,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
 
-    private static final String DATABASE_NAME = "movie_info_database";
-    private static final String STORED_TABLE_NAME = "stored_movie_info";
+    public static final String DATABASE_NAME = "movie_info_database";
+    public static final String STORED_TABLE_NAME = "stored_movie_info";
     //    private static final String UPDATED_TABLE_NAME = "updated_movie_info";
-    private static final String MOVIE_ID = "movie_id";
-    private static final String MOVIE_ORIGINAL_TITLE = "movie_original_title";
-    private static final String MOVIE_IMAGE_URL = "movie_image_url";
-    private static final String MOVIE_PLOT_SYNOPSIS = "movie_plot_synopsis";
-    private static final String MOVIE_USER_RATING = "movie_rating";
-    private static final String MOVIE_RELEASE_DATE = "movie_date";
-    private static final String MOVIE_TRAILER_URL_JSON_STRING = "movie_trailer_url_json_string";
-    private static final String MOVIE_REVIEW_JSON_STRING = "movie_review_json_string";
-    private static final String MOVIE_FAVORITE_STATUS = "movie_favorite_status";
-    private static final int versioin = 1;
+    public static final String MOVIE_ID = "movie_id";
+    public static final String MOVIE_ORIGINAL_TITLE = "movie_original_title";
+    public static final String MOVIE_IMAGE_URL = "movie_image_url";
+    public static final String MOVIE_PLOT_SYNOPSIS = "movie_plot_synopsis";
+    public static final String MOVIE_USER_RATING = "movie_rating";
+    public static final String MOVIE_RELEASE_DATE = "movie_date";
+    public static final String MOVIE_TRAILER_URL_JSON_STRING = "movie_trailer_url_json_string";
+    public static final String MOVIE_REVIEW_JSON_STRING = "movie_review_json_string";
+    public static final String MOVIE_FAVORITE_STATUS = "movie_favorite_status";
+    public static final int versioin = 1;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, versioin);
