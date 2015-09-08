@@ -26,7 +26,7 @@ public class DisplayFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View displayFragmentView = inflater.inflate(R.layout.fragment_details_tabletux, null);
+        View displayFragmentView = inflater.inflate(R.layout.fragment_display_tabletux, null);
         gridView = (GridView) displayFragmentView.findViewById(R.id.gridview_displayfragment);
         return displayFragmentView;
     }

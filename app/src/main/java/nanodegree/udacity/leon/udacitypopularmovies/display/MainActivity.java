@@ -53,29 +53,31 @@ public class MainActivity extends Activity {
 
     private ArrayList<MovieInfoModel> movieInfo;
 
-    private ParsingForMovieInfo parsingForMovieInfo;
+    private ParsingJSONForMovieInfo parsingJSONForMovieInfo;
 
-    private DatabaseHelper dbHelper;
+//    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbHelper = new DatabaseHelper(MainActivity.this);
+//        dbHelper = new DatabaseHelper(MainActivity.this);
 
         if (savedInstanceState != null) {
             movieInfo = savedInstanceState.getParcelableArrayList(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
-            Log.v(LOG_TAG, "movieInfo - saveInstanceState: " + movieInfo);
+            Log.v(LOG_TAG, "movieInfo, fetched from saveInstanceState(): " + movieInfo);
             customSetContentView(movieInfo);
-        } else if ((dbHelper.getAllMovieInfo()).size() > 0) {
+        }
+/*        else if ((dbHelper.getAllMovieInfo()).size() > 0) {
             movieInfo = dbHelper.getAllMovieInfo();
             customSetContentView(movieInfo);
             // For update (database) purpose
-            parsingForMovieInfo = new ParsingForMovieInfo();
-            parsingForMovieInfo.execute(API_KEY, "popularity");
-        } else {
-            parsingForMovieInfo = new ParsingForMovieInfo();
-            parsingForMovieInfo.execute(API_KEY, "popularity");
+            parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
+            parsingJSONForMovieInfo.execute(API_KEY, "popularity");
+        } */
+        else {
+            parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
+            parsingJSONForMovieInfo.execute(API_KEY, "popularity");
         }
     }
 
@@ -147,30 +149,30 @@ public class MainActivity extends Activity {
              * Should I add popularity in the model and parse it in JSON parsing part,
              * or simply use WebAPI each time for such sort?
              */
-            ParsingForMovieInfo parsingForMovieInfo = new ParsingForMovieInfo();
-            parsingForMovieInfo.execute(API_KEY, "popularity");
+            ParsingJSONForMovieInfo parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
+            parsingJSONForMovieInfo.execute(API_KEY, "popularity");
             return true;
         }
         if (id == R.id.sort_highest_rating_desc) {
-//            ParsingForMovieInfo parsingForMovieInfo = new ParsingForMovieInfo();
-//            parsingForMovieInfo.execute(API_KEY, "highestrating");
-            movieInfo = dbHelper.getAllMovieInfoOrderByUserRating();
-            customSetContentView(movieInfo);
+            ParsingJSONForMovieInfo parsingJSONForMovieInfo = new ParsingJSONForMovieInfo();
+            parsingJSONForMovieInfo.execute(API_KEY, "highestrating");
+/*            movieInfo = dbHelper.getAllMovieInfoOrderByUserRating();
+            customSetContentView(movieInfo);*/
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public class ParsingForMovieInfo extends AsyncTask<String, Void, ArrayList<MovieInfoModel>> {
+    public class ParsingJSONForMovieInfo extends AsyncTask<String, Void, ArrayList<MovieInfoModel>> {
 
-        private final String LOG_TAG = ParsingForMovieInfo.class.getSimpleName();
+        private final String LOG_TAG = ParsingJSONForMovieInfo.class.getSimpleName();
 
         private ArrayList<MovieInfoModel> moviesInfoAsArrayList;
         private String moviesJsonStr;
         private URL defaultUrl;
 
-        // base API URL to fetch movie info
+        // base API URL to fetch udacity_popular_movie info
         final String BASE_API_MOVIE_INFO_URL = "http://api.themoviedb.org/3/discover/movie?";
         // base URL for poster images
         final String BASE_POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
@@ -234,7 +236,7 @@ public class MainActivity extends Activity {
         }
 
         /**
-         * Setter method for movie info
+         * Setter method for udacity_popular_movie info
          *
          * @param moviesInfoAsArrayList
          * @throws JSONException
@@ -316,7 +318,7 @@ public class MainActivity extends Activity {
         }
 
         /**
-         * JSON parsing method for movie info
+         * JSON parsing method for udacity_popular_movie info
          *
          * @param moviesJsonStr
          * @return
@@ -350,16 +352,17 @@ public class MainActivity extends Activity {
                 JSONObject itemJson = moviesJsonObjectArray.getJSONObject(i);
 
                 movieId = itemJson.getLong(OWN_MOVIE_ID);
-//            Log.v(LOG_TAG, "MOVIE_ID - parseJsonDataForMovieInfo(): " + MOVIE_ID);
+//            Log.v(LOG_TAG, "MOVIE_ID, parseJsonDataForMovieInfo(): " + movieId);
                 movieOriginalTitle = itemJson.getString(OWN_ORIGINAL_TITLE);
-//            Log.v(LOG_TAG, "MOVIE_ORIGINAL_TITLE - parseJsonDataForMovieInfo(): " + MOVIE_ORIGINAL_TITLE);
+//            Log.v(LOG_TAG, "MOVIE_ORIGINAL_TITLE, parseJsonDataForMovieInfo(): " + movieOriginalTitle);
                 moviePlotSynopsis = itemJson.getString(OWN_MOVIE_PLOT_SYNOPSIS);
-//            Log.v(LOG_TAG, "MOVIE_PLOT_SYNOPSIS - parseJsonDataForMovieInfo(): " + MOVIE_PLOT_SYNOPSIS);
+//            Log.v(LOG_TAG, "MOVIE_PLOT_SYNOPSIS, parseJsonDataForMovieInfo(): " + moviePlotSynopsis);
                 movieUserRating = itemJson.getString(OWN_MOVIE_USER_RATING);
-//            Log.v(LOG_TAG, "MOVIE_USER_RATING - parseJsonDataForMovieInfo(): " + MOVIE_USER_RATING);
+//            Log.v(LOG_TAG, "MOVIE_USER_RATING, parseJsonDataForMovieInfo(): " + movieUserRating);
                 movieReleaseDate = itemJson.getString(OWN_RELEASE_DATE);
-//            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE - parseJsonDataForMovieInfo(): " + MOVIE_RELEASE_DATE);
+//            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE, parseJsonDataForMovieInfo(): " + movieReleaseDate);
                 moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
+                Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMovieInfo(): " + moviePosterUrl);
 
                 movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
 
@@ -375,7 +378,7 @@ public class MainActivity extends Activity {
         }
 
         /**
-         * For each specific movie id, this method will get all the "key"s from API/JSON data, when combined with base Youtube URL, return
+         * For each specific udacity_popular_movie id, this method will get all the "key"s from API/JSON data, when combined with base Youtube URL, return
          * an ArrayList of all trailer urls, which can be played directly
          *
          * @param movieId
@@ -454,19 +457,19 @@ public class MainActivity extends Activity {
         protected void onPostExecute(ArrayList<MovieInfoModel> movieModels) {
             super.onPostExecute(movieModels);
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), moviesInfoAsArrayList);
-            movieInfo = parsingForMovieInfo.getMoviesInfoArrayList();
+            movieInfo = parsingJSONForMovieInfo.getMoviesInfoArrayList();
 
-            updateDatabase(movieInfo);
+//            updateDatabase(movieInfo);
             customSetContentView(movieInfo);
 
             Log.v(LOG_TAG, "movieInfo after parsing:" + movieInfo.toString());
 //            gridView.setAdapter(customGridViewAdapter);
         }
 
-        private void updateDatabase(ArrayList<MovieInfoModel> movieInfoArrayList) {
+/*        private void updateDatabase(ArrayList<MovieInfoModel> movieInfoArrayList) {
             for (int i = 0; i < movieInfoArrayList.size(); i++) {
                 dbHelper.updateTableData(movieInfo.get(i));
             }
-        }
+        }     */
     }
 }

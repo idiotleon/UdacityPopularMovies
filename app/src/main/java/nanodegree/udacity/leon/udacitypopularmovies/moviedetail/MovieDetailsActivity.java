@@ -63,7 +63,7 @@ public class MovieDetailsActivity extends Activity {
         ratingBar = (RatingBar) findViewById(R.id.ratingbar_movie_details);
 
         /**
-         * By SharedPreference, I can save the favorite status of a particular movie.
+         * By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
         if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, movieInfo.getMovieId().toString(), 0)) {

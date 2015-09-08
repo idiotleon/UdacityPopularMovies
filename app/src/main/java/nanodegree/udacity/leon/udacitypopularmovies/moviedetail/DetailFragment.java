@@ -69,7 +69,7 @@ public class DetailFragment extends Fragment {
         ratingBar = (RatingBar) detailFragmentView.findViewById(R.id.ratingbar_movie_details_tabletux);
 
         /**
-         * By SharedPreference, I can save the favorite status of a particular movie.
+         * By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
          */
         favoriteStatusCheckBox = (CheckBox) detailFragmentView.findViewById(R.id.checkbox_favorite_star_button_tabletux);
         if (1 == GeneralHelper.getFavoriteStatus(getActivity(), movie.getMovieId().toString(), 0)) {
