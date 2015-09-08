@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 
@@ -59,7 +59,7 @@ public class DetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        movie = getArguments().getParcelable(CommonConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER);
+        movie = getArguments().getParcelable(GeneralConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER);
 
         textViewOriginalTitle = (TextView) detailFragmentView.findViewById(R.id.textview_original_title_movie_details_tabletux);
         textViewPlotSynopsis = (TextView) detailFragmentView.findViewById(R.id.textview_plot_synopsis_movie_details_tabletux);

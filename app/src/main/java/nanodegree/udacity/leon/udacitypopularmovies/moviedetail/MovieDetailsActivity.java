@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import nanodegree.udacity.leon.udacitypopularmovies.helper.CommonConstants;
+import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
@@ -49,10 +49,10 @@ public class MovieDetailsActivity extends Activity {
         setContentView(R.layout.movie_details);
 
         if (savedInstanceState != null) {
-            movieInfo = savedInstanceState.getParcelable(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
+            movieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
         } else {
             Bundle data = getIntent().getExtras();
-            movieInfo = (MovieInfoModel) data.getParcelable(CommonConstants.MOVIE_PARCEL);
+            movieInfo = (MovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_PARCEL);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
@@ -128,7 +128,7 @@ public class MovieDetailsActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(CommonConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
+        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
         super.onSaveInstanceState(outState);
 
     }
