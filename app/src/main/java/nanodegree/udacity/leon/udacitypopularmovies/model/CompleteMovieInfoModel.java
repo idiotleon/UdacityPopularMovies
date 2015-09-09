@@ -13,55 +13,24 @@ public class CompleteMovieInfoModel implements Parcelable {
     private String movieOriginalTitle;
     private String movieImageUrl;
     private String moviePlotSynopsis;
-    private String movieUserRating;
+    private float movieUserRating;
     private String movieReleaseDate;
-    private ArrayList<String> movieTrailerUrlArrayList = null;
+    private double moviePopularity;
+    private ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
     private ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
 
-    public CompleteMovieInfoModel() {
-    }
-
-    public CompleteMovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
-        this.movieId = movieId;
-        this.movieOriginalTitle = movieOriginalTitle;
-        this.movieImageUrl = movieImageUrl;
-        this.moviePlotSynopsis = moviePlotSynopsis;
-        this.movieUserRating = movieUserRating;
-        this.movieReleaseDate = movieReleaseDate;
+    public CompleteMovieInfoModel(MediumMovieInfoModel mediumMovieInfoModel,
+                                  ArrayList<String> movieTrailerUrlArrayList,
+                                  ArrayList<MovieReviewModel> movieReviewModelArrayList) {
+        this.movieId = mediumMovieInfoModel.getMovieId();
+        this.movieOriginalTitle = mediumMovieInfoModel.getMovieOriginalTitle();
+        this.movieImageUrl = mediumMovieInfoModel.getMovieImageUrl();
+        this.moviePlotSynopsis = mediumMovieInfoModel.getMoviePlotSynopsis();
+        this.movieUserRating = mediumMovieInfoModel.getMovieUserRating();
+        this.moviePopularity = mediumMovieInfoModel.getMoviePopularity();
+        this.movieReleaseDate = mediumMovieInfoModel.getMovieReleaseDate();
         this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
-        this.movieReviewArrayList = movieReviewArrayList;
-    }
-
-    public void setMovieTrailerUrlArrayList(ArrayList<String> movieTrailerUrlArrayList) {
-        this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
-    }
-
-    public void setMovieId(Long movieId) {
-        this.movieId = movieId;
-    }
-
-    public void setMovieOriginalTitle(String movieOriginalTitle) {
-        this.movieOriginalTitle = movieOriginalTitle;
-    }
-
-    public void setMovieImageUrl(String movieImageUrl) {
-        this.movieImageUrl = movieImageUrl;
-    }
-
-    public void setMoviePlotSynopsis(String moviePlotSynopsis) {
-        this.moviePlotSynopsis = moviePlotSynopsis;
-    }
-
-    public void setMovieUserRating(String movieUserRating) {
-        this.movieUserRating = movieUserRating;
-    }
-
-    public void setMovieReleaseDate(String movieReleaseDate) {
-        this.movieReleaseDate = movieReleaseDate;
-    }
-
-    public void setMovieReviewArrayList(ArrayList<MovieReviewModel> movieReviewArrayList) {
-        this.movieReviewArrayList = movieReviewArrayList;
+        this.movieReviewArrayList = movieReviewModelArrayList;
     }
 
     public ArrayList<MovieReviewModel> getMovieReviewArrayList() {
@@ -88,7 +57,7 @@ public class CompleteMovieInfoModel implements Parcelable {
         return moviePlotSynopsis;
     }
 
-    public String getMovieUserRating() {
+    public float getMovieUserRating() {
         return movieUserRating;
     }
 
@@ -106,8 +75,9 @@ public class CompleteMovieInfoModel implements Parcelable {
         movieOriginalTitle = in.readString();
         movieImageUrl = in.readString();
         moviePlotSynopsis = in.readString();
-        movieUserRating = in.readString();
+        movieUserRating = in.readFloat();
         movieReleaseDate = in.readString();
+        moviePopularity = in.readDouble();
         movieTrailerUrlArrayList = in.createStringArrayList();
         in.readTypedList(movieReviewArrayList, MovieReviewModel.CREATOR);
     }
@@ -118,8 +88,9 @@ public class CompleteMovieInfoModel implements Parcelable {
         dest.writeString(movieOriginalTitle);
         dest.writeString(movieImageUrl);
         dest.writeString(moviePlotSynopsis);
-        dest.writeString(movieUserRating);
+        dest.writeFloat(movieUserRating);
         dest.writeString(movieReleaseDate);
+        dest.writeDouble(moviePopularity);
         dest.writeStringList(movieTrailerUrlArrayList);
         dest.writeTypedList(movieReviewArrayList);
     }

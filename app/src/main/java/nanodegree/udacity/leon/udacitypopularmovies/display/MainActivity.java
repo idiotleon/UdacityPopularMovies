@@ -32,8 +32,6 @@ import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
-
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,6 +1,5 @@
 package nanodegree.udacity.leon.udacitypopularmovies.moviedetail;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nanodegree.udacity.leon.udacitypopularmovies.helper.DatabaseHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
@@ -40,7 +40,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
 
-    private MediumMovieInfoModel movieInfo;
+    private CompleteMovieInfoModel completeMovieInfo;
+    private MediumMovieInfoModel mediumMovieInfo;
+    private long movieId;
 
     private TextView textViewOriginalTitle;
     private TextView textViewPlotSynopsis;
@@ -56,16 +58,33 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private MovieTrailerCustomListViewAdapter movieTrailerListViewAdapter;
     private MovieReviewCustomListViewAdapter movieReviewListViewAdapter;
 
+    private ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
+    private ArrayList<MovieReviewModel> movieReviewsArrayList = new ArrayList<>();
+
+    private DatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details);
+        dbHelper = new DatabaseHelper(MovieDetailsActivity.this);
 
         if (savedInstanceState != null) {
-            movieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
+            completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
+            movieId = completeMovieInfo.getMovieId();
         } else {
             Bundle data = getIntent().getExtras();
-            movieInfo = (MediumMovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_PARCEL);
+            mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_PARCEL);
+            movieId = mediumMovieInfo.getMovieId();
+
+            movieTrailerUrlArrayList = dbHelper.getMovieTrailerUrlsBasedOnMovieId(movieId);
+            movieReviewsArrayList = dbHelper.getMovieReviewsBasedOnMovieId(movieId);
+
+            completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
+
+            // For updating database
+            ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+            parseForMovieTrailerAndReviews.execute(movieId);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
@@ -76,10 +95,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.ratingbar_movie_details);
 
         /**
-         * By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
+         *By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
-        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieInfo.getMovieId()), 0)) {
+        if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieId), 0)) {
             favoriteStatusCheckBox.setChecked(true);
         } else {
             favoriteStatusCheckBox.setChecked(false);
@@ -88,48 +107,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, Long.toString(movieInfo.getMovieId()));
+                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, Long.toString(movieId));
                     Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieInfo.getMovieId()));
+                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieId));
                     Toast.makeText(MovieDetailsActivity.this, "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        movieTrailerListView = (ListView) findViewById(R.id.listview_movietrailers);
-        movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(MovieDetailsActivity.this, movieInfo.getMovieTrailerUrlArrayList());
-//        Log.v(LOG_TAG, "movieInfo.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieInfo.getMovieTrailerUrlArrayList().toString());
-        movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
-        movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = movieInfo.getMovieTrailerUrlArrayList().get(position);
-//                Log.v(LOG_TAG, "Youtube Trailer URL is: " + url);
-                Intent implicitVideoPlayIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(implicitVideoPlayIntent);
-            }
-        });
-
-        movieReviewListView = (ListView) findViewById(R.id.listview_moviereviews);
-        movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(MovieDetailsActivity.this, movieInfo.getMovieReviewArrayList());
-        movieReviewListView.setAdapter(movieReviewListViewAdapter);
-        movieReviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = movieInfo.getMovieReviewArrayList().get(position).getReviewUrl();
-//                Log.v(LOG_TAG, "Review URL: " + url);
-                Intent implicitIntentReviewURLBrowsing = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(implicitIntentReviewURLBrowsing);
-            }
-        });
-
-        Picasso.with(this).load(movieInfo.getMovieImageUrl()).into(imageViewPosterImage);
+        Picasso.with(this).load(completeMovieInfo.getMovieImageUrl()).into(imageViewPosterImage);
 //        Log.v(LOG_TAG, "movieInfo.getMovieImageUrl() - Line70, onCreate(): " + movieInfo.getMovieImageUrl());
-        textViewOriginalTitle.setText("Original Title: " + movieInfo.getMovieOriginalTitle());
-        textViewPlotSynopsis.setText("Plot Synopsis: " + movieInfo.getMoviePlotSynopsis());
-        ratingBar.setRating(movieInfo.getMovieUserRating());
-        textViewReleaseDate.setText("Release Date: " + movieInfo.getMovieReleaseDate());
+        textViewOriginalTitle.setText("Original Title: " + completeMovieInfo.getMovieOriginalTitle());
+        textViewPlotSynopsis.setText("Plot Synopsis: " + completeMovieInfo.getMoviePlotSynopsis());
+        ratingBar.setRating(completeMovieInfo.getMovieUserRating());
+        textViewReleaseDate.setText("Release Date: " + completeMovieInfo.getMovieReleaseDate());
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -139,26 +131,33 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
-        super.onSaveInstanceState(outState);
-    }
-
-    public class ParseForMovieTralierAndReviews extends AsyncTask<Long, Void, Void> {
+    public class ParseForMovieTrailerAndReviews extends AsyncTask<Long, Void, Void> {
+        ArrayList<String> movieTrailerUrlArrayList;
+        ArrayList<MovieReviewModel> movieReviewModelArrayList;
 
         @Override
         protected Void doInBackground(Long... params) {
-            long movieId = params[0];
             try {
-                ArrayList<String> movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
-                ArrayList<MovieReviewModel> movieReviewModelArrayList = parseJsonDataForMovieReview(movieId);
+                long movieId = params[0];
+                movieTrailerUrlArrayList = new ArrayList<>();
+                movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
+                movieReviewModelArrayList = new ArrayList<>();
+                movieReviewModelArrayList = parseJsonDataForMovieReview(movieId);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            refreshMovieTrailers(movieTrailerUrlArrayList);
+            refreshMovieReviews(movieReviewModelArrayList);
+            completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewModelArrayList);
         }
 
         /**
@@ -196,6 +195,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 //                Log.v(LOG_TAG, "key: " + key);
                 String url = BASE_YOUTUBE_URL + key;
 //                Log.v(LOG_TAG, "url: " + url);
+                // todo: how to avoid duplicate record
+                dbHelper.insertMovieTrailer(movieId, url);
                 movieTrailerUrlArrayList.add(url);
             }
             return movieTrailerUrlArrayList;
@@ -207,10 +208,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
             final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
             final String PARAM_REVIEWS = "/reviews?";
 
-            final String OWN_RESULTS = "results";
-            final String OWN_AUTHOR = "author";
-            final String OWN_CONTENT = "content";
-            final String OWN_URL = "url";
+            final String UPM_RESULTS = "results";
+            final String UPM_AUTHOR = "author";
+            final String UPM_CONTENT = "content";
+            final String UPM_URL = "url";
 
             String movieReviewAPIUrl = BASE_API_TRAILER_URL + Long.toString(movieId) + PARAM_REVIEWS + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
 //            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line428: " + movieReviewAPIUrl);
@@ -218,25 +219,62 @@ public class MovieDetailsActivity extends AppCompatActivity {
             String allJsonData = GeneralHelper.getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
 //            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line431: " + allJsonData);
             JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
-            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
-            JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(OWN_RESULTS);
+//            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
+            JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(UPM_RESULTS);
 //            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
 
             ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
             for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
                 JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
-                String author = itemJson.getString(OWN_AUTHOR);
+                String author = itemJson.getString(UPM_AUTHOR);
 //                Log.v(LOG_TAG, "author: " + author);
-                String content = itemJson.getString(OWN_CONTENT);
+                String content = itemJson.getString(UPM_CONTENT);
 //                Log.v(LOG_TAG, "content: " + content);
-                String url = itemJson.getString(OWN_URL);
+                String url = itemJson.getString(UPM_URL);
 //                Log.v(LOG_TAG, "review url: " + url);
                 MovieReviewModel movieReviewModel = new MovieReviewModel(author, content, url);
+                // todo: how to avoid duplicate record
+                dbHelper.insertMovieReviews(movieId, movieReviewModel);
                 movieReviewArrayList.add(movieReviewModel);
             }
             return movieReviewArrayList;
         }
     }
 
+    private void refreshMovieTrailers(final ArrayList<String> movieTrailerArrayList) {
+        movieTrailerListView = (ListView) findViewById(R.id.listview_movietrailers);
+        movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(MovieDetailsActivity.this, movieTrailerArrayList);
+//        Log.v(LOG_TAG, "movieInfo.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieInfo.getMovieTrailerUrlArrayList().toString());
+        movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
+        movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String url = movieTrailerArrayList.get(position);
+                Log.v(LOG_TAG, "Youtube Trailer URL is: " + url);
+                Intent implicitVideoPlayIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(implicitVideoPlayIntent);
+            }
+        });
+    }
 
+    private void refreshMovieReviews(final ArrayList<MovieReviewModel> movieReviewArrayList) {
+        movieReviewListView = (ListView) findViewById(R.id.listview_moviereviews);
+        movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(MovieDetailsActivity.this, movieReviewArrayList);
+        movieReviewListView.setAdapter(movieReviewListViewAdapter);
+        movieReviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String url = movieReviewArrayList.get(position).getReviewUrl();
+                Log.v(LOG_TAG, "Review URL: " + url);
+                Intent implicitIntentReviewURLBrowsing = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(implicitIntentReviewURLBrowsing);
+            }
+        });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, completeMovieInfo);
+        super.onSaveInstanceState(outState);
+    }
 }

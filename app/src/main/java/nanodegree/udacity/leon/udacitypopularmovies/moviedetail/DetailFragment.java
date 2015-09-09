@@ -121,7 +121,7 @@ public class DetailFragment extends Fragment {
 //        Log.v(LOG_TAG, "movieModel.getMovieImageUrl() - Line70, onCreate(): " + movieModel.getMovieImageUrl());
         textViewOriginalTitle.setText("Original Title: " + movie.getMovieOriginalTitle());
         textViewPlotSynopsis.setText("Plot Synopsis: " + movie.getMoviePlotSynopsis());
-        ratingBar.setRating(Float.parseFloat(movie.getMovieUserRating()));
+        ratingBar.setRating(movie.getMovieUserRating());
         textViewReleaseDate.setText("Release Date: " + movie.getMovieReleaseDate());
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
