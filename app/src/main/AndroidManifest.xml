@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".moviedetail.MovieDetailsActivity" />
+
+        <provider
+            android:name=".provider.MovieInfoProvider"
+            android:authorities="nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProvider" />
     </application>
 
 </manifest>

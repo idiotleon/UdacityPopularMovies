@@ -16,18 +16,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.helper.DatabaseHelper;
+import nanodegree.udacity.leon.udacitypopularmovies.provider.DatabaseHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
@@ -285,19 +280,19 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject itemJson = moviesJsonObjectArray.getJSONObject(i);
 
                 movieId = itemJson.getLong(UPM_MOVIE_ID);
-//            Log.v(LOG_TAG, "MOVIE_ID, parseJsonDataForMediumMovieInfo(): " + movieId);
+//            Log.v(LOG_TAG, "MOVIE_COLUMN_ID, parseJsonDataForMediumMovieInfo(): " + movieId);
                 movieOriginalTitle = itemJson.getString(UPM_ORIGINAL_TITLE);
-//            Log.v(LOG_TAG, "MOVIE_ORIGINAL_TITLE, parseJsonDataForMediumMovieInfo(): " + movieOriginalTitle);
+//            Log.v(LOG_TAG, "MOVIE_COLUMN_ORIGINAL_TITLE, parseJsonDataForMediumMovieInfo(): " + movieOriginalTitle);
                 moviePlotSynopsis = itemJson.getString(UPM_MOVIE_PLOT_SYNOPSIS);
-//            Log.v(LOG_TAG, "MOVIE_PLOT_SYNOPSIS, parseJsonDataForMediumMovieInfo(): " + moviePlotSynopsis);
+//            Log.v(LOG_TAG, "MOVIE_COLUMN_PLOT_SYNOPSIS, parseJsonDataForMediumMovieInfo(): " + moviePlotSynopsis);
                 movieUserRating = Float.parseFloat(itemJson.getString(UPM_MOVIE_USER_RATING));
-//            Log.v(LOG_TAG, "MOVIE_USER_RATING, parseJsonDataForMediumMovieInfo(): " + movieUserRating);
+//            Log.v(LOG_TAG, "MOVIE_COLUMN_USER_RATING, parseJsonDataForMediumMovieInfo(): " + movieUserRating);
                 movieReleaseDate = itemJson.getString(UPM_RELEASE_DATE);
-//            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE, parseJsonDataForMediumMovieInfo(): " + movieReleaseDate);
+//            Log.v(LOG_TAG, "MOVIE_COLUMN_RELEASE_DATE, parseJsonDataForMediumMovieInfo(): " + movieReleaseDate);
                 moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(UPM_POSTER_PATH);
 //                Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMediumMovieInfo(): " + moviePosterUrl);
                 moviePopularity = itemJson.getDouble(UPM_POPULAIRY);
-//                Log.v(LOG_TAG, "MOVIE_POPULAIRY, parseJsonDataForMediumMovieInfo(): " + moviePopularity);
+//                Log.v(LOG_TAG, "MOVIE_COLUMN_POPULAIRY, parseJsonDataForMediumMovieInfo(): " + moviePopularity);
 
                 MediumMovieInfoModel mediumMovieInfoModel = new MediumMovieInfoModel(movieId,
                         movieOriginalTitle, moviePosterUrl, moviePlotSynopsis,
