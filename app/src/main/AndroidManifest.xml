@@ -23,7 +23,9 @@
 
         <provider
             android:name=".provider.MovieInfoProvider"
-            android:authorities="nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProvider" />
+            android:authorities="nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProvider"
+            android:readPermission="android:permission.permRead"
+            android:writePermission="android.permission.permWrite" />
     </application>
 
 </manifest>

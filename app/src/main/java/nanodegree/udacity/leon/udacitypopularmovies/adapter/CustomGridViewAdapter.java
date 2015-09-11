@@ -28,7 +28,10 @@ public class CustomGridViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return moviesInfoAsArrayList.size();
+        if (moviesInfoAsArrayList.isEmpty())
+            return 0;
+        else
+            return moviesInfoAsArrayList.size();
     }
 
     @Override

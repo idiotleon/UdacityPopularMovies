@@ -10,8 +10,11 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class MovieInfoProvider extends ContentProvider {
+
+    private static final String LOG_TAG = MovieInfoProvider.class.getSimpleName();
 
     private DatabaseHelper dbHelper;
 
@@ -28,12 +31,12 @@ public class MovieInfoProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, "movies", MOVIES);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, "movies/#", MOVIE_ID);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, "movie_traliers", MOVIE_TRAILERS);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, "movie_traliers/#", MOVIE_TRAILER_ID);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, "movie_reviews", MOVIE_REVIEWS);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, "movie_reviews/#", MOVIE_REVIEW_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_GENERAL_MOVIE_INFO, MOVIES);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_GENERAL_MOVIE_INFO + "/#", MOVIE_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_TRAILER, MOVIE_TRAILERS);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_TRAILER + "/#", MOVIE_TRAILER_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_REVIEW, MOVIE_REVIEWS);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_REVIEW + "/#", MOVIE_REVIEW_ID);
     }
 
     @Override
@@ -44,6 +47,7 @@ public class MovieInfoProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.v(LOG_TAG, "query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder), MovieInfoProvider executed.");
         openDatabase();
 
         String groupBy = null;
@@ -52,65 +56,65 @@ public class MovieInfoProvider extends ContentProvider {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
         switch (uriMatcher.match(uri)) {
+            case MOVIES:
+                queryBuilder.setTables(MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME);
+                break;
             case MOVIE_ID:
                 String rowIdForGeneralMovieInfo = uri.getPathSegments().get(1);
                 queryBuilder.setTables(MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME);
                 queryBuilder.appendWhere(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID + "=" + rowIdForGeneralMovieInfo);
                 break;
+            case MOVIE_TRAILERS:
+                queryBuilder.setTables(MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME);
+                break;
             case MOVIE_TRAILER_ID:
                 String rowIdForMovieTrailer = uri.getPathSegments().get(1);
                 queryBuilder.setTables(MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME);
-                queryBuilder.appendWhere(MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_ID + " = " + rowIdForMovieTrailer);
+                queryBuilder.appendWhere(MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_FOREIGN_KEY_ID + " = " + rowIdForMovieTrailer);
+                break;
+            case MOVIE_REVIEWS:
+                queryBuilder.setTables(MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME);
                 break;
             case MOVIE_REVIEW_ID:
                 String rowIdForMovieReview = uri.getPathSegments().get(1);
                 queryBuilder.setTables(MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME);
-                queryBuilder.appendWhere(MovieInfoProviderContract.MovieReviewEntry.MOVIE_REVIEW_COLUMN_ID + " = " + rowIdForMovieReview);
+                queryBuilder.appendWhere(MovieInfoProviderContract.MovieReviewEntry.MOVIE_REVIEW_COLUMN_FOREIGN_KEY_ID + " = " + rowIdForMovieReview);
+                break;
         }
 
-        // If no sortOrder is specified, sort by movie popularity
-        String orderBy;
-        if (TextUtils.isEmpty(sortOrder)) {
-            orderBy = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_POPULAIRY;
-        } else {
-            orderBy = sortOrder;
-        }
+        Log.v(LOG_TAG, "queryBuilder.toString(), MovieInfoProvider: " + queryBuilder.toString());
 
         // Apply the query to the underlying database
-        Cursor cursor = queryBuilder.query(database, projection, selection, selectionArgs, groupBy, having, orderBy);
+        Cursor cursor = queryBuilder.query(database, projection, selection, selectionArgs, groupBy, having, sortOrder);
 
         // Register the contexts ContentResolver to be notified if the cursor result set changes
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
-        try {
-            // Return a cursor to the query result
-            return cursor;
-        } finally {
-            database.close();
-            cursor.close();
-        }
-
+        // Return a cursor to the query result
+        return cursor;
     }
 
     @Override
     public String getType(Uri uri) {
+        Log.v(LOG_TAG, "getType(Uri uri), MovieInfoProvider executed.");
+
         /**
          * Return a String that identifies the MIME type
          * for a Content Provider URI
          */
         switch (uriMatcher.match(uri)) {
             case MOVIES:
-                return "vnd.android.cursor.dir/vnd.udacity.nanodegree.movie";
+                return MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_TYPE;
             case MOVIE_ID:
-                return "vnd.android.cursor.item/vnd.udacity.nanodegree.movie";
+                return MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_ITEM_TYPE;
             case MOVIE_TRAILERS:
-                return "vnd.android.cursor.dir/vnd.udacity.nanodegree.movie_trailer";
+                return MovieInfoProviderContract.MovieTrailerEntry.CONTENT_TYPE;
             case MOVIE_TRAILER_ID:
-                return "vnd.android.cursor.item/vnd.udacity.nanodegree.movie_trailer";
+                return MovieInfoProviderContract.MovieTrailerEntry.CONTENT_ITEM_TYPE;
             case MOVIE_REVIEWS:
-                return "vnd.android.cursor.dir/vnd.udacity.nanodegree.movie_review";
+                return MovieInfoProviderContract.MovieReviewEntry.CONTENT_TYPE;
             case MOVIE_REVIEW_ID:
-                return "vnd.android.cursor.item/vnd.udacity.nanodegree.movie_review";
+                return MovieInfoProviderContract.MovieReviewEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -118,6 +122,7 @@ public class MovieInfoProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        Log.v(LOG_TAG, "insert(Uri uri, ContentValues values), MovieInfoProvider executed.");
         openDatabase();
 
         /* To add empty rows to your database by passing in an empty
@@ -155,7 +160,6 @@ public class MovieInfoProvider extends ContentProvider {
                 }
         }
 
-        database.close();
         return null;
     }
 
@@ -198,7 +202,6 @@ public class MovieInfoProvider extends ContentProvider {
                 break;
         }
 
-        database.close();
         // Return the number of deleted items
         return deleteCount;
     }
@@ -235,7 +238,6 @@ public class MovieInfoProvider extends ContentProvider {
         // Notify any observers of the change in the data set
         getContext().getContentResolver().notifyChange(uri, null);
 
-        database.close();
         return updateCount;
     }
 

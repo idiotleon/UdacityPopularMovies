@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieTrailerModel;
 import nanodegree.udacity.leon.udacitypopularmovies.provider.DatabaseHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
@@ -58,16 +59,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private MovieTrailerCustomListViewAdapter movieTrailerListViewAdapter;
     private MovieReviewCustomListViewAdapter movieReviewListViewAdapter;
 
-    private ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
-    private ArrayList<MovieReviewModel> movieReviewsArrayList = new ArrayList<>();
-
-    private DatabaseHelper dbHelper;
+    private ArrayList<String> movieTrailerUrlArrayList;
+    private ArrayList<MovieReviewModel> movieReviewsArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details);
-        dbHelper = new DatabaseHelper(MovieDetailsActivity.this);
+
+        movieTrailerUrlArrayList = new ArrayList<>();
+        movieReviewsArrayList = new ArrayList<>();
 
         if (savedInstanceState != null) {
             completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
@@ -75,16 +76,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
         } else {
             Bundle data = getIntent().getExtras();
             mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_PARCEL);
+            Log.v(LOG_TAG, "mediumMovieInfo.getMovieImageUrl(), onCreate(), MovieDetailsActivity: " + mediumMovieInfo.getMovieImageUrl());
             movieId = mediumMovieInfo.getMovieId();
 
-            movieTrailerUrlArrayList = dbHelper.getMovieTrailerUrlsBasedOnMovieId(movieId);
-            movieReviewsArrayList = dbHelper.getMovieReviewsBasedOnMovieId(movieId);
-
+            movieTrailerUrlArrayList = GeneralHelper.getMovieTrailerUrls(MovieDetailsActivity.this, movieId);
+            movieReviewsArrayList = GeneralHelper.getMovieReviews(MovieDetailsActivity.this, movieId);
             completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
-
-            // For updating database
-            ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-            parseForMovieTrailerAndReviews.execute(movieId);
+            if (movieTrailerUrlArrayList.isEmpty() || movieReviewsArrayList.isEmpty()) {
+                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                parseForMovieTrailerAndReviews.execute(movieId);
+            } else {
+                completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
+                Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onCreate(), MovieDetailsActivity: " + completeMovieInfo.getMovieImageUrl());
+                // For updating database
+                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                parseForMovieTrailerAndReviews.execute(movieId);
+            }
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
@@ -139,9 +146,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         protected Void doInBackground(Long... params) {
             try {
                 long movieId = params[0];
-                movieTrailerUrlArrayList = new ArrayList<>();
                 movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
-                movieReviewModelArrayList = new ArrayList<>();
                 movieReviewModelArrayList = parseJsonDataForMovieReview(movieId);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -158,6 +163,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             refreshMovieTrailers(movieTrailerUrlArrayList);
             refreshMovieReviews(movieReviewModelArrayList);
             completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewModelArrayList);
+            Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onPostExecute(), MovieDetailsActivity: " + completeMovieInfo.getMovieImageUrl());
         }
 
         /**
@@ -180,7 +186,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             final String UPM_KEY = "key";
 
             String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
-//            Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
+//            Log.v(LOG_TAG, "movieTrailerAPIUrl, parseJsonDataForMovieTrailerUrl(long movieId), MovieDetailsActivity: " + movieTrailerAPIUrl);
             URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
 //            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
             JSONObject movieTrailerAllJsonDataObject = new JSONObject(GeneralHelper.getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
@@ -192,11 +198,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
             for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
                 JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
                 String key = itemJson.getString(UPM_KEY);
-//                Log.v(LOG_TAG, "key: " + key);
+                Log.v(LOG_TAG, "key, parseJsonDataForMovieTrailerUrl(long movieId), MovieDetailActivity: " + key);
                 String url = BASE_YOUTUBE_URL + key;
-//                Log.v(LOG_TAG, "url: " + url);
+                Log.v(LOG_TAG, "url, parseJsonDataForMovieTrailerUrl(long movieId), MovieDetailActivity: " + url);
+                MovieTrailerModel movieTrailerModel = new MovieTrailerModel(movieId, url);
                 // todo: how to avoid duplicate record
-                dbHelper.insertMovieTrailer(movieId, url);
+                GeneralHelper.insertMovieTrailer(MovieDetailsActivity.this, movieTrailerModel);
                 movieTrailerUrlArrayList.add(url);
             }
             return movieTrailerUrlArrayList;
@@ -227,14 +234,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
             for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
                 JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
                 String author = itemJson.getString(UPM_AUTHOR);
-//                Log.v(LOG_TAG, "author: " + author);
+//                Log.v(LOG_TAG, "author, parseJsonDataForMovieReview(long movieId), MovieDetailActivity: " + author);
                 String content = itemJson.getString(UPM_CONTENT);
-//                Log.v(LOG_TAG, "content: " + content);
+//                Log.v(LOG_TAG, "content, parseJsonDataForMovieReview(long movieId), MovieDetailActivity: " + content);
                 String url = itemJson.getString(UPM_URL);
-//                Log.v(LOG_TAG, "review url: " + url);
-                MovieReviewModel movieReviewModel = new MovieReviewModel(author, content, url);
+//                Log.v(LOG_TAG, "review url, parseJsonDataForMovieReview(long movieId), MovieDetailActivity: " + url);
+                MovieReviewModel movieReviewModel = new MovieReviewModel(movieId, author, content, url);
                 // todo: how to avoid duplicate record
-                dbHelper.insertMovieReviews(movieId, movieReviewModel);
+                GeneralHelper.insertMovieReviews(MovieDetailsActivity.this, movieReviewModel);
                 movieReviewArrayList.add(movieReviewModel);
             }
             return movieReviewArrayList;
@@ -274,6 +281,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
         outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, completeMovieInfo);
         super.onSaveInstanceState(outState);
     }

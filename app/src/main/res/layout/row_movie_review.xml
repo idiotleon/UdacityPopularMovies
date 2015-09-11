@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/textview_movie_review_author"
-        android:layout_width="40sp"
+        android:layout_width="60sp"
         android:layout_height="wrap_content" />
 
     <TextView
