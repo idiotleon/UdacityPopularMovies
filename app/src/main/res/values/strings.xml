@@ -20,4 +20,6 @@
     <string name="imageview_description_row_list">Movie Trailer Play Button Image</string>
 
     <string name="favorite_star_button_description">The favorite star button</string>
+
+    <string name="share_intent_chooser_text">Please select an app to share</string>
 </resources>

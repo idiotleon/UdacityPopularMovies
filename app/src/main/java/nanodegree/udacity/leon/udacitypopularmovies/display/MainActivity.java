@@ -1,7 +1,5 @@
 package nanodegree.udacity.leon.udacitypopularmovies.display;
 
-import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,12 +22,10 @@ import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
-import nanodegree.udacity.leon.udacitypopularmovies.provider.DatabaseHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProviderContract;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -123,26 +119,23 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
 
         // todo: methods should be improved based on databases
-        if (id == R.id.sort_popularity_desc) {
-            /**
-             * todo:
-             * I do not how to improve this part based on database.
-             * There is no Popularity in MovieModel.
-             * Should I add popularity in the model and parse it in JSON parsing part,
-             * or simply use WebAPI each time for such sort?
-             */
-            ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
-            return true;
-        }
-        if (id == R.id.sort_highest_rating_desc) {
-            ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "highestrating");
-/*            movieInfo = dbHelper.getAllMovieInfoOrderByUserRating();
-            refreshPageView(movieInfo);*/
-            return true;
+        switch (id) {
+            case R.id.sort_popularity_desc:
+                /**
+                 * todo:
+                 * I do not how to improve this part based on database.
+                 * There is no Popularity in MovieModel.
+                 * Should I add popularity in the model and parse it in JSON parsing part,
+                 * or simply use WebAPI each time for such sort?
+                 */
+                parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
+                break;
+            case R.id.sort_highest_rating_desc:
+                parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "highestrating");
+                break;
         }
 
         return super.onOptionsItemSelected(item);
