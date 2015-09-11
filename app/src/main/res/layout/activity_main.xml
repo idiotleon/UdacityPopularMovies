@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:horizontalSpacing="0dp"
-    android:numColumns="2"
+    android:numColumns="auto_fit"
+    android:columnWidth="193sp"
     android:verticalSpacing="0dp"></GridView>
 

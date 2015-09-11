@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UdacityPopularMovies</string>
+    <string name="app_name">PopularMovies</string>
 
     <string name="sort_popularity_desc_text">Popularity</string>
     <string name="sort_highest_rating_desc_text">Highest Rating</string>

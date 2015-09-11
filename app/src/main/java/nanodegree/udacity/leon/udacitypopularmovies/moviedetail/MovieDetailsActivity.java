@@ -104,7 +104,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.ratingbar_movie_details);
 
         /**
-         *By SharedPreference, I can save the favorite status of a particular udacity_popular_moive.
+         *By SharedPreference, I can save the favorite status of a particular udacity_popular_movie.
          */
         favoriteStatusCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
         if (1 == GeneralHelper.getFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieId), 0)) {
@@ -162,16 +162,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ParseForMovieTrailerAndReviews extends AsyncTask<Long, Void, Void> {
-        ArrayList<String> movieTrailerUrlArrayList;
-        ArrayList<MovieReviewModel> movieReviewModelArrayList;
+    class ParseForMovieTrailerAndReviews extends AsyncTask<Long, Void, Void> {
+/*        ArrayList<String> movieTrailerUrlArrayList;
+        ArrayList<MovieReviewModel> movieReviewModelArrayList;*/
 
         @Override
         protected Void doInBackground(Long... params) {
             try {
                 long movieId = params[0];
                 movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
-                movieReviewModelArrayList = parseJsonDataForMovieReview(movieId);
+                movieReviewsArrayList = parseJsonDataForMovieReview(movieId);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -185,8 +185,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             refreshMovieTrailers(movieTrailerUrlArrayList);
-            refreshMovieReviews(movieReviewModelArrayList);
-            completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewModelArrayList);
+            refreshMovieReviews(movieReviewsArrayList);
+            completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
             Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onPostExecute(), MovieDetailsActivity: " + completeMovieInfo.getMovieImageUrl());
         }
 
