@@ -152,8 +152,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
             case R.id.menu_item_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, mediumMovieInfo.getMovieImageUrl());
-                shareIntent.setType("image/jpeg");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, movieTrailerUrlArrayList.get(0));
+                shareIntent.setType("text/plain");
                 shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_intent_chooser_text)));
                 break;
