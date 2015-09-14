@@ -8,6 +8,9 @@ import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -75,7 +78,7 @@ public class DetailFragment extends Fragment {
         movieReviewsArrayList = new ArrayList<>();
 
         if (savedInstanceState != null) {
-            completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
+            completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT);
             movieId = completeMovieInfo.getMovieId();
         } else {
             Bundle data = getArguments();
@@ -102,6 +105,40 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
+        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT, completeMovieInfo);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_share, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, movieTrailerUrlArrayList.get(0));
+                shareIntent.setType("text/plain");
+                shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_intent_chooser_text)));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -125,21 +162,21 @@ public class DetailFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(getActivity(), Long.toString(mediumMovieInfo.getMovieId()));
+                    GeneralHelper.markAsFavorite(getActivity(), Long.toString(completeMovieInfo.getMovieId()));
                     Toast.makeText(getActivity(), "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(getActivity(), Long.toString(mediumMovieInfo.getMovieId()));
+                    GeneralHelper.cancelFavoriteStatus(getActivity(), Long.toString(completeMovieInfo.getMovieId()));
                     Toast.makeText(getActivity(), "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        Picasso.with(getActivity()).load(mediumMovieInfo.getMovieImageUrl()).into(imageViewPosterImage);
+        Picasso.with(getActivity()).load(completeMovieInfo.getMovieImageUrl()).into(imageViewPosterImage);
 //        Log.v(LOG_TAG, "movieModel.getMovieImageUrl() - Line70, onCreate(): " + movieModel.getMovieImageUrl());
-        textViewOriginalTitle.setText("Original Title: " + mediumMovieInfo.getMovieOriginalTitle());
-        textViewPlotSynopsis.setText("Plot Synopsis: " + mediumMovieInfo.getMoviePlotSynopsis());
-        ratingBar.setRating(mediumMovieInfo.getMovieUserRating());
-        textViewReleaseDate.setText("Release Date: " + mediumMovieInfo.getMovieReleaseDate());
+        textViewOriginalTitle.setText("Original Title: " + completeMovieInfo.getMovieOriginalTitle());
+        textViewPlotSynopsis.setText("Plot Synopsis: " + completeMovieInfo.getMoviePlotSynopsis());
+        ratingBar.setRating(completeMovieInfo.getMovieUserRating());
+        textViewReleaseDate.setText("Release Date: " + completeMovieInfo.getMovieReleaseDate());
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -286,12 +323,5 @@ public class DetailFragment extends Fragment {
                 startActivity(implicitIntentReviewURLBrowsing);
             }
         });
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
-        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, completeMovieInfo);
-        super.onSaveInstanceState(outState);
     }
 }

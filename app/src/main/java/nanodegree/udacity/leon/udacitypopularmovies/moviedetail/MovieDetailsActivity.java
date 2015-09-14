@@ -29,7 +29,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieTrailerModel;
-import nanodegree.udacity.leon.udacitypopularmovies.provider.DatabaseHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
@@ -138,11 +137,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 Toast.makeText(MovieDetailsActivity.this, "You changed rating to: " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_share, menu);
         return true;
     }
 

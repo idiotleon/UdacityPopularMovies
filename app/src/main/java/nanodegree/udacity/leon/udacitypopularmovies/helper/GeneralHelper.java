@@ -170,10 +170,11 @@ public class GeneralHelper {
         contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_POPULARITY, movieInfo.getMoviePopularity());
         contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS, checkFavoriteStatus(context, movieInfo));
 
-        String where = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID + " = ?";
-        String[] whereArgs = new String[]{Long.toString(movieInfo.getMovieId())};
+        String selection = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID + " = ?";
+        String[] selectionArgs = new String[]{Long.toString(movieInfo.getMovieId())};
 
-        int updateCount = contentResolver.update(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI, contentValues, where, whereArgs);
+        int updateCount = contentResolver.update(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI,
+                contentValues, selection, selectionArgs);
         Log.v(LOG_TAG, "updateCount, updateMovieInfo(MediumMovieInfoModel movieInfo), DatabaseHelper: " + updateCount);
     }
 
@@ -193,16 +194,17 @@ public class GeneralHelper {
     public static boolean movieTrailerExists(Context context, MovieTrailerModel movieTrailerModel) {
         ContentResolver contentResolver = context.getContentResolver();
         Log.v(LOG_TAG, "movieTrailerExists(long movieId, String movieTrailerUrl), DatabaseHelper executed");
-        String[] resultColumns = {
+        String[] projection = {
                 MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_FOREIGN_KEY_ID,
                 MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_URL
         };
 
-        String where = MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_FOREIGN_KEY_ID + " = ? AND " +
+        String selection = MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_FOREIGN_KEY_ID + " = ? AND " +
                 MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_URL + " = ?";
-        String[] whereArgs = new String[]{Long.toString(movieTrailerModel.getMovieId()), movieTrailerModel.getMovieTrailerUrl()};
+        String[] selectionArgs = new String[]{Long.toString(movieTrailerModel.getMovieId()), movieTrailerModel.getMovieTrailerUrl()};
 
-        Cursor resultCursor = contentResolver.query(MovieInfoProviderContract.MovieTrailerEntry.CONTENT_URI, resultColumns, where, whereArgs, null);
+        Cursor resultCursor = contentResolver.query(MovieInfoProviderContract.MovieTrailerEntry.CONTENT_URI,
+                projection, selection, selectionArgs, null);
 
         try {
             if (resultCursor.getCount() == 0)

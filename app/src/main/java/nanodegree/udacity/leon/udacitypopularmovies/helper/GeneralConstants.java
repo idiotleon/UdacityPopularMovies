@@ -16,6 +16,7 @@ public class GeneralConstants {
     public static final String MOVIE_PARCEL = "movieParcel";
     public static final String MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY = "movieSavedInstanceStateMainActivity";
     public static final String MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY = "movieSavedInstanceStateDetailActivity";
+    public static final String MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT = "movieSavedInstanceStateDetailFragment";
     public static final String MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER = "movieInfoDisplayFragmentIdentifier";
     public static final String MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER = "movieInfoDetailFragmentIdentifier";
 
