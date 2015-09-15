@@ -118,6 +118,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT, completeMovieInfo);
+        Log.v(LOG_TAG, "onSaveInstanceState(Bundle outState) executed.");
         super.onSaveInstanceState(outState);
     }
 

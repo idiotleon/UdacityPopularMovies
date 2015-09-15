@@ -1,5 +1,6 @@
 package nanodegree.udacity.leon.udacitypopularmovies.display;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -24,6 +25,7 @@ public class DisplayFragment extends Fragment {
 
     private GridView gridView;
     private ArrayList<MediumMovieInfoModel> movieModelArrayList;
+    private int movieSelectedPosition = -1;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -38,6 +40,16 @@ public class DisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View displayFragmentView = inflater.inflate(R.layout.fragment_display_tabletux, null);
         gridView = (GridView) displayFragmentView.findViewById(R.id.gridview_displayfragment);
+        if (movieSelectedPosition > -1) {
+            Bundle detailsArgs = new Bundle();
+            detailsArgs.putParcelable(GeneralConstants.MOVIE_INFO_DETAIL_FRAGMENT_IDENTIFIER,
+                    movieModelArrayList.get(movieSelectedPosition));
+            DetailFragment detailFragment = new DetailFragment();
+            detailFragment.setArguments(detailsArgs);
+            getFragmentManager().beginTransaction().
+                    replace(R.id.tabletux_container2, detailFragment,
+                            GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
+        }
         return displayFragmentView;
     }
 
@@ -49,6 +61,7 @@ public class DisplayFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                movieSelectedPosition = position;
                 MediumMovieInfoModel clickedMovieInfo = (MediumMovieInfoModel) gridView.getItemAtPosition(position);
                 Bundle detailsArgs = new Bundle();
                 detailsArgs.putParcelable(GeneralConstants.MOVIE_INFO_DETAIL_FRAGMENT_IDENTIFIER, clickedMovieInfo);
@@ -65,7 +78,9 @@ public class DisplayFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DISPLAY_FRAGMENT, movieModelArrayList);
+        Log.v(LOG_TAG, "movieSelectedPosition, onSaveInstanceState(Bundle outState): " + movieSelectedPosition);
+        outState.putInt(GeneralConstants.MOVIE_SELECTED_POSITION_SAVED_INSTANCE_STATE_DISPLAY_FRAGMENT, movieSelectedPosition);
+        super.onSaveInstanceState(outState);
     }
 }
