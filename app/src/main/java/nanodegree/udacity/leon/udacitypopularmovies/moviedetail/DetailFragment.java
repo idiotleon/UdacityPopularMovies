@@ -28,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -79,25 +78,31 @@ public class DetailFragment extends Fragment {
 
         if (savedInstanceState != null) {
             completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT);
+//            Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), savedInstanceState, onCreateView(), DetailFragment: " + completeMovieInfo.getMovieImageUrl());
             movieId = completeMovieInfo.getMovieId();
+
+            refreshMovieTrailers(completeMovieInfo.getMovieTrailerUrlArrayList());
+            refreshMovieReviews(completeMovieInfo.getMovieReviewArrayList());
         } else {
             Bundle data = getArguments();
-            mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER);
-            Log.v(LOG_TAG, "mediumMovieInfo.getMovieImageUrl(), onCreate(), MovieDetailsActivity: " + mediumMovieInfo.getMovieImageUrl());
-            movieId = mediumMovieInfo.getMovieId();
+            if (data != null) {
+                mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_INFO_DETAIL_FRAGMENT_IDENTIFIER);
+//                Log.v(LOG_TAG, "mediumMovieInfo.getMovieImageUrl(), onCreateView(): " + mediumMovieInfo.getMovieImageUrl());
+                movieId = mediumMovieInfo.getMovieId();
 
-            movieTrailerUrlArrayList = GeneralHelper.getMovieTrailerUrls(getActivity(), movieId);
-            movieReviewsArrayList = GeneralHelper.getMovieReviews(getActivity(), movieId);
-            completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
-            if (movieTrailerUrlArrayList.isEmpty() || movieReviewsArrayList.isEmpty()) {
-                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                parseForMovieTrailerAndReviews.execute(movieId);
-            } else {
+                movieTrailerUrlArrayList = GeneralHelper.getMovieTrailerUrls(getActivity(), movieId);
+                movieReviewsArrayList = GeneralHelper.getMovieReviews(getActivity(), movieId);
                 completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
-                Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onCreate(), MovieDetailsActivity: " + completeMovieInfo.getMovieImageUrl());
-                // For updating database
-                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                parseForMovieTrailerAndReviews.execute(movieId);
+                if (movieTrailerUrlArrayList.isEmpty() || movieReviewsArrayList.isEmpty()) {
+                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                    parseForMovieTrailerAndReviews.execute(movieId);
+                } else {
+                    completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
+//                    Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onCreate(): " + completeMovieInfo.getMovieImageUrl());
+                    // For updating database
+                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                    parseForMovieTrailerAndReviews.execute(movieId);
+                }
             }
         }
 
@@ -112,7 +117,6 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
         outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT, completeMovieInfo);
         super.onSaveInstanceState(outState);
     }
@@ -141,7 +145,6 @@ public class DetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         textViewOriginalTitle = (TextView) detailFragmentView.findViewById(R.id.textview_original_title_movie_details_tabletux);
         textViewPlotSynopsis = (TextView) detailFragmentView.findViewById(R.id.textview_plot_synopsis_movie_details_tabletux);
         textViewReleaseDate = (TextView) detailFragmentView.findViewById(R.id.textview_release_date_movie_details_tabletux);
@@ -209,7 +212,7 @@ public class DetailFragment extends Fragment {
             refreshMovieTrailers(movieTrailerUrlArrayList);
             refreshMovieReviews(movieReviewsArrayList);
             completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
-            Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onPostExecute(), MovieDetailsActivity: " + completeMovieInfo.getMovieImageUrl());
+//            Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onPostExecute(): " + completeMovieInfo.getMovieImageUrl());
         }
 
         /**
@@ -232,7 +235,7 @@ public class DetailFragment extends Fragment {
             final String UPM_KEY = "key";
 
             String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId + PARAM_VIDEO + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
-//            Log.v(LOG_TAG, "movieTrailerAPIUrl, parseJsonDataForMovieTrailerUrl(long movieId), MovieDetailsActivity: " + movieTrailerAPIUrl);
+//            Log.v(LOG_TAG, "movieTrailerAPIUrl, parseJsonDataForMovieTrailerUrl(long movieId): " + movieTrailerAPIUrl);
             URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
 //            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
             JSONObject movieTrailerAllJsonDataObject = new JSONObject(GeneralHelper.getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
@@ -244,9 +247,9 @@ public class DetailFragment extends Fragment {
             for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
                 JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
                 String key = itemJson.getString(UPM_KEY);
-                Log.v(LOG_TAG, "key, parseJsonDataForMovieTrailerUrl(long movieId), MovieDetailActivity: " + key);
+//                Log.v(LOG_TAG, "key, parseJsonDataForMovieTrailerUrl(long movieId): " + key);
                 String url = BASE_YOUTUBE_URL + key;
-                Log.v(LOG_TAG, "url, parseJsonDataForMovieTrailerUrl(long movieId), MovieDetailActivity: " + url);
+//                Log.v(LOG_TAG, "url, parseJsonDataForMovieTrailerUrl(long movieId): " + url);
                 MovieTrailerModel movieTrailerModel = new MovieTrailerModel(movieId, url);
                 // todo: how to avoid duplicate record
                 GeneralHelper.insertMovieTrailer(getActivity(), movieTrailerModel);
@@ -267,12 +270,12 @@ public class DetailFragment extends Fragment {
             final String UPM_URL = "url";
 
             String movieReviewAPIUrl = BASE_API_TRAILER_URL + Long.toString(movieId) + PARAM_REVIEWS + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
-//            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line428: " + movieReviewAPIUrl);
+//            Log.v(LOG_TAG, "movieReviewAPIUrl: " + movieReviewAPIUrl);
             URL movieReviewAPIURL = new URL(movieReviewAPIUrl);
             String allJsonData = GeneralHelper.getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
-//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line431: " + allJsonData);
+//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL): " + allJsonData);
             JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
-//            Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
+//            Log.v(LOG_TAG, "movieReviewAllJsonDataObject: " + movieReviewAllJsonDataObject);
             JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(UPM_RESULTS);
 //            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
 
@@ -280,11 +283,11 @@ public class DetailFragment extends Fragment {
             for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
                 JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
                 String author = itemJson.getString(UPM_AUTHOR);
-//                Log.v(LOG_TAG, "author, parseJsonDataForMovieReview(long movieId), MovieDetailActivity: " + author);
+//                Log.v(LOG_TAG, "author, parseJsonDataForMovieReview(long movieId): " + author);
                 String content = itemJson.getString(UPM_CONTENT);
-//                Log.v(LOG_TAG, "content, parseJsonDataForMovieReview(long movieId), MovieDetailActivity: " + content);
+//                Log.v(LOG_TAG, "content, parseJsonDataForMovieReview(long movieId): " + content);
                 String url = itemJson.getString(UPM_URL);
-//                Log.v(LOG_TAG, "review url, parseJsonDataForMovieReview(long movieId), MovieDetailActivity: " + url);
+//                Log.v(LOG_TAG, "review url, parseJsonDataForMovieReview(long movieId): " + url);
                 MovieReviewModel movieReviewModel = new MovieReviewModel(movieId, author, content, url);
                 // todo: how to avoid duplicate record
                 GeneralHelper.insertMovieReviews(getActivity(), movieReviewModel);
@@ -303,7 +306,7 @@ public class DetailFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = movieTrailerArrayList.get(position);
-                Log.v(LOG_TAG, "Youtube Trailer URL is: " + url);
+//                Log.v(LOG_TAG, "Youtube Trailer URL is, refreshMovieTrailers(): " + url);
                 Intent implicitVideoPlayIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(implicitVideoPlayIntent);
             }
@@ -318,7 +321,7 @@ public class DetailFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url = movieReviewArrayList.get(position).getReviewUrl();
-                Log.v(LOG_TAG, "Review URL: " + url);
+//                Log.v(LOG_TAG, "Review URL, refreshMovieReviews(): " + url);
                 Intent implicitIntentReviewURLBrowsing = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(implicitIntentReviewURLBrowsing);
             }

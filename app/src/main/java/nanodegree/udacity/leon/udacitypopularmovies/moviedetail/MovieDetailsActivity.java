@@ -72,8 +72,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieReviewsArrayList = new ArrayList<>();
 
         if (savedInstanceState != null) {
+            Log.v(LOG_TAG, "saveInstanceState!=null, MovieDetailsActivity, from which data fetched..");
             completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
             movieId = completeMovieInfo.getMovieId();
+            refreshMovieReviews(completeMovieInfo.getMovieReviewArrayList());
+            refreshMovieTrailers(completeMovieInfo.getMovieTrailerUrlArrayList());
         } else {
             Bundle data = getIntent().getExtras();
             mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_PARCEL);
@@ -137,7 +140,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 Toast.makeText(MovieDetailsActivity.this, "You changed rating to: " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -305,7 +307,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
+        Log.v(LOG_TAG, "onSaveInstanceState(Bundle outState), MovieDetailsActivity executed.");
+        if (mediumMovieInfo != null)
+            completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
         outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, completeMovieInfo);
         super.onSaveInstanceState(outState);
     }

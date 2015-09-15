@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.DetailFragment;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo;
 
+    private DisplayFragment displayFragment;
+    private DetailFragment detailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
         mediumMovieInfoArrayList = new ArrayList<>();
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null &&
+                savedInstanceState.containsKey(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY)) {
             mediumMovieInfoArrayList = savedInstanceState.getParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
             Log.v(LOG_TAG, "mediumMovieInfoArrayList.isEmpty(), fetched from savedInstanceState(): " + mediumMovieInfoArrayList.isEmpty());
-            refreshPageView(mediumMovieInfoArrayList);
+            refreshPageView(mediumMovieInfoArrayList, savedInstanceState);
         } else if (GeneralHelper.getMovieInfoStoredCount(MainActivity.this) > 0) {
             mediumMovieInfoArrayList = GeneralHelper.getAllMediumMovieInfo(MainActivity.this,
                     GeneralConstants.MOVIE_SORTED_BY_POPULARITY, GeneralConstants.MOVIE_SORTED_DESC);
-            refreshPageView(mediumMovieInfoArrayList);
+            refreshPageView(mediumMovieInfoArrayList, savedInstanceState);
             // For update (database) purpose
             parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
             parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
@@ -63,16 +67,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshPageView(ArrayList<MediumMovieInfoModel> movieInfo) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, mediumMovieInfoArrayList);
+//        Log.v(LOG_TAG, "mediumMovieInfoArrayList.isEmpty(), onSaveInstanceState(): " + mediumMovieInfoArrayList.isEmpty());
+        if (GeneralHelper.isTablet(MainActivity.this)) {
+            getFragmentManager().putFragment(outState,
+                    GeneralConstants.SAVE_INSTANCE_STATE_DISPLAY_FRAGMENT, displayFragment);
+            detailFragment = (DetailFragment) getFragmentManager()
+                    .findFragmentByTag(GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG);
+            if (detailFragment != null) {
+                getFragmentManager().putFragment(outState, GeneralConstants.SAVE_INSTANCE_STATE_DETAIL_FRAGMENT, detailFragment);
+                Log.v(LOG_TAG, "detailFragment has been put to savedInstance");
+            }
+        }
+    }
+
+    private void refreshPageView(ArrayList<MediumMovieInfoModel> movieInfo, Bundle savedInstanceState) {
         if (GeneralHelper.isTablet(MainActivity.this)) {
             Log.v(LOG_TAG, "This is a tablet.");
             setContentView(R.layout.activity_main_tabletux);
             Bundle displayFragmentArgs = new Bundle();
             displayFragmentArgs.putParcelableArrayList(GeneralConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER, movieInfo);
-            DisplayFragment displayFragment = new DisplayFragment();
-            displayFragment.setArguments(displayFragmentArgs);
+            if (savedInstanceState != null &&
+                    savedInstanceState.containsKey(GeneralConstants.SAVE_INSTANCE_STATE_DISPLAY_FRAGMENT) &&
+                    savedInstanceState.containsKey(GeneralConstants.SAVE_INSTANCE_STATE_DETAIL_FRAGMENT)) {
+                displayFragment = (DisplayFragment) getFragmentManager().getFragment(savedInstanceState, GeneralConstants.SAVE_INSTANCE_STATE_DISPLAY_FRAGMENT);
+                detailFragment = (DetailFragment) getFragmentManager().getFragment(savedInstanceState, GeneralConstants.SAVE_INSTANCE_STATE_DETAIL_FRAGMENT);
+
+                if (detailFragment == null) {
+                    Log.v(LOG_TAG, "detailFragment, refreshPageView(), is null.");
+                } else {
+                    Log.v(LOG_TAG, "detailFragment, refreshPageView(), is not null.");
+                }
+            } else {
+                displayFragment = new DisplayFragment();
+                displayFragment.setArguments(displayFragmentArgs);
+                Log.v(LOG_TAG, "A new DisplayFragment created, refreshPageView().");
+            }
             getFragmentManager().beginTransaction().
-                    replace(R.id.tabletux_container1, displayFragment).commit();
+                    replace(R.id.tabletux_container1, displayFragment,
+                            GeneralConstants.DISPLAYFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
+            if (detailFragment != null) {
+                getFragmentManager().beginTransaction().
+                        replace(R.id.tabletux_container2, detailFragment,
+                                GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
+                Log.v(LOG_TAG, "detailFragment, refreshPageView(), transaction has been committed");
+            }
         } else {
             Log.v(LOG_TAG, "This is a phone.");
             setContentView(R.layout.activity_main);
@@ -98,13 +140,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
-
-/*    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, mediumMovieInfoArrayList);
-        Log.v(LOG_TAG, "mediumMovieInfoArrayList, onSaveInstanceState(), MainActivity: " + mediumMovieInfoArrayList.toString());
-        super.onSaveInstanceState(savedInstanceState);
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -292,14 +327,7 @@ public class MainActivity extends AppCompatActivity {
             Log.v(LOG_TAG, "mediumMovieInfoArrayList after parsing: " + mediumMovieInfoArrayList.size());
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieModels);
 
-            refreshPageView(movieModels);
+            refreshPageView(movieModels, null);
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, mediumMovieInfoArrayList);
-        Log.v(LOG_TAG, "mediumMovieInfoArrayList.isEmpty(), onSaveInstanceState(), MainActivity: " + mediumMovieInfoArrayList.isEmpty());
-        super.onSaveInstanceState(outState);
     }
 }
