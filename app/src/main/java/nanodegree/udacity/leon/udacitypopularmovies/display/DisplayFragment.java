@@ -27,14 +27,6 @@ public class DisplayFragment extends Fragment {
     private ArrayList<MediumMovieInfoModel> movieModelArrayList;
     private int movieSelectedPosition = -1;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            movieModelArrayList = savedInstanceState.getParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DISPLAY_FRAGMENT);
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,16 +63,8 @@ public class DisplayFragment extends Fragment {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.tabletux_container2, detailFragment,
                                 GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
-                Log.v(LOG_TAG, "detailFragment, transaction committed from DisplayFragment");
+//                Log.v(LOG_TAG, "detailFragment, transaction committed from DisplayFragment");
             }
         });
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DISPLAY_FRAGMENT, movieModelArrayList);
-        Log.v(LOG_TAG, "movieSelectedPosition, onSaveInstanceState(Bundle outState): " + movieSelectedPosition);
-        outState.putInt(GeneralConstants.MOVIE_SELECTED_POSITION_SAVED_INSTANCE_STATE_DISPLAY_FRAGMENT, movieSelectedPosition);
-        super.onSaveInstanceState(outState);
     }
 }

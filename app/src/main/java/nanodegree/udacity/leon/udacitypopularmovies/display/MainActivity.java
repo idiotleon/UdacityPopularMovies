@@ -109,12 +109,12 @@ public class MainActivity extends AppCompatActivity {
             getFragmentManager().beginTransaction().
                     replace(R.id.tabletux_container1, displayFragment,
                             GeneralConstants.DISPLAYFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
-            if (detailFragment != null) {
+/*            if (detailFragment != null) {
                 getFragmentManager().beginTransaction().
                         replace(R.id.tabletux_container2, detailFragment,
                                 GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
                 Log.v(LOG_TAG, "detailFragment, refreshPageView(), transaction has been committed");
-            }
+            }*/
         } else {
             Log.v(LOG_TAG, "This is a phone.");
             setContentView(R.layout.activity_main);

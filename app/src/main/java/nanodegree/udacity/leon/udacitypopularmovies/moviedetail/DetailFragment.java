@@ -76,33 +76,24 @@ public class DetailFragment extends Fragment {
         movieTrailerUrlArrayList = new ArrayList<>();
         movieReviewsArrayList = new ArrayList<>();
 
-        if (savedInstanceState != null) {
-            completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT);
-//            Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), savedInstanceState, onCreateView(), DetailFragment: " + completeMovieInfo.getMovieImageUrl());
-            movieId = completeMovieInfo.getMovieId();
-
-            refreshMovieTrailers(completeMovieInfo.getMovieTrailerUrlArrayList());
-            refreshMovieReviews(completeMovieInfo.getMovieReviewArrayList());
-        } else {
-            Bundle data = getArguments();
-            if (data != null) {
-                mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_INFO_DETAIL_FRAGMENT_IDENTIFIER);
+        Bundle data = getArguments();
+        if (data != null) {
+            mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_INFO_DETAIL_FRAGMENT_IDENTIFIER);
 //                Log.v(LOG_TAG, "mediumMovieInfo.getMovieImageUrl(), onCreateView(): " + mediumMovieInfo.getMovieImageUrl());
-                movieId = mediumMovieInfo.getMovieId();
+            movieId = mediumMovieInfo.getMovieId();
 
-                movieTrailerUrlArrayList = GeneralHelper.getMovieTrailerUrls(getActivity(), movieId);
-                movieReviewsArrayList = GeneralHelper.getMovieReviews(getActivity(), movieId);
+            movieTrailerUrlArrayList = GeneralHelper.getMovieTrailerUrls(getActivity(), movieId);
+            movieReviewsArrayList = GeneralHelper.getMovieReviews(getActivity(), movieId);
+            completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
+            if (movieTrailerUrlArrayList.isEmpty() || movieReviewsArrayList.isEmpty()) {
+                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                parseForMovieTrailerAndReviews.execute(movieId);
+            } else {
                 completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
-                if (movieTrailerUrlArrayList.isEmpty() || movieReviewsArrayList.isEmpty()) {
-                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                    parseForMovieTrailerAndReviews.execute(movieId);
-                } else {
-                    completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
 //                    Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onCreate(): " + completeMovieInfo.getMovieImageUrl());
-                    // For updating database
-                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                    parseForMovieTrailerAndReviews.execute(movieId);
-                }
+                // For updating database
+                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                parseForMovieTrailerAndReviews.execute(movieId);
             }
         }
 
@@ -113,13 +104,6 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_FRAGMENT, completeMovieInfo);
-        Log.v(LOG_TAG, "onSaveInstanceState(Bundle outState) executed.");
-        super.onSaveInstanceState(outState);
     }
 
     @Override
