@@ -322,9 +322,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<MediumMovieInfoModel> movieModels) {
             super.onPostExecute(movieModels);
-            GeneralHelper.updateDatabaseMovieInfo(MainActivity.this, movieModels);
+            for (int i = 0; i < movieModels.size(); i++)
+                GeneralHelper.insertMovieInfo(MainActivity.this, movieModels.get(i));
             mediumMovieInfoArrayList = movieModels;
-            Log.v(LOG_TAG, "mediumMovieInfoArrayList after parsing: " + mediumMovieInfoArrayList.size());
+            Log.v(LOG_TAG, "mediumMovieInfoArrayList.size() after parsing: " + mediumMovieInfoArrayList.size());
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieModels);
 
             refreshPageView(movieModels, null);

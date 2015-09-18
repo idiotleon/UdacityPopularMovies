@@ -30,7 +30,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 // todo: Date type might be better
                 MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_RELEASE_DATE + " TEXT, " +
                 MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_POPULARITY + " REAL, " +
-                MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS + " BOOLEAN DEFAULT FALSE)";
+                MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS + " BOOLEAN DEFAULT FALSE, " +
+                " UNIQUE (" + MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID + ") ON CONFLICT REPLACE)";
         Log.v(LOG_TAG, "createMediumMovieInfoTableQuery: " + createMediumMovieInfoTableQuery);
         db.execSQL(createMediumMovieInfoTableQuery);
 

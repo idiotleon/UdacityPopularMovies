@@ -274,7 +274,6 @@ public class DetailFragment extends Fragment {
                 String url = itemJson.getString(UPM_URL);
 //                Log.v(LOG_TAG, "review url, parseJsonDataForMovieReview(long movieId): " + url);
                 MovieReviewModel movieReviewModel = new MovieReviewModel(movieId, author, content, url);
-                // todo: how to avoid duplicate record
                 GeneralHelper.insertMovieReviews(getActivity(), movieReviewModel);
                 movieReviewArrayList.add(movieReviewModel);
             }

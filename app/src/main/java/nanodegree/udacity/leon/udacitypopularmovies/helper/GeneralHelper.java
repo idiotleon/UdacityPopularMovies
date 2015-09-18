@@ -102,7 +102,7 @@ public class GeneralHelper {
         return moviesJsonStr;
     }
 
-    public static void updateDatabaseMovieInfo(Context context, ArrayList<MediumMovieInfoModel> mediumMovieInfoModelArrayList) {
+/*    public static void updateDatabaseMovieInfo(Context context, ArrayList<MediumMovieInfoModel> mediumMovieInfoModelArrayList) {
         for (int i = 0; i < mediumMovieInfoModelArrayList.size(); i++) {
             if (checkMovieInfoStored(context, mediumMovieInfoModelArrayList.get(i))) {
                 updateMovieInfo(context, mediumMovieInfoModelArrayList.get(i));
@@ -110,7 +110,7 @@ public class GeneralHelper {
                 insertMovieInfo(context, mediumMovieInfoModelArrayList.get(i));
             }
         }
-    }
+    }*/
 
     public static boolean checkMovieInfoStored(Context context, MediumMovieInfoModel movieInfo) {
         ContentResolver contentResolver = context.getContentResolver();
@@ -143,6 +143,7 @@ public class GeneralHelper {
     }
 
     public static void insertMovieInfo(Context context, MediumMovieInfoModel movieInfo) {
+        Log.v(LOG_TAG, "insertMovieInfo(Context context, MediumMovieInfoModel movieInfo) executed.");
         ContentResolver contentResolver = context.getContentResolver();
         ContentValues contentValues = new ContentValues();
         contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID, movieInfo.getMovieId());
@@ -154,8 +155,14 @@ public class GeneralHelper {
         contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_POPULARITY, movieInfo.getMoviePopularity());
         contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS, checkFavoriteStatus(context, movieInfo));
 
-        Uri insertedId = contentResolver.insert(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI, contentValues);
-        Log.v(LOG_TAG, "insertedId, insertMovieInfo(MediumMovieInfoModel movieInfo), DatabaseHelper: " + insertedId.toString());
+        try {
+            Uri insertedId = contentResolver.insert(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI, contentValues);
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+//        if (insertedId == null)
+//            Log.v(LOG_TAG, "insertedId, insertMovieInfo(MediumMovieInfoModel movieInfo), is null");
+//        Log.v(LOG_TAG, "insertedId, insertMovieInfo(MediumMovieInfoModel movieInfo), DatabaseHelper: " + insertedId.getEncodedPath());
     }
 
     public static void updateMovieInfo(Context context, MediumMovieInfoModel movieInfo) {
@@ -182,7 +189,6 @@ public class GeneralHelper {
         ContentResolver contentResolver = context.getContentResolver();
         Log.v(LOG_TAG, "insertMovieTrailer(MovieTrailerModel movieTrailerModel), DatabaseHelper executed.");
         if (!movieTrailerExists(context, movieTrailerModel)) {
-
             ContentValues contentValues = new ContentValues();
             contentValues.put(MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_URL, movieTrailerModel.getMovieTrailerUrl());
             contentValues.put(MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_FOREIGN_KEY_ID, movieTrailerModel.getMovieId());

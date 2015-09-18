@@ -31,12 +31,12 @@ public class MovieInfoProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_GENERAL_MOVIE_INFO, MOVIES);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_GENERAL_MOVIE_INFO + "/#", MOVIE_ID);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_TRAILER, MOVIE_TRAILERS);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_TRAILER + "/#", MOVIE_TRAILER_ID);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_REVIEW, MOVIE_REVIEWS);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.PATH_MOVIE_REVIEW + "/#", MOVIE_REVIEW_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME, MOVIES);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME + "/#", MOVIE_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME, MOVIE_TRAILERS);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME + "/#", MOVIE_TRAILER_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME, MOVIE_REVIEWS);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME + "/#", MOVIE_REVIEW_ID);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class MovieInfoProvider extends ContentProvider {
         long id;
         Uri insertedId;
         switch (uriMatcher.match(uri)) {
-            case MOVIE_ID:
+            case MOVIES:
                 id = database.insert(MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME, nullColumnHack, values);
                 if (id > -1) {
                     // Construct and return the URI of the newly inserted row
@@ -144,14 +144,14 @@ public class MovieInfoProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(insertedId, null);
                     return insertedId;
                 }
-            case MOVIE_TRAILER_ID:
+            case MOVIE_TRAILERS:
                 id = database.insert(MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME, nullColumnHack, values);
                 if (id > -1) {
                     insertedId = ContentUris.withAppendedId(MovieInfoProviderContract.MovieTrailerEntry.CONTENT_URI, id);
                     getContext().getContentResolver().notifyChange(insertedId, null);
                     return insertedId;
                 }
-            case MOVIE_REVIEW_ID:
+            case MOVIE_REVIEWS:
                 id = database.insert(MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME, nullColumnHack, values);
                 if (id > -1) {
                     insertedId = ContentUris.withAppendedId(MovieInfoProviderContract.MovieReviewEntry.CONTENT_URI, id);
