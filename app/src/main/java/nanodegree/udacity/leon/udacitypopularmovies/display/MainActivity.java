@@ -171,9 +171,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.sort_highest_rating_desc:
                 parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "highestrating");
                 break;
+            case R.id.show_favorite_movies:
+                showAllFavoriteMovies();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAllFavoriteMovies() {
+        ArrayList<MediumMovieInfoModel> favoriteMovieArrayList = new ArrayList<>();
+        favoriteMovieArrayList = GeneralHelper.getAllFavoriteMediumMovieInfoAsArrayList(MainActivity.this);
+        refreshPageView(favoriteMovieArrayList, null);
     }
 
     public class ParsingJsonForMediumMovieInfo extends AsyncTask<String, Void, ArrayList<MediumMovieInfoModel>> {

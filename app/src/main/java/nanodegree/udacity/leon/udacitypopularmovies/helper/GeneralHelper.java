@@ -36,18 +36,69 @@ public class GeneralHelper {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         sharedPreferences.edit().putInt(key, 1).commit();
+
+        ContentResolver contentResolver = context.getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID, key);
+        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS, 1);
+
+        contentResolver.update(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI,
+                contentValues, MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID,
+                new String[]{key});
     }
+
 
     public static void cancelFavoriteStatus(Context context, String key) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         sharedPreferences.edit().putInt(key, 0).commit();
+
+        ContentResolver contentResolver = context.getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID, key);
+        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS, 0);
+
+        contentResolver.update(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI,
+                contentValues, MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID,
+                new String[]{key});
     }
 
     public static int getFavoriteStatus(Context context, String key, int defaultValue) {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         return sharedPreferences.getInt(key, defaultValue);
+    }
+
+    public static ArrayList<MediumMovieInfoModel> getAllFavoriteMediumMovieInfoAsArrayList(Context context) {
+        ContentResolver contentResolver = context.getContentResolver();
+
+        ArrayList<MediumMovieInfoModel> mediumMovieInfoModelArrayList = new ArrayList<>();
+
+        String selection = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS + " = ?";
+        String[] selectionArgs = new String[]{"1"};
+        String orderBy = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ORIGINAL_TITLE;
+        Cursor cursor = contentResolver.query(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI, null,
+                selection, selectionArgs, orderBy);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                long movieId = cursor.getLong(cursor.getColumnIndex(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID));
+                String movieOriginalTitle = cursor.getString(cursor.getColumnIndex(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ORIGINAL_TITLE));
+                String movieImageUrl = cursor.getString(cursor.getColumnIndex(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_IMAGE_URL));
+                String moviePlotSynopsis = cursor.getString(cursor.getColumnIndex(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_PLOT_SYNOPSIS));
+                float movieUserRating = cursor.getFloat(cursor.getColumnIndex(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_USER_RATING));
+                String movieReleaseDate = cursor.getString(cursor.getColumnIndex(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_RELEASE_DATE));
+                double moviePopularity = cursor.getDouble(cursor.getColumnIndex(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_POPULARITY));
+                MediumMovieInfoModel mediumMovieInfoModel = new MediumMovieInfoModel(
+                        movieId, movieOriginalTitle, movieImageUrl, moviePlotSynopsis,
+                        movieUserRating, movieReleaseDate, moviePopularity);
+                mediumMovieInfoModelArrayList.add(mediumMovieInfoModel);
+                cursor.moveToNext();
+            }
+        }
+
+        return mediumMovieInfoModelArrayList;
     }
 
     /**
@@ -263,7 +314,7 @@ public class GeneralHelper {
     public static ArrayList<String> getMovieTrailerUrls(Context context, long movieId) {
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection = {MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_URL};
-        String selection = MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_FOREIGN_KEY_ID + " =?";
+        String selection = MovieInfoProviderContract.MovieTrailerEntry.MOVIE_TRAILER_COLUMN_FOREIGN_KEY_ID + " = ?";
         String[] selectionArgs = new String[]{Long.toString(movieId)};
         Cursor resultCursor = contentResolver.query(MovieInfoProviderContract.MovieTrailerEntry.CONTENT_URI,
                 projection, selection, selectionArgs, null);
@@ -277,7 +328,7 @@ public class GeneralHelper {
             }
             return movieTrailerUrlArrayList;
         } else {
-            return null;
+            return new ArrayList<String>();
         }
     }
 
@@ -310,7 +361,7 @@ public class GeneralHelper {
                 }
             } else {
                 Log.e(LOG_TAG, "resultCursor, getMovieReviews(Context context, long movieId), GeneralHelper is null.");
-                return null;
+                return new ArrayList<MovieReviewModel>();
             }
         } finally {
             Log.v(LOG_TAG, "resultCursor.getCount(), getMovieReviews(Context context, long movieId), GeneralHelper: " + resultCursor.getCount());
