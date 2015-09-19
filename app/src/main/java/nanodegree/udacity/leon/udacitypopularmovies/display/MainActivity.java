@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,12 +59,22 @@ public class MainActivity extends AppCompatActivity {
             mediumMovieInfoArrayList = GeneralHelper.getAllMediumMovieInfo(MainActivity.this,
                     GeneralConstants.MOVIE_SORTED_BY_POPULARITY, GeneralConstants.MOVIE_SORTED_DESC);
             refreshPageView(mediumMovieInfoArrayList, savedInstanceState);
-            // For update (database) purpose
-            parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
+            if (GeneralHelper.isNetworkAvailable(MainActivity.this)) {
+                // For update (database) purpose
+                parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
+                parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
+            } else {
+                Toast.makeText(MainActivity.this,
+                        getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+            }
         } else {
-            parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-            parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
+            if (GeneralHelper.isNetworkAvailable(MainActivity.this)) {
+                parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
+                parsingJsonForMediumMovieInfo.execute(GeneralConstants.API_KEY, "popularity");
+            } else {
+                Toast.makeText(MainActivity.this,
+                        getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -119,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             Log.v(LOG_TAG, "This is a phone.");
             setContentView(R.layout.activity_main);
             gridView = (GridView) findViewById(R.id.gridview_mainactivity);
-            customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieInfo);
+            customGridViewAdapter = new CustomGridViewAdapter(MainActivity.this, movieInfo);
             gridView.setAdapter(customGridViewAdapter);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -182,7 +193,13 @@ public class MainActivity extends AppCompatActivity {
     private void showAllFavoriteMovies() {
         ArrayList<MediumMovieInfoModel> favoriteMovieArrayList = new ArrayList<>();
         favoriteMovieArrayList = GeneralHelper.getAllFavoriteMediumMovieInfoAsArrayList(MainActivity.this);
-        refreshPageView(favoriteMovieArrayList, null);
+        if (favoriteMovieArrayList.size() > 0) {
+            refreshPageView(favoriteMovieArrayList, null);
+        } else {
+            Toast.makeText(MainActivity.this,
+                    getResources().getString(R.string.favorite_movie_alert),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class ParsingJsonForMediumMovieInfo extends AsyncTask<String, Void, ArrayList<MediumMovieInfoModel>> {

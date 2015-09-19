@@ -214,6 +214,15 @@ public class MovieInfoProvider extends ContentProvider {
         String rowId;
         int updateCount = 0;
         switch (uriMatcher.match(uri)) {
+            case MOVIES:
+                updateCount = database.update(MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case MOVIE_TRAILERS:
+                updateCount = database.update(MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case MOVIE_REVIEWS:
+                updateCount = database.update(MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
             case MOVIE_ID:
                 rowId = uri.getPathSegments().get(1);
                 selection = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID + " = " + rowId

@@ -86,14 +86,26 @@ public class DetailFragment extends Fragment {
             movieReviewsArrayList = GeneralHelper.getMovieReviews(getActivity(), movieId);
             completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
             if (movieTrailerUrlArrayList.isEmpty() || movieReviewsArrayList.isEmpty()) {
-                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                parseForMovieTrailerAndReviews.execute(movieId);
+                if (GeneralHelper.isNetworkAvailable(getActivity())) {
+                    // For update (database) purpose
+                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                    parseForMovieTrailerAndReviews.execute(movieId);
+                } else {
+                    Toast.makeText(getActivity(),
+                            getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+                }
             } else {
                 completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
 //                    Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onCreate(): " + completeMovieInfo.getMovieImageUrl());
                 // For updating database
-                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                parseForMovieTrailerAndReviews.execute(movieId);
+                if (GeneralHelper.isNetworkAvailable(getActivity())) {
+                    // For update (database) purpose
+                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                    parseForMovieTrailerAndReviews.execute(movieId);
+                } else {
+                    Toast.makeText(getActivity(),
+                            getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -150,10 +162,10 @@ public class DetailFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(getActivity(), Long.toString(completeMovieInfo.getMovieId()));
+                    GeneralHelper.markAsFavorite(getActivity(), mediumMovieInfo);
                     Toast.makeText(getActivity(), "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(getActivity(), Long.toString(completeMovieInfo.getMovieId()));
+                    GeneralHelper.cancelFavoriteStatus(getActivity(), mediumMovieInfo);
                     Toast.makeText(getActivity(), "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }

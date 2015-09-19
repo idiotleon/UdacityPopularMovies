@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +16,7 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
+import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.DetailFragment;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
@@ -42,13 +46,42 @@ public class DisplayFragment extends Fragment {
                     replace(R.id.tabletux_container2, detailFragment,
                             GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
         }
+        setHasOptionsMenu(true);
         return displayFragmentView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        movieModelArrayList = getArguments().getParcelableArrayList(GeneralConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
+        movieModelArrayList = getArguments()
+                .getParcelableArrayList(GeneralConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
+        refreshDisplayFragment(movieModelArrayList);
+    }
+
+    // Both onOptionsItemSelected(MenuItem item) of DisplayFragment and MainActivity will be executed.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.show_favorite_movies:
+                Log.v(LOG_TAG, "onOptionsItemSelected(MenuItem item) executed");
+                displayFavoriteMovies();
+                break;
+            case R.id.sort_popularity_desc:
+                Log.v(LOG_TAG, "onOptionsItemSelected(MenuItem item) executed");
+                break;
+            case R.id.sort_highest_rating_desc:
+                Log.v(LOG_TAG, "onOptionsItemSelected(MenuItem item) executed");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void displayFavoriteMovies() {
+        movieModelArrayList = GeneralHelper.getAllFavoriteMediumMovieInfoAsArrayList(getActivity());
+        refreshDisplayFragment(movieModelArrayList);
+    }
+
+    private void refreshDisplayFragment(ArrayList<MediumMovieInfoModel> movieModelArrayList) {
         gridView.setAdapter(new CustomGridViewAdapter(getActivity(), movieModelArrayList));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

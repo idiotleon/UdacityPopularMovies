@@ -87,14 +87,24 @@ public class MovieDetailsActivity extends AppCompatActivity {
             movieReviewsArrayList = GeneralHelper.getMovieReviews(MovieDetailsActivity.this, movieId);
             completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
             if (movieTrailerUrlArrayList.isEmpty() || movieReviewsArrayList.isEmpty()) {
-                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                parseForMovieTrailerAndReviews.execute(movieId);
+                if (GeneralHelper.isNetworkAvailable(MovieDetailsActivity.this)) {
+                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                    parseForMovieTrailerAndReviews.execute(movieId);
+                } else {
+                    Toast.makeText(MovieDetailsActivity.this,
+                            getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+                }
             } else {
                 completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
                 Log.v(LOG_TAG, "completeMovieInfo.getMovieImageUrl(), onCreate(), MovieDetailsActivity: " + completeMovieInfo.getMovieImageUrl());
                 // For updating database
-                ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
-                parseForMovieTrailerAndReviews.execute(movieId);
+                if (GeneralHelper.isNetworkAvailable(MovieDetailsActivity.this)) {
+                    ParseForMovieTrailerAndReviews parseForMovieTrailerAndReviews = new ParseForMovieTrailerAndReviews();
+                    parseForMovieTrailerAndReviews.execute(movieId);
+                } else {
+                    Toast.makeText(MovieDetailsActivity.this,
+                            getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -118,10 +128,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, Long.toString(movieId));
+                    GeneralHelper.markAsFavorite(MovieDetailsActivity.this, mediumMovieInfo);
                     Toast.makeText(MovieDetailsActivity.this, "Marked as Favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, Long.toString(movieId));
+                    GeneralHelper.cancelFavoriteStatus(MovieDetailsActivity.this, mediumMovieInfo);
                     Toast.makeText(MovieDetailsActivity.this, "Favorite Canceled", Toast.LENGTH_SHORT).show();
                 }
             }

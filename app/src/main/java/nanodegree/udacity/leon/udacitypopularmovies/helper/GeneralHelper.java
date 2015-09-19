@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieTrailerModel;
@@ -26,41 +30,58 @@ import nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProviderCo
 public class GeneralHelper {
     private static final String LOG_TAG = GeneralHelper.class.getSimpleName();
 
+    public static final boolean FAVORITE_STATUS_TRUE = true;
+    public static final int FAVORITE_STATUS_TRUE_STATUS_CODE = 1;
+    public static final boolean FAVORITE_STATUS_FALSE = false;
+    public static final int FAVORITE_STATUS_FALSE_STATUS_CODE = 0;
+
     public static boolean isTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    public static void markAsFavorite(Context context, String key) {
+    public static void markAsFavorite(Context context, MediumMovieInfoModel mediumMovieInfoModel) {
+        String key = Long.toString(mediumMovieInfoModel.getMovieId());
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putInt(key, 1).commit();
+        sharedPreferences.edit().putInt(key, FAVORITE_STATUS_TRUE_STATUS_CODE).commit();
 
-        ContentResolver contentResolver = context.getContentResolver();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID, key);
-        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS, 1);
-
-        contentResolver.update(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI,
-                contentValues, MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID,
-                new String[]{key});
+        changeFavoriteStatusCode(context, mediumMovieInfoModel, FAVORITE_STATUS_TRUE);
     }
 
 
-    public static void cancelFavoriteStatus(Context context, String key) {
+    public static void cancelFavoriteStatus(Context context, MediumMovieInfoModel mediumMovieInfoModel) {
+        String key = Long.toString(mediumMovieInfoModel.getMovieId());
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putInt(key, 0).commit();
+        sharedPreferences.edit().putInt(key, FAVORITE_STATUS_FALSE_STATUS_CODE).commit();
 
+        changeFavoriteStatusCode(context, mediumMovieInfoModel, FAVORITE_STATUS_FALSE);
+    }
+
+    public static void changeFavoriteStatusCode(Context context, MediumMovieInfoModel mediumMovieInfoModel, boolean status) {
+        String movieId = Long.toString(mediumMovieInfoModel.getMovieId());
         ContentResolver contentResolver = context.getContentResolver();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID, key);
-        contentValues.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS, 0);
-
-        contentResolver.update(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI,
-                contentValues, MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID,
-                new String[]{key});
+        ContentValues updatedValue = new ContentValues();
+        // The only row that has to be updated
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS, status);
+        // The other rows remain the same
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID, mediumMovieInfoModel.getMovieId());
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ORIGINAL_TITLE, mediumMovieInfoModel.getMovieOriginalTitle());
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_IMAGE_URL, mediumMovieInfoModel.getMovieImageUrl());
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_PLOT_SYNOPSIS, mediumMovieInfoModel.getMoviePlotSynopsis());
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_USER_RATING, mediumMovieInfoModel.getMovieUserRating());
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_RELEASE_DATE, mediumMovieInfoModel.getMovieReleaseDate());
+        updatedValue.put(MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_POPULARITY, mediumMovieInfoModel.getMoviePopularity());
+/*        int updateCount = contentResolver.update(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI,
+                updatedValue, MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ID + " = ?",
+                new String[]{movieId});*/
+        Uri updateUri = Uri.parse(MovieInfoProviderContract.GeneralMovieInfoEntry.CONTENT_URI + "/" + movieId);
+        int updateCount = contentResolver.update(updateUri,
+                updatedValue, null, null);
+        Log.v(LOG_TAG, "updateCount, changeFavoriteStatusCode(Context context, String key, int statusCode): " + updateCount);
+        Log.v(LOG_TAG, "key, changeFavoriteStatusCode(Context context, String key, int statusCode): " + movieId);
     }
 
     public static int getFavoriteStatus(Context context, String key, int defaultValue) {
@@ -69,11 +90,10 @@ public class GeneralHelper {
         return sharedPreferences.getInt(key, defaultValue);
     }
 
+
     public static ArrayList<MediumMovieInfoModel> getAllFavoriteMediumMovieInfoAsArrayList(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
-
         ArrayList<MediumMovieInfoModel> mediumMovieInfoModelArrayList = new ArrayList<>();
-
         String selection = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_FAVORITE_STATUS + " = ?";
         String[] selectionArgs = new String[]{"1"};
         String orderBy = MovieInfoProviderContract.GeneralMovieInfoEntry.MOVIE_COLUMN_ORIGINAL_TITLE;
@@ -97,7 +117,6 @@ public class GeneralHelper {
                 cursor.moveToNext();
             }
         }
-
         return mediumMovieInfoModelArrayList;
     }
 
@@ -440,12 +459,35 @@ public class GeneralHelper {
         } finally {
             cursor.close();
         }
+        Log.v(LOG_TAG, "allMediumMovieInfoArrayList.size(), getAllMediumMovieInfo(Context context, " +
+                "int orderByPopularityOrAveragedVoting, int sortDescOrAsc): " + allMediumMovieInfoArrayList.size());
         return allMediumMovieInfoArrayList;
     }
 
     public static int getMovieInfoStoredCount(Context context) {
         ArrayList<MediumMovieInfoModel> mediumMovieInfoArrayList
-                = getAllMediumMovieInfo(context, GeneralConstants.MOVIE_SORTED_BY_POPULARITY, GeneralConstants.MOVIE_SORTED_DESC);
+                = getAllMediumMovieInfo(context,
+                GeneralConstants.MOVIE_SORTED_BY_POPULARITY,
+                GeneralConstants.MOVIE_SORTED_DESC);
         return mediumMovieInfoArrayList.size();
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        boolean status = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
+                netInfo = cm.getNetworkInfo(1);
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return status;
     }
 }
