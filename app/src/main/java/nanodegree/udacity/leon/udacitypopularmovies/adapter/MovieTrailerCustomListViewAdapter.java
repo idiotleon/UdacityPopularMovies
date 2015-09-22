@@ -14,22 +14,22 @@ import nanodegree.udacity.leon.udacitypopularmovies.R;
 public class MovieTrailerCustomListViewAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<String> moviePosterImageUrlArrayList;
+    private ArrayList<String> movieTrailerUrlArrayList;
     private TextView textViewRowList;
 
-    public MovieTrailerCustomListViewAdapter(Context mContext, ArrayList<String> moviePosterImageUrlArrayList) {
+    public MovieTrailerCustomListViewAdapter(Context mContext, ArrayList<String> movieTrailerUrlArrayList) {
         this.mContext = mContext;
-        this.moviePosterImageUrlArrayList = moviePosterImageUrlArrayList;
+        this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
     }
 
     @Override
     public int getCount() {
-        return moviePosterImageUrlArrayList.size();
+        return movieTrailerUrlArrayList.size();
     }
 
     @Override
     public String getItem(int position) {
-        return moviePosterImageUrlArrayList.get(position);
+        return movieTrailerUrlArrayList.get(position);
     }
 
     @Override

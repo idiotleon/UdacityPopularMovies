@@ -1,10 +1,21 @@
 package nanodegree.udacity.leon.udacitypopularmovies.display;
 
+<<<<<<< HEAD
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.util.Log;
+=======
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.util.Log;
+import android.view.Display;
+>>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,10 +25,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import org.json.JSONException;
+
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
+<<<<<<< HEAD
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
+=======
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
+import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
+>>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.DetailFragment;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.R;
@@ -53,6 +72,7 @@ public class DisplayFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+<<<<<<< HEAD
         movieModelArrayList = getArguments()
                 .getParcelableArrayList(GeneralConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
         refreshDisplayFragment(movieModelArrayList);
@@ -82,10 +102,14 @@ public class DisplayFragment extends Fragment {
     }
 
     private void refreshDisplayFragment(ArrayList<MediumMovieInfoModel> movieModelArrayList) {
+=======
+        ArrayList<MovieInfoModel> movieModelArrayList = getArguments().getParcelableArrayList(GeneralConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER);
+>>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
         gridView.setAdapter(new CustomGridViewAdapter(getActivity(), movieModelArrayList));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+<<<<<<< HEAD
                 movieSelectedPosition = position;
                 MediumMovieInfoModel clickedMovieInfo = (MediumMovieInfoModel) gridView.getItemAtPosition(position);
                 Bundle detailsArgs = new Bundle();
@@ -97,7 +121,48 @@ public class DisplayFragment extends Fragment {
                         .replace(R.id.tabletux_container2, detailFragment,
                                 GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
 //                Log.v(LOG_TAG, "detailFragment, transaction committed from DisplayFragment");
+=======
+                MovieInfoModel clickedMovieInfo = (MovieInfoModel) gridView.getItemAtPosition(position);
+                ParseJsonForTheCompleteMovieInfo parseJsonForTheCompleteMovieInfo = new ParseJsonForTheCompleteMovieInfo();
+                parseJsonForTheCompleteMovieInfo.execute(clickedMovieInfo);
+>>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
             }
         });
+    }
+
+    class ParseJsonForTheCompleteMovieInfo extends AsyncTask<MovieInfoModel, Void, Void> {
+
+        MovieInfoModel completeMovieInfo;
+
+        @Override
+        protected Void doInBackground(MovieInfoModel... params) {
+            MovieInfoModel movieInfoModelWithoutTrailerAndReviews = params[0];
+            Long movieId = movieInfoModelWithoutTrailerAndReviews.getMovieId();
+            try {
+                ArrayList<String> trailerUrlArrayList = GeneralHelper.parseJsonDataForMovieTrailerUrl(movieId);
+                ArrayList<MovieReviewModel> reviewUrlArrayList = GeneralHelper.parseJsonDataForMovieReview(movieId);
+                Log.v(LOG_TAG, "GeneralHelper.parseJsonDataForMovieTrailerUrl(movieId), DisplayFragment: " + trailerUrlArrayList);
+                Log.v(LOG_TAG, "GeneralHelper.parseJsonDataForMovieReview(movieId), DisplayFragment: " + reviewUrlArrayList);
+                completeMovieInfo = new MovieInfoModel(movieInfoModelWithoutTrailerAndReviews, trailerUrlArrayList, reviewUrlArrayList);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Bundle detailsArgs = new Bundle();
+            detailsArgs.putParcelable(GeneralConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER, completeMovieInfo);
+            DetailFragment detailFragment = new DetailFragment();
+            detailFragment.setArguments(detailsArgs);
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.tabletux_container2, detailFragment);
+            fragmentTransaction.commit();
+        }
     }
 }
