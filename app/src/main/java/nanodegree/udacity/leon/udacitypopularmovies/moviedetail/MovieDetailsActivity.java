@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-<<<<<<< HEAD
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +29,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieTrailerModel;
-=======
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieReviewCustomListViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.MovieTrailerCustomListViewAdapter;
@@ -75,7 +72,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieReviewsArrayList = new ArrayList<>();
 
         if (savedInstanceState != null) {
-<<<<<<< HEAD
             Log.v(LOG_TAG, "saveInstanceState!=null, MovieDetailsActivity, from which data fetched..");
             completeMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
             movieId = completeMovieInfo.getMovieId();
@@ -83,7 +79,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             refreshMovieTrailers(completeMovieInfo.getMovieTrailerUrlArrayList());
         } else {
             Bundle data = getIntent().getExtras();
-            mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_PARCEL);
+            mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_DETAILED_IDENTIFIER);
             Log.v(LOG_TAG, "mediumMovieInfo.getMovieImageUrl(), onCreate(), MovieDetailsActivity: " + mediumMovieInfo.getMovieImageUrl());
             movieId = mediumMovieInfo.getMovieId();
 
@@ -110,12 +106,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                             getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
                 }
             }
-=======
-            movieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
-        } else {
-            Bundle data = getIntent().getExtras();
-            movieInfo = (MovieInfoModel) data.getParcelable(GeneralConstants.MOVIE_DETAILED_IDENTIFIER);
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
+            mediumMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
@@ -327,14 +318,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-<<<<<<< HEAD
         Log.v(LOG_TAG, "onSaveInstanceState(Bundle outState), MovieDetailsActivity executed.");
         if (mediumMovieInfo != null)
             completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
         outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, completeMovieInfo);
-=======
-        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, movieInfo);
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
+        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, mediumMovieInfo);
         super.onSaveInstanceState(outState);
     }
 }

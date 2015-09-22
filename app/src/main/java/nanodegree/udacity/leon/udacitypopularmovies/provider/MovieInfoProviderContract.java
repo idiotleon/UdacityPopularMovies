@@ -72,7 +72,5 @@ public final class MovieInfoProviderContract {
                 .appendPath(TABLE_NAME).build();
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
-
-
     }
 }
