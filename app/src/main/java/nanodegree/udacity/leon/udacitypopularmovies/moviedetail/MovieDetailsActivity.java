@@ -79,7 +79,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             refreshMovieTrailers(completeMovieInfo.getMovieTrailerUrlArrayList());
         } else {
             Bundle data = getIntent().getExtras();
-            mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_DETAILED_IDENTIFIER);
+            mediumMovieInfo = data.getParcelable(GeneralConstants.MOVIE_PARCEL);
             Log.v(LOG_TAG, "mediumMovieInfo.getMovieImageUrl(), onCreate(), MovieDetailsActivity: " + mediumMovieInfo.getMovieImageUrl());
             movieId = mediumMovieInfo.getMovieId();
 
@@ -106,7 +106,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                             getResources().getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
                 }
             }
-            mediumMovieInfo = savedInstanceState.getParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY);
         }
 
         textViewOriginalTitle = (TextView) findViewById(R.id.textview_original_title_movie_details);
@@ -322,7 +321,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (mediumMovieInfo != null)
             completeMovieInfo = new CompleteMovieInfoModel(mediumMovieInfo, movieTrailerUrlArrayList, movieReviewsArrayList);
         outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, completeMovieInfo);
-        outState.putParcelable(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_DETAIL_ACTIVITY, mediumMovieInfo);
         super.onSaveInstanceState(outState);
     }
 }

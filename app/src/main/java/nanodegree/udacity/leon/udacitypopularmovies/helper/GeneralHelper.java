@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-<<<<<<<HEAD
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,22 +12,12 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-=======
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
->>>>>>>e6cce583ad40b3ac8aa5321a49158327f94244a9
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-<<<<<<<HEAD
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -37,14 +26,6 @@ import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieTrailerModel;
 import nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProviderContract;
-=======
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
->>>>>>>e6cce583ad40b3ac8aa5321a49158327f94244a9
 
 public class GeneralHelper {
     private static final String LOG_TAG = GeneralHelper.class.getSimpleName();
@@ -53,8 +34,6 @@ public class GeneralHelper {
     public static final int FAVORITE_STATUS_TRUE_STATUS_CODE = 1;
     public static final boolean FAVORITE_STATUS_FALSE = false;
     public static final int FAVORITE_STATUS_FALSE_STATUS_CODE = 0;
-
-    private static final String LOG_TAG = GeneralHelper.class.getSimpleName();
 
     public static boolean isTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
@@ -110,6 +89,7 @@ public class GeneralHelper {
                 .getDefaultSharedPreferences(context);
         return sharedPreferences.getInt(key, defaultValue);
     }
+
 
     public static ArrayList<MediumMovieInfoModel> getAllFavoriteMediumMovieInfoAsArrayList(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
@@ -192,7 +172,6 @@ public class GeneralHelper {
         return moviesJsonStr;
     }
 
-    <<<<<<<HEAD
 /*    public static void updateDatabaseMovieInfo(Context context, ArrayList<MediumMovieInfoModel> mediumMovieInfoModelArrayList) {
         for (int i = 0; i < mediumMovieInfoModelArrayList.size(); i++) {
             if (checkMovieInfoStored(context, mediumMovieInfoModelArrayList.get(i))) {
@@ -511,148 +490,4 @@ public class GeneralHelper {
         }
         return status;
     }
-
-    =======
-
-    /**
-     * JSON parsing method for udacity_popular_movie info
-     *
-     * @param moviesJsonStr
-     * @return
-     * @throws JSONException
-     */
-    public static ArrayList<MovieInfoModel> parseJsonDataForMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException {
-
-        final String OWN_RESULTS = "results";
-        final String OWN_MOVIE_ID = "id";
-        final String OWN_ORIGINAL_TITLE = "original_title";
-        final String OWN_MOVIE_PLOT_SYNOPSIS = "overview";
-        final String OWN_MOVIE_USER_RATING = "vote_average";
-        final String OWN_RELEASE_DATE = "release_date";
-        final String OWN_POSTER_PATH = "poster_path";
-
-        // base URL for poster images
-        final String BASE_POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
-
-        Long movieId;
-        String movieOriginalTitle;
-        String moviePlotSynopsis;
-        String movieUserRating;
-        String movieReleaseDate;
-        String moviePosterUrl;
-        ArrayList<String> movieTrailerUrlArrayList;
-        ArrayList<MovieReviewModel> movieReviewArrayList;
-
-        JSONObject moviesJsonObject = new JSONObject(moviesJsonStr);
-        JSONArray moviesJsonObjectArray = moviesJsonObject.getJSONArray(OWN_RESULTS);
-
-        ArrayList<MovieInfoModel> moviesInfoAsArrayList = new ArrayList<MovieInfoModel>();
-        for (int i = 0; i < moviesJsonObjectArray.length(); i++) {
-
-            JSONObject itemJson = moviesJsonObjectArray.getJSONObject(i);
-
-            movieId = itemJson.getLong(OWN_MOVIE_ID);
-//            Log.v(LOG_TAG, "MOVIE_ID, parseJsonDataForMovieInfo(): " + movieId);
-            movieOriginalTitle = itemJson.getString(OWN_ORIGINAL_TITLE);
-//            Log.v(LOG_TAG, "MOVIE_ORIGINAL_TITLE, parseJsonDataForMovieInfo(): " + movieOriginalTitle);
-            moviePlotSynopsis = itemJson.getString(OWN_MOVIE_PLOT_SYNOPSIS);
-//            Log.v(LOG_TAG, "MOVIE_PLOT_SYNOPSIS, parseJsonDataForMovieInfo(): " + moviePlotSynopsis);
-            movieUserRating = itemJson.getString(OWN_MOVIE_USER_RATING);
-//            Log.v(LOG_TAG, "MOVIE_USER_RATING, parseJsonDataForMovieInfo(): " + movieUserRating);
-            movieReleaseDate = itemJson.getString(OWN_RELEASE_DATE);
-//            Log.v(LOG_TAG, "MOVIE_RELEASE_DATE, parseJsonDataForMovieInfo(): " + movieReleaseDate);
-            moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(OWN_POSTER_PATH);
-//            Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMovieInfo(): " + moviePosterUrl);
-
-/*            movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
-            movieReviewArrayList = parseJsonDataForMovieReview(movieId);*/
-
-            MediumMovieInfoModel movieModelWithoutTrailerOrReviews = new MediumMovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate);
-            moviesInfoAsArrayList.add(movieModelWithoutTrailerOrReviews);
-        }
-//            Log.v(LOG_TAG, "moviesInfoAsArrayList - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.toString());
-//            Log.v(LOG_TAG, "moviesInfoAsArrayList.size() - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.size());
-
-        return moviesInfoAsArrayList;
-    }
-
-    /**
-     * For each specific udacity_popular_movie id, this method will get all the "key"s from API/JSON data, when combined with base Youtube URL, return
-     * an ArrayList of all trailer urls, which can be played directly
-     *
-     * @param movieId
-     * @return
-     * @throws MalformedURLException
-     * @throws JSONException
-     */
-
-    public static ArrayList<String> parseJsonDataForMovieTrailerUrl(Long movieId) throws MalformedURLException, JSONException {
-
-
-        // base API URL for fetching trailer id
-        final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/udacity_popular_movie/";
-        // base Youtube URL for displaying trailer
-        final String BASE_YOUTUBE_URL = "http://www.youtube.com/v/";
-        final String PARAM_VIDEO = "/videos?";
-        final String OWN_RESULTS = "results";
-        final String OWN_KEY = "key";
-
-        String movieTrailerAPIUrl = BASE_API_TRAILER_URL + movieId.toString() + PARAM_VIDEO + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
-//            Log.v(LOG_TAG, "movieTrailerAPIUrl - MainActivity: " + movieTrailerAPIUrl);
-        URL movieTrailerAPIURL = new URL(movieTrailerAPIUrl);
-//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieTrailerAPIURL), Line325: " + getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
-        JSONObject movieTrailerAllJsonDataObject = new JSONObject(getAllJsonDataAsStringFromAPI(movieTrailerAPIURL));
-
-        JSONArray movieTrailerInfoJsonArray = movieTrailerAllJsonDataObject.getJSONArray(OWN_RESULTS);
-//            Log.v(LOG_TAG, "movieTrailerInfoJsonArray: " + movieTrailerInfoJsonArray);
-
-        ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
-        for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
-            JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
-            String key = itemJson.getString(OWN_KEY);
-//                Log.v(LOG_TAG, "key: " + key);
-            String url = BASE_YOUTUBE_URL + key;
-//                Log.v(LOG_TAG, "url: " + url);
-            movieTrailerUrlArrayList.add(url);
-        }
-        return movieTrailerUrlArrayList;
-    }
-
-    public static ArrayList<MovieReviewModel> parseJsonDataForMovieReview(Long movieId) throws MalformedURLException, JSONException {
-
-        // base API URL for fetching reviews
-        final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/udacity_popular_movie/";
-        final String PARAM_REVIEWS = "/reviews?";
-
-        final String OWN_RESULTS = "results";
-        final String OWN_AUTHOR = "author";
-        final String OWN_CONTENT = "content";
-        final String OWN_URL = "url";
-
-        String movieReviewAPIUrl = BASE_API_TRAILER_URL + movieId.toString() + PARAM_REVIEWS + GeneralConstants.PARAM_API_KEY + "=" + GeneralConstants.API_KEY;
-//            Log.v(LOG_TAG, "movieReviewAPIUrl - MainActivity, Line428: " + movieReviewAPIUrl);
-        URL movieReviewAPIURL = new URL(movieReviewAPIUrl);
-        String allJsonData = getAllJsonDataAsStringFromAPI(movieReviewAPIURL);
-//            Log.v(LOG_TAG, "getAllJsonDataAsStringFromAPI(movieReviewAPIURL), Line431: " + allJsonData);
-        JSONObject movieReviewAllJsonDataObject = new JSONObject(allJsonData);
-//        Log.v(LOG_TAG, "movieReviewAllJsonDataObject, Line433: " + movieReviewAllJsonDataObject);
-        JSONArray movieTrailerInfoJsonArray = movieReviewAllJsonDataObject.getJSONArray(OWN_RESULTS);
-//            Log.v(LOG_TAG, "movieReviewInfoJsonArray: " + movieTrailerInfoJsonArray);
-
-        ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
-        for (int i = 0; i < movieTrailerInfoJsonArray.length(); i++) {
-            JSONObject itemJson = movieTrailerInfoJsonArray.getJSONObject(i);
-            String author = itemJson.getString(OWN_AUTHOR);
-//                Log.v(LOG_TAG, "author: " + author);
-            String content = itemJson.getString(OWN_CONTENT);
-//                Log.v(LOG_TAG, "content: " + content);
-            String url = itemJson.getString(OWN_URL);
-//                Log.v(LOG_TAG, "review url: " + url);
-            MovieReviewModel movieReviewModel = new MovieReviewModel(author, content, url);
-            movieReviewArrayList.add(movieReviewModel);
-        }
-        return movieReviewArrayList;
-    }
-
-    >>>>>>>e6cce583ad40b3ac8aa5321a49158327f94244a9
 }

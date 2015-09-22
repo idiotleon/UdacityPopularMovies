@@ -118,7 +118,6 @@ public class DetailFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-<<<<<<< HEAD
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_share, menu);
@@ -139,9 +138,6 @@ public class DetailFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-=======
-        movie = getArguments().getParcelable(GeneralConstants.MOVIE_INFO_DETAILFRAGMENT_IDENTIFIER);
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
 
     @Override
     public void onStart() {
@@ -175,7 +171,6 @@ public class DetailFragment extends Fragment {
             }
         });
 
-<<<<<<< HEAD
         Picasso.with(getActivity()).load(completeMovieInfo.getMovieImageUrl()).into(imageViewPosterImage);
 //        Log.v(LOG_TAG, "movieModel.getMovieImageUrl() - Line70, onCreate(): " + movieModel.getMovieImageUrl());
         textViewOriginalTitle.setText("Original Title: " + completeMovieInfo.getMovieOriginalTitle());
@@ -302,11 +297,6 @@ public class DetailFragment extends Fragment {
         movieTrailerListView = (ListView) detailFragmentView.findViewById(R.id.listview_movietrailers_tabletux);
         movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(getActivity(), movieTrailerArrayList);
 //        Log.v(LOG_TAG, "movieInfo.getMovieTrailerUrlArrayList() - Line59, onCreate(): " + movieInfo.getMovieTrailerUrlArrayList().toString());
-=======
-        movieTrailerListView = (ListView) detailFragmentView.findViewById(R.id.listview_movietrailers_tabletux);
-        movieTrailerListViewAdapter = new MovieTrailerCustomListViewAdapter(getActivity(), movie.getMovieTrailerUrlArrayList());
-//        Log.v(LOG_TAG, "movieModel.getMovieTrailerUrlArrayList(), Line95, onCreate(), DetailFragment: " + udacity_popular_movie.getMovieTrailerUrlArrayList().toString());
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
         movieTrailerListView.setAdapter(movieTrailerListViewAdapter);
         movieTrailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -319,14 +309,9 @@ public class DetailFragment extends Fragment {
         });
     }
 
-<<<<<<< HEAD
     private void refreshMovieReviews(final ArrayList<MovieReviewModel> movieReviewArrayList) {
         movieReviewListView = (ListView) detailFragmentView.findViewById(R.id.listview_moviereviews_tabletux);
         movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(getActivity(), movieReviewArrayList);
-=======
-        movieReviewListView = (ListView) detailFragmentView.findViewById(R.id.listview_moviereviews_tabletux);
-        movieReviewListViewAdapter = new MovieReviewCustomListViewAdapter(getActivity(), movie.getMovieReviewArrayList());
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
         movieReviewListView.setAdapter(movieReviewListViewAdapter);
         movieReviewListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

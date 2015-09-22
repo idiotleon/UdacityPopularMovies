@@ -25,12 +25,9 @@ import nanodegree.udacity.leon.udacitypopularmovies.R;
 import nanodegree.udacity.leon.udacitypopularmovies.adapter.CustomGridViewAdapter;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.DetailFragment;
-import nanodegree.udacity.leon.udacitypopularmovies.model.MediumMovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.moviedetail.MovieDetailsActivity;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralConstants;
 import nanodegree.udacity.leon.udacitypopularmovies.helper.GeneralHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.provider.DatabaseHelper;
-import nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProviderContract;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null &&
                 savedInstanceState.containsKey(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY)) {
             mediumMovieInfoArrayList = savedInstanceState.getParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY);
-//            Log.v(LOG_TAG, "mediumMovieInfoArrayList.isEmpty(), fetched from savedInstanceState(): " + mediumMovieInfoArrayList.isEmpty());
+            Log.v(LOG_TAG, "mediumMovieInfoArrayList.isEmpty(), fetched from savedInstanceState(): " + mediumMovieInfoArrayList.isEmpty());
             refreshPageView(mediumMovieInfoArrayList, savedInstanceState);
         } else if (GeneralHelper.getMovieInfoStoredCount(MainActivity.this) > 0) {
             mediumMovieInfoArrayList = GeneralHelper.getAllMediumMovieInfo(MainActivity.this,
-                    GeneralConstants, GeneralConstants.MOVIE_SORTED_DESC);
+                    GeneralConstants.MOVIE_SORTED_BY_POPULARITY, GeneralConstants.MOVIE_SORTED_DESC);
             refreshPageView(mediumMovieInfoArrayList, savedInstanceState);
             if (GeneralHelper.isNetworkAvailable(MainActivity.this)) {
                 // For update (database) purpose
@@ -86,6 +83,16 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(GeneralConstants.MOVIE_SAVED_INSTANCE_STATE_MAIN_ACTIVITY, mediumMovieInfoArrayList);
 //        Log.v(LOG_TAG, "mediumMovieInfoArrayList.isEmpty(), onSaveInstanceState(): " + mediumMovieInfoArrayList.isEmpty());
+        if (GeneralHelper.isTablet(MainActivity.this)) {
+            getFragmentManager().putFragment(outState,
+                    GeneralConstants.SAVE_INSTANCE_STATE_DISPLAY_FRAGMENT, displayFragment);
+            detailFragment = (DetailFragment) getFragmentManager()
+                    .findFragmentByTag(GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG);
+            if (detailFragment != null) {
+                getFragmentManager().putFragment(outState, GeneralConstants.SAVE_INSTANCE_STATE_DETAIL_FRAGMENT, detailFragment);
+                Log.v(LOG_TAG, "detailFragment has been put to savedInstance");
+            }
+        }
     }
 
     private void refreshPageView(ArrayList<MediumMovieInfoModel> movieInfo, Bundle savedInstanceState) {
@@ -94,50 +101,55 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main_tabletux);
             Bundle displayFragmentArgs = new Bundle();
             displayFragmentArgs.putParcelableArrayList(GeneralConstants.MOVIE_INFO_DISPLAYFRAGMENT_IDENTIFIER, movieInfo);
-        } else {
-            displayFragment = new DisplayFragment();
-            displayFragment.setArguments(displayFragmentArgs);
-            Log.v(LOG_TAG, "A new DisplayFragment created, refreshPageView().");
-        }
-        DisplayFragment displayFragment = new DisplayFragment();
-        displayFragment.setArguments(displayFragmentArgs);
-        getFragmentManager().beginTransaction().
-                replace(R.id.tabletux_container1, displayFragment).commit();
+            if (savedInstanceState != null &&
+                    savedInstanceState.containsKey(GeneralConstants.SAVE_INSTANCE_STATE_DISPLAY_FRAGMENT) &&
+                    savedInstanceState.containsKey(GeneralConstants.SAVE_INSTANCE_STATE_DETAIL_FRAGMENT)) {
+                displayFragment = (DisplayFragment) getFragmentManager().getFragment(savedInstanceState, GeneralConstants.SAVE_INSTANCE_STATE_DISPLAY_FRAGMENT);
+                detailFragment = (DetailFragment) getFragmentManager().getFragment(savedInstanceState, GeneralConstants.SAVE_INSTANCE_STATE_DETAIL_FRAGMENT);
+
+                if (detailFragment == null) {
+                    Log.v(LOG_TAG, "detailFragment, refreshPageView(), is null.");
+                } else {
+                    Log.v(LOG_TAG, "detailFragment, refreshPageView(), is not null.");
+                }
+            } else {
+                displayFragment = new DisplayFragment();
+                displayFragment.setArguments(displayFragmentArgs);
+                Log.v(LOG_TAG, "A new DisplayFragment created, refreshPageView().");
+            }
+            getFragmentManager().beginTransaction().
+                    replace(R.id.tabletux_container1, displayFragment,
+                            GeneralConstants.DISPLAYFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
 /*            if (detailFragment != null) {
                 getFragmentManager().beginTransaction().
                         replace(R.id.tabletux_container2, detailFragment,
                                 GeneralConstants.DETAILFRAGMENT_FRAGMENTTRANSACTION_TAG).commit();
                 Log.v(LOG_TAG, "detailFragment, refreshPageView(), transaction has been committed");
             }*/
-    }
-
-    else
-
-    {
-        Log.v(LOG_TAG, "This is a phone.");
-        setContentView(R.layout.activity_main);
-        gridView = (GridView) findViewById(R.id.gridview_mainactivity);
-        customGridViewAdapter = new CustomGridViewAdapter(MainActivity.this, movieInfo);
-        gridView.setAdapter(customGridViewAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MediumMovieInfoModel clickedMovieInfo = (MediumMovieInfoModel) gridView.getItemAtPosition(position);
-                Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
-                detailsIntent.putExtra(GeneralConstants.MOVIE_DETAILED_IDENTIFIER, new MediumMovieInfoModel(
-                        clickedMovieInfo.getMovieId(),
-                        clickedMovieInfo.getMovieOriginalTitle(),
-                        clickedMovieInfo.getMovieImageUrl(),
-                        clickedMovieInfo.getMoviePlotSynopsis(),
-                        clickedMovieInfo.getMovieUserRating(),
-                        clickedMovieInfo.getMovieReleaseDate(),
-                        clickedMovieInfo.getMoviePopularity()
-                ));
-                startActivity(detailsIntent);
-                ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
-                parsingJsonForMediumMovieInfo.execute(clickedMovieInfo);
-            }
-        });
+        } else {
+            Log.v(LOG_TAG, "This is a phone.");
+            setContentView(R.layout.activity_main);
+            gridView = (GridView) findViewById(R.id.gridview_mainactivity);
+            customGridViewAdapter = new CustomGridViewAdapter(MainActivity.this, movieInfo);
+            gridView.setAdapter(customGridViewAdapter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    MediumMovieInfoModel clickedMovieInfo = (MediumMovieInfoModel) gridView.getItemAtPosition(position);
+                    Intent detailsIntent = new Intent(MainActivity.this, MovieDetailsActivity.class);
+                    detailsIntent.putExtra(GeneralConstants.MOVIE_PARCEL, new MediumMovieInfoModel(
+                            clickedMovieInfo.getMovieId(),
+                            clickedMovieInfo.getMovieOriginalTitle(),
+                            clickedMovieInfo.getMovieImageUrl(),
+                            clickedMovieInfo.getMoviePlotSynopsis(),
+                            clickedMovieInfo.getMovieUserRating(),
+                            clickedMovieInfo.getMovieReleaseDate(),
+                            clickedMovieInfo.getMoviePopularity()
+                    ));
+                    startActivity(detailsIntent);
+                }
+            });
+        }
     }
 
     @Override
@@ -153,8 +165,9 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        // todo: methods should be improved based on databases
         ParsingJsonForMediumMovieInfo parsingJsonForMediumMovieInfo = new ParsingJsonForMediumMovieInfo();
+
+        // todo: methods should be improved based on databases
         switch (id) {
             case R.id.sort_popularity_desc:
                 /**
@@ -172,8 +185,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.show_favorite_movies:
                 showAllFavoriteMovies();
                 break;
-            return super.onOptionsItemSelected(item);
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void showAllFavoriteMovies() {
@@ -188,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class ParsingJsonForMediumMovieInfo extends AsyncTask<String, Void, ArrayList<MediumMovieInfoModel>> {
+    public class ParsingJsonForMediumMovieInfo extends AsyncTask<String, Void, ArrayList<MediumMovieInfoModel>> {
 
         private final String LOG_TAG = ParsingJsonForMediumMovieInfo.class.getSimpleName();
 
@@ -196,7 +210,9 @@ public class MainActivity extends AppCompatActivity {
         private URL defaultUrl;
 
         // base API URL to fetch udacity_popular_movie info
-        final String BASE_API_MOVIE_INFO_URL = "http://api.themoviedb.org/3/discover/udacity_popular_movie?";
+        final String BASE_API_MOVIE_INFO_URL = "http://api.themoviedb.org/3/discover/movie?";
+        // base URL for poster images
+        final String BASE_POSTER_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
 
         final String QUERY_PARAM = "sort_by";
         final String SETTINGS_PARAM_POPULARITY_DESC = "popularity.desc";
@@ -243,9 +259,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 mediumMovieInfoModelArrayList = parseJsonDataForMediumMovieInfo(moviesJsonStr);
                 return mediumMovieInfoModelArrayList;
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
 
@@ -314,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
 //            Log.v(LOG_TAG, "MOVIE_COLUMN_USER_RATING, parseJsonDataForMediumMovieInfo(): " + movieUserRating);
                 movieReleaseDate = itemJson.getString(UPM_RELEASE_DATE);
 //            Log.v(LOG_TAG, "MOVIE_COLUMN_RELEASE_DATE, parseJsonDataForMediumMovieInfo(): " + movieReleaseDate);
-                moviePosterUrl = MovieInfoProviderContract.GeneralMovieInfoEntry. + itemJson.getString(UPM_POSTER_PATH);
+                moviePosterUrl = BASE_POSTER_IMAGE_URL + itemJson.getString(UPM_POSTER_PATH);
 //                Log.v(LOG_TAG, "MOVIE_POSTER_IMAGE_URL, parseJsonDataForMediumMovieInfo(): " + moviePosterUrl);
                 moviePopularity = itemJson.getDouble(UPM_POPULAIRY);
 //                Log.v(LOG_TAG, "MOVIE_COLUMN_POPULARITY, parseJsonDataForMediumMovieInfo(): " + moviePopularity);
@@ -337,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
             mediumMovieInfoArrayList = movieModels;
             Log.v(LOG_TAG, "mediumMovieInfoArrayList.size() after parsing: " + mediumMovieInfoArrayList.size());
             customGridViewAdapter = new CustomGridViewAdapter(getApplicationContext(), movieModels);
+
             refreshPageView(movieModels, null);
         }
     }
