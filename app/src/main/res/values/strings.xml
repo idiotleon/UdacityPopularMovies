@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">UdacityPopularMovies</string>
+    <string name="app_name">PopularMovies</string>
 
     <string name="sort_popularity_desc_text">Popularity</string>
     <string name="sort_highest_rating_desc_text">Highest Rating</string>
+    <string name="favorite">Favorite</string>
+    <string name="favorite_movie_alert">Please have at least one favorite movie.</string>
+    <string name="network_unavailable">Network Unavailable</string>
 
     <string name="textview_text_mainactivity">Movies</string>
 
@@ -20,4 +23,6 @@
     <string name="imageview_description_row_list">Movie Trailer Play Button Image</string>
 
     <string name="favorite_star_button_description">The favorite star button</string>
+
+    <string name="share_intent_chooser_text">Please select an app to share</string>
 </resources>

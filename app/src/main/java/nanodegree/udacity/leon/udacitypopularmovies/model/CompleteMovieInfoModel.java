@@ -6,31 +6,31 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class MovieModel implements Parcelable {
+public class CompleteMovieInfoModel implements Parcelable {
 
-    // Movie features
-    private String movieId;
+    // Movie info
+    private long movieId;
     private String movieOriginalTitle;
     private String movieImageUrl;
     private String moviePlotSynopsis;
-    private String movieUserRating;
+    private float movieUserRating;
     private String movieReleaseDate;
-    private ArrayList<String> movieTrailerUrlArrayList = null;
+    private double moviePopularity;
+    private ArrayList<String> movieTrailerUrlArrayList = new ArrayList<>();
     private ArrayList<MovieReviewModel> movieReviewArrayList = new ArrayList<>();
 
-    public MovieModel(String movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating, String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
-        this.movieId = movieId;
-        this.movieOriginalTitle = movieOriginalTitle;
-        this.movieImageUrl = movieImageUrl;
-        this.moviePlotSynopsis = moviePlotSynopsis;
-        this.movieUserRating = movieUserRating;
-        this.movieReleaseDate = movieReleaseDate;
+    public CompleteMovieInfoModel(MediumMovieInfoModel mediumMovieInfoModel,
+                                  ArrayList<String> movieTrailerUrlArrayList,
+                                  ArrayList<MovieReviewModel> movieReviewModelArrayList) {
+        this.movieId = mediumMovieInfoModel.getMovieId();
+        this.movieOriginalTitle = mediumMovieInfoModel.getMovieOriginalTitle();
+        this.movieImageUrl = mediumMovieInfoModel.getMovieImageUrl();
+        this.moviePlotSynopsis = mediumMovieInfoModel.getMoviePlotSynopsis();
+        this.movieUserRating = mediumMovieInfoModel.getMovieUserRating();
+        this.moviePopularity = mediumMovieInfoModel.getMoviePopularity();
+        this.movieReleaseDate = mediumMovieInfoModel.getMovieReleaseDate();
         this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
-        this.movieReviewArrayList = movieReviewArrayList;
-    }
-
-    public void setMovieTrailerUrlArrayList(ArrayList<String> movieTrailerUrlArrayList) {
-        this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
+        this.movieReviewArrayList = movieReviewModelArrayList;
     }
 
     public ArrayList<MovieReviewModel> getMovieReviewArrayList() {
@@ -41,7 +41,7 @@ public class MovieModel implements Parcelable {
         return movieTrailerUrlArrayList;
     }
 
-    public String getMovieId() {
+    public Long getMovieId() {
         return movieId;
     }
 
@@ -57,7 +57,7 @@ public class MovieModel implements Parcelable {
         return moviePlotSynopsis;
     }
 
-    public String getMovieUserRating() {
+    public float getMovieUserRating() {
         return movieUserRating;
     }
 
@@ -70,38 +70,40 @@ public class MovieModel implements Parcelable {
         return 0;
     }
 
-    protected MovieModel(Parcel in) {
-        movieId = in.readString();
+    protected CompleteMovieInfoModel(Parcel in) {
+        movieId = in.readLong();
         movieOriginalTitle = in.readString();
         movieImageUrl = in.readString();
         moviePlotSynopsis = in.readString();
-        movieUserRating = in.readString();
+        movieUserRating = in.readFloat();
         movieReleaseDate = in.readString();
+        moviePopularity = in.readDouble();
         movieTrailerUrlArrayList = in.createStringArrayList();
         in.readTypedList(movieReviewArrayList, MovieReviewModel.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(movieId);
+        dest.writeLong(movieId);
         dest.writeString(movieOriginalTitle);
         dest.writeString(movieImageUrl);
         dest.writeString(moviePlotSynopsis);
-        dest.writeString(movieUserRating);
+        dest.writeFloat(movieUserRating);
         dest.writeString(movieReleaseDate);
+        dest.writeDouble(moviePopularity);
         dest.writeStringList(movieTrailerUrlArrayList);
         dest.writeTypedList(movieReviewArrayList);
     }
 
-    public static final Creator<MovieModel> CREATOR = new Creator<MovieModel>() {
+    public static final Creator<CompleteMovieInfoModel> CREATOR = new Creator<CompleteMovieInfoModel>() {
         @Override
-        public MovieModel createFromParcel(Parcel in) {
-            return new MovieModel(in);
+        public CompleteMovieInfoModel createFromParcel(Parcel in) {
+            return new CompleteMovieInfoModel(in);
         }
 
         @Override
-        public MovieModel[] newArray(int size) {
-            return new MovieModel[size];
+        public CompleteMovieInfoModel[] newArray(int size) {
+            return new CompleteMovieInfoModel[size];
         }
     };
 }

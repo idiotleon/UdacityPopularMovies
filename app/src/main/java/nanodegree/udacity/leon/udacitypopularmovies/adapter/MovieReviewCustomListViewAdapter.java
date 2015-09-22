@@ -30,7 +30,10 @@ public class MovieReviewCustomListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return movieReviewsArrayList.size();
+        if (!movieReviewsArrayList.isEmpty())
+            return movieReviewsArrayList.size();
+        else
+            return 0;
     }
 
     @Override

@@ -3,14 +3,17 @@
     package="nanodegree.udacity.leon.udacitypopularmovies">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/udacity_popular_movie"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".display.MainActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MovieDetailsActivity" />
+        <activity android:name=".moviedetail.MovieDetailsActivity" />
+
+        <provider
+            android:name=".provider.MovieInfoProvider"
+            android:authorities="nanodegree.udacity.leon.udacitypopularmovies.provider.MovieInfoProvider"
+            android:readPermission="android:permission.permRead"
+            android:writePermission="android.permission.permWrite" />
     </application>
 
 </manifest>
