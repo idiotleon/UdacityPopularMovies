@@ -2,46 +2,46 @@
 <items version="2" >
 
     <item
-        jar="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\classes.jar"
+        jar="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\libs\picasso-2.5.2.jar"
         jumboMode="false"
         revision="22.0.0"
-        sha1="f8efd0096475e0daf054267b61544e10dc776503">
-        <dex dex="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\classes-f75756591f6f384bf1b2b244de0fe65b7ae9662a.jar" />
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\picasso-2.5.2-2e5c7541aed2d64e787d19034f0f0529be2cd8ea.jar" />
     </item>
     <item
-        jar="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.2.1\jars\classes.jar"
-        jumboMode="false"
-        revision="22.0.0"
-        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
-        <dex dex="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\classes-0a778f0158310d05f293f0351c23db09fa7f805b.jar" />
-    </item>
-    <item
-        jar="E:\Downloads\Github\UdacityPopularMovies\app\libs\gson-2.3.1.jar"
+        jar="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\libs\gson-2.3.1.jar"
         jumboMode="false"
         revision="22.0.0"
         sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\gson-2.3.1-5620e4752c75a04e9b6d7cdcd0c4e5ad69508b95.jar" />
+        <dex dex="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\gson-2.3.1-5616f230ec5d38da252dfbb0e0c23bac95d115d4.jar" />
+    </item>
+    <item
+        jar="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\libs\internal_impl-22.2.1.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
+        <dex dex="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.1-e27910fe07afcd1294087012f07aa6e0f588eb3d.jar" />
+    </item>
+    <item
+        jar="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.0"
+        sha1="f8efd0096475e0daf054267b61544e10dc776503">
+        <dex dex="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\classes-0c4774b09d35eece46ea0f9a4cbda486ab0d63d0.jar" />
     </item>
     <item
         jar="E:\Software\Matrix\Android\AndroidSDK\extras\android\m2repository\com\android\support\support-annotations\22.2.1\support-annotations-22.2.1.jar"
         jumboMode="false"
         revision="22.0.0"
         sha1="61a0ff5c29295ec56d7e0bd3d25d95dbf71b4b2b">
-        <dex dex="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\support-annotations-22.2.1-fc9a2adf29bf17414b506e3e120c5b30a0ab441a.jar" />
+        <dex dex="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\support-annotations-22.2.1-fc9a2adf29bf17414b506e3e120c5b30a0ab441a.jar" />
     </item>
     <item
-        jar="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\libs\internal_impl-22.2.1.jar"
+        jar="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.2.1\jars\classes.jar"
         jumboMode="false"
         revision="22.0.0"
-        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
-        <dex dex="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.1-5cb72a1a6736e92fd83c0c8b53147a5795cdb66e.jar" />
-    </item>
-    <item
-        jar="E:\Downloads\Github\UdacityPopularMovies\app\libs\picasso-2.5.2.jar"
-        jumboMode="false"
-        revision="22.0.0"
-        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
-        <dex dex="E:\Downloads\Github\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\picasso-2.5.2-999ac31443f3eff156fdfdc50fa6ffee668b7984.jar" />
+        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
+        <dex dex="E:\Downloads\Github\Udacity\UdacityPopularMovies\app\build\intermediates\pre-dexed\debug\classes-767fff0e7d42b82fa79e19aab280de490aa9b502.jar" />
     </item>
 
 </items>

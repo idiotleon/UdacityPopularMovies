@@ -16,34 +16,8 @@ public class MediumMovieInfoModel implements Parcelable {
     private String movieReleaseDate;
     private double moviePopularity;
 
-<<<<<<< HEAD:app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MediumMovieInfoModel.java
     public MediumMovieInfoModel(long movieId, String movieOriginalTitle, String movieImageUrl,
                                 String moviePlotSynopsis, float movieUserRating, String movieReleaseDate, double moviePopularity) {
-=======
-    public MovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis,
-                          String movieUserRating, String movieReleaseDate) {
-        this.movieId = movieId;
-        this.movieOriginalTitle = movieOriginalTitle;
-        this.movieImageUrl = movieImageUrl;
-        this.moviePlotSynopsis = moviePlotSynopsis;
-        this.movieUserRating = movieUserRating;
-        this.movieReleaseDate = movieReleaseDate;
-    }
-
-    public MovieInfoModel(MovieInfoModel movieInfoModel, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
-        this.movieId = movieInfoModel.getMovieId();
-        this.movieOriginalTitle = movieInfoModel.getMovieOriginalTitle();
-        this.movieImageUrl = movieInfoModel.getMovieImageUrl();
-        this.moviePlotSynopsis = movieInfoModel.getMoviePlotSynopsis();
-        this.movieUserRating = movieInfoModel.getMovieUserRating();
-        this.movieReleaseDate = movieInfoModel.getMovieReleaseDate();
-        this.movieTrailerUrlArrayList = movieTrailerUrlArrayList;
-        this.movieReviewArrayList = movieReviewArrayList;
-    }
-
-    public MovieInfoModel(Long movieId, String movieOriginalTitle, String movieImageUrl, String moviePlotSynopsis, String movieUserRating,
-                          String movieReleaseDate, ArrayList<String> movieTrailerUrlArrayList, ArrayList<MovieReviewModel> movieReviewArrayList) {
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9:app/src/main/java/nanodegree/udacity/leon/udacitypopularmovies/model/MovieInfoModel.java
         this.movieId = movieId;
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieImageUrl = movieImageUrl;
