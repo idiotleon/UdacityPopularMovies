@@ -5,7 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-<<<<<<< HEAD
+<<<<<<<HEAD
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,14 +21,14 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
+>>>>>>>e6cce583ad40b3ac8aa5321a49158327f94244a9
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-<<<<<<< HEAD
+<<<<<<<HEAD
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieInfoModel;
 import nanodegree.udacity.leon.udacitypopularmovies.model.MovieReviewModel;
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
+>>>>>>>e6cce583ad40b3ac8aa5321a49158327f94244a9
 
 public class GeneralHelper {
     private static final String LOG_TAG = GeneralHelper.class.getSimpleName();
@@ -62,13 +62,8 @@ public class GeneralHelper {
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-<<<<<<< HEAD
     public static void markAsFavorite(Context context, MediumMovieInfoModel mediumMovieInfoModel) {
         String key = Long.toString(mediumMovieInfoModel.getMovieId());
-=======
-
-    public static void markAsFavorite(Context context, String key) {
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         sharedPreferences.edit().putInt(key, FAVORITE_STATUS_TRUE_STATUS_CODE).commit();
@@ -116,8 +111,6 @@ public class GeneralHelper {
         return sharedPreferences.getInt(key, defaultValue);
     }
 
-<<<<<<< HEAD
-
     public static ArrayList<MediumMovieInfoModel> getAllFavoriteMediumMovieInfoAsArrayList(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
         ArrayList<MediumMovieInfoModel> mediumMovieInfoModelArrayList = new ArrayList<>();
@@ -147,8 +140,6 @@ public class GeneralHelper {
         return mediumMovieInfoModelArrayList;
     }
 
-=======
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
     /**
      * Method is to get all the json data from the input URL as String.
      * <improvement>: there should be URL check methods
@@ -201,7 +192,7 @@ public class GeneralHelper {
         return moviesJsonStr;
     }
 
-<<<<<<< HEAD
+    <<<<<<<HEAD
 /*    public static void updateDatabaseMovieInfo(Context context, ArrayList<MediumMovieInfoModel> mediumMovieInfoModelArrayList) {
         for (int i = 0; i < mediumMovieInfoModelArrayList.size(); i++) {
             if (checkMovieInfoStored(context, mediumMovieInfoModelArrayList.get(i))) {
@@ -520,7 +511,9 @@ public class GeneralHelper {
         }
         return status;
     }
-=======
+
+    =======
+
     /**
      * JSON parsing method for udacity_popular_movie info
      *
@@ -574,7 +567,7 @@ public class GeneralHelper {
 /*            movieTrailerUrlArrayList = parseJsonDataForMovieTrailerUrl(movieId);
             movieReviewArrayList = parseJsonDataForMovieReview(movieId);*/
 
-            MovieInfoModel movieModelWithoutTrailerOrReviews = new MovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate);
+            MediumMovieInfoModel movieModelWithoutTrailerOrReviews = new MediumMovieInfoModel(movieId, movieOriginalTitle, moviePosterUrl, moviePlotSynopsis, movieUserRating, movieReleaseDate);
             moviesInfoAsArrayList.add(movieModelWithoutTrailerOrReviews);
         }
 //            Log.v(LOG_TAG, "moviesInfoAsArrayList - parseJsonDataForMovieInfo(): " + moviesInfoAsArrayList.toString());
@@ -661,5 +654,5 @@ public class GeneralHelper {
         return movieReviewArrayList;
     }
 
->>>>>>> e6cce583ad40b3ac8aa5321a49158327f94244a9
+    >>>>>>>e6cce583ad40b3ac8aa5321a49158327f94244a9
 }
