@@ -211,7 +211,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
          * @throws MalformedURLException
          * @throws JSONException
          */
-        public ArrayList<String> parseJsonDataForMovieTrailerUrl(long movieId) throws MalformedURLException, JSONException {
+        public ArrayList<String> parseJsonDataForMovieTrailerUrl(long movieId) throws MalformedURLException, JSONException, NullPointerException {
 
             // base API URL for fetching trailer id
             final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";
@@ -245,7 +245,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             return movieTrailerUrlArrayList;
         }
 
-        public ArrayList<MovieReviewModel> parseJsonDataForMovieReview(long movieId) throws MalformedURLException, JSONException {
+        public ArrayList<MovieReviewModel> parseJsonDataForMovieReview(long movieId) throws MalformedURLException, JSONException, NullPointerException {
 
             // base API URL for fetching reviews
             final String BASE_API_TRAILER_URL = "http://api.themoviedb.org/3/movie/";

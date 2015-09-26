@@ -157,6 +157,8 @@ public class GeneralHelper {
 
         } catch (IOException ex) {
             ex.printStackTrace();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         } finally {
             if (urlConnection != null) urlConnection.disconnect();
             if (reader != null) {

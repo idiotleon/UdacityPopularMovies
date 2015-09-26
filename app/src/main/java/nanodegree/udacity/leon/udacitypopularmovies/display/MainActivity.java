@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
          * @return
          * @throws JSONException
          */
-        public ArrayList<MediumMovieInfoModel> parseJsonDataForMediumMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException {
+        public ArrayList<MediumMovieInfoModel> parseJsonDataForMediumMovieInfo(String moviesJsonStr) throws JSONException, MalformedURLException, NullPointerException {
 
             // Keywords for JSON parsing purpose
             final String UPM_RESULTS = "results";

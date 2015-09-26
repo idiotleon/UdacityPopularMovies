@@ -31,12 +31,18 @@ public class MovieInfoProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME, MOVIES);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME + "/#", MOVIE_ID);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME, MOVIE_TRAILERS);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME + "/#", MOVIE_TRAILER_ID);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME, MOVIE_REVIEWS);
-        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY, MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME + "/#", MOVIE_REVIEW_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY,
+                MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME, MOVIES);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY,
+                MovieInfoProviderContract.GeneralMovieInfoEntry.TABLE_NAME + "/#", MOVIE_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY,
+                MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME, MOVIE_TRAILERS);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY,
+                MovieInfoProviderContract.MovieTrailerEntry.TABLE_NAME + "/#", MOVIE_TRAILER_ID);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY,
+                MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME, MOVIE_REVIEWS);
+        uriMatcher.addURI(MovieInfoProviderContract.CONTENT_AUTHORITY,
+                MovieInfoProviderContract.MovieReviewEntry.TABLE_NAME + "/#", MOVIE_REVIEW_ID);
     }
 
     @Override
